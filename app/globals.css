@@ -25,3 +25,29 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+
+
+.slider{
+  position: relative;
+  white-space: nowrap;
+}
+
+
+
+.slider p{
+  position: relative;
+  margin: 0px;
+  color: white;
+  font-size: 70px;
+  font-weight: 500;
+  transform: rotate(-90deg);
+  transform-origin: left bottom;
+  white-space: nowrap;
+}
+
+.slider p:nth-of-type(2){
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+}
