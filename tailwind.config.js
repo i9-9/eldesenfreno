@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        'hover-gray': '#606060',
+      },
       fontFamily: {
         'neue-haas-grotesk': ['neue-haas-grotesk-text', 'sans-serif'],
       },
