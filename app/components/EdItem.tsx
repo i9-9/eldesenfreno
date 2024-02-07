@@ -12,7 +12,7 @@ interface EdItemProps {
 const EdItem = ({image, title, author, review, reviewName, link}: EdItemProps) => {
 
   return (
-    <div className='m-2 font-neue-haas-grotesk md:max-h-screen '>
+    <div className='m-2 md:max-h-screen '>
         <Image className='border border-white mb-2' src={image} alt={title} width={500} height={600}/>
         <div className='md:max-w-[600px] pb-4'>
           <h4 className='uppercase font-semibold mb-2'>{title}</h4>

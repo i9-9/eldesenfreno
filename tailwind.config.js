@@ -12,6 +12,7 @@ module.exports = {
       },
       fontFamily: {
         'neue-haas-grotesk': ['neue-haas-grotesk-text', 'sans-serif'],
+        'neue-display': ['neue-haas-grotesk-display', 'sans-serif']
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

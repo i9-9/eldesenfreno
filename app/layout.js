@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import Menu from './components/Menu'
 import Dropdown from './components/Dropdown'
 import Bio from './components/Bio'
+import Link from 'next/link';
 
 const aggie = localFont({
   src: [
@@ -30,20 +31,22 @@ export default function RootLayout({ children }) {
           <Menu/>    
         </div>
         <div className='flex flex-col md:hidden'>
-          <h5 className={`${aggie.className} 'border border-b-white border-x-0 border-t-0 text-center text-xl'`}>
-            EL DESENFRENO EDICIONES
-          </h5>
+          <Link href="/" className=' my-1'>
+            <h5 className={`${aggie.className} 'border border-b-white border-x-0 border-t-0 text-center text-xl tracking-tighter'`}>
+              EL DESENFRENO EDICIONES
+            </h5>
+          </Link>
           <Dropdown/>
         </div>
         <div className='flex mr-4'>
-        <div className='md:flex fixed z-10 top-8 left-4'>
+        <div className='md:flex fixed z-10 top-8 left-4 w-fit'>
           <div className='md:w-1/4 h-screen md:flex hidden md:visible  border-l-[1px]'>
           <div className='w-48'>MARQUEE</div>
               {/* <MarqueeTitle/> */}
             <Bio/>
           </div>
           </div>
-          <div className='md:w-3/4 md:ml-[30rem] md:mt-8 font-neue-haas-grotesk'>{children}</div>
+          <div className='md:w-3/4 md:ml-[30rem] md:mt-8 font-light'>{children}</div>
         </div>
         </main>
       </body>
