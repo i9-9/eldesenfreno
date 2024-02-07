@@ -1,3 +1,6 @@
+'use client'
+
+
 import React, { useState } from 'react'
 import Link from 'next/link'
 
@@ -9,37 +12,30 @@ const Dropdown = () => {
     };
   
   return (
-    <div className="relative inline-block text-center md:hidden w-full">
-      <button
-        id="dropdownDefaultButton"
-        onClick={toggleDropdown}
-        className="text-white font-neue-haas-grotesk font-medium flex items-center justify-center w-full"
-        type="button"> MENU
-        <svg
-          className={`w-2.5 h-2.5 ms-3 hidden ${isOpen ? 'transform rotate-180' : ''}`}
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 10 6"
-        >
-          <path
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="m1 1 4 4 4-4"
-          />
-        </svg>
-      </button>
+    <div className="relative md:hidden w-full">
+      <div className='flex w-full px-2 justify-around items-center' id="dropdownDefaultButton" onClick={toggleDropdown}>
+        <p className="text-white font-neue-haas-grotesk font-medium w-full text-xl"> MENU </p>
+        <svg 
+          className={`${isOpen ? 'transform rotate-180' : ''}`} 
+          width="16" 
+          height="14" 
+          viewBox="0 0 16 14" 
+          fill="none" 
+          xmlns="http://www.w3.org/2000/svg">
+            <path 
+              d="M8 14L0.205772 0.5L15.7942 0.5L8 14Z" 
+              fill="#D9D9D9"/>
+          </svg>
+      </div>
 
       {/* Dropdown menu */}
       {isOpen && (
-        <div className="z-20 absolute bg-black divide-y divide-white  w-full font-neue-haas-grotesk">
-            <Link href='/' className='block border border-t-white border-x-0 border-b-0 px-4 py-1 hover:bg-hover-gray'>BLOG</Link>
-            <Link href='/' className='block px-4 py-1 hover:bg-hover-gray'>TIENDA</Link>
-            <Link href='/' className='block px-4 py-1 hover:bg-hover-gray'>EVENTOS</Link>
-            <Link href='/' className='block px-4 py-1 hover:bg-hover-gray'>AUTORXS</Link>
-            <Link href='/' className='block border border-b-white border-x-0 border-t-0 px-4 py-1 hover:bg-hover-gray'>CONTACTO</Link>
+        <div className="z-20 absolute bg-black divide-y divide-white w-full font-neue-haas-grotesk text-xl">
+            <Link href='/' className='block border border-t-white border-x-0 border-b-0 px-2 py-1 hover:bg-hover-gray'>BLOG</Link>
+            <Link href='/shop' className='block px-2 py-1 hover:bg-hover-gray'>TIENDA</Link>
+            <Link href='/events' className='block px-2 py-1 hover:bg-hover-gray'>EVENTOS</Link>
+            <Link href='/authors' className='block px-2 py-1 hover:bg-hover-gray'>AUTORXS</Link>
+            <Link href='/' className='block border border-b-white border-x-0 border-t-0 px-2 py-1 hover:bg-hover-gray'>CONTACTO</Link>
         </div>
       )}
     </div>

@@ -5,14 +5,13 @@ import Link from 'next/link'
 
 const Menu = () => {
   return (
-    <div className='w-full h-12 md:w-1/4 md:h-screen m-4'>
-      <div className='md:flex md:flex-col hidden md:visible font-semibold font-neue-haas-grotesk'>
-        <Image src='/logo.png' width={50} height={100} alt='El Desenfreno' className='mb-4'/>
-        <Link href='/'>BLOG</Link>
-        <Link href='/'>TIENDA</Link>
-        <Link href='/'>EVENTOS</Link>
-        <Link href='/'>AUTORXS</Link>
-        <Link href='/'>CONTACTO</Link>
+    <div className='w-full h-8 divide-y-2 pr-4 bg-black pt-2'>
+      <div className='flex w-full justify-between font-semibold font-neue-haas-grotesk text-sm'>
+        <Link href='/' className=' hover:underline'>INDEX</Link>
+        <Link href='/shop' className=' hover:underline'>TIENDA</Link>
+        <Link href='/events' className=' hover:underline'>EVENTOS</Link>
+        <Link href='/authors' className=' hover:underline'>AUTORXS</Link>
+        <Link href='/contact' className='hover:underline pr-4'>CONTACTO</Link>
       </div>
     </div>
   )
