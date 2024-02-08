@@ -12,7 +12,7 @@ const Dropdown = () => {
     };
   
   return (
-    <div className="relative md:hidden w-full border border-white border-x-0 ">
+    <div className="relative md:hidden w-full border border-white border-x-0 font-neue-display">
       <div className='flex w-full px-2 justify-around items-center' id="dropdownDefaultButton" onClick={toggleDropdown}>
         <p className="text-white w-full text-xl"> MENU </p>
         <svg 

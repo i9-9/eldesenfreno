@@ -24,12 +24,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className={aggie.className}>
           <MenuHeader />
-          <MobileHeader font={`${aggie.className}`} />
+          <MobileHeader />
           <div className="flex h-screen">
             <Sidebar/>
-            <div className="md:ml-[450px] md:mt-10 md:flex-1 ">
+            <div className="md:ml-[500px] md:mt-10 md:flex-1 ">
               {children}
             </div>
           </div>

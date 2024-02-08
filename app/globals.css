@@ -44,14 +44,3 @@ body {
   bottom: 100%;
   left: 0;
 }
-
-
-.marquee-home {
-  width: 400px;
-  height: 400px;
-  writing-mode: vertical-lr;
-  display: inline;
-  color: white;
-  word-spacing: 2px;
-  font-size: 40px;
-}
