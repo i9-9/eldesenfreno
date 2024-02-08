@@ -10,7 +10,7 @@ interface AuthorItemProps {
 const AuthorItem = ({image,  author, description, link}: AuthorItemProps) => {
 
   return (
-    <div className='m-2 max-w-full flex flex-col md:flex-row'>
+    <div className='m-2 max-w-full flex flex-col lg:flex-row'>
         <Image className='mb-2 object-cover saturate-0' src={image} alt={author} width={400} height={400}/>
         <div className='md:max-w-[400px] pb-4 md:mx-4'>
           <h4 className='font-bold mb-2'>{author}</h4>
