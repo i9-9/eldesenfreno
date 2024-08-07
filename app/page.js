@@ -5,7 +5,7 @@ import editions from "./editions";
 export default function Home() {
   return (
     <div className="flex flex-col">
-      <h3 className="font-neue-display ml-2 -tracking-wide">INDEX</h3>
+      <h3 className="font-neue-display ml-2 -tracking-wide">Index</h3>
       <div className="flex flex-col md:flex-row">
         {editions.map((edition, index) => (
           <div key={index} id={`${index}`}>

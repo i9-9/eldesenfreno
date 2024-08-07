@@ -17,11 +17,11 @@ const EdItem = ({image, title, author, review, reviewName, link}: EdItemProps) =
         <div className='md:max-w-[500px] pb-4'>
           <h4 className='uppercase font-semibold mb-2'>{title}</h4>
           <h5 className='uppercase text-xs mb-2'>{author}</h5>
-          <p className='text-xs mb-2 leading-4'>{review}</p>
+          <p className='text-xs mb-2 leading-5'>{review}</p>
           <p className='text-xs italic mb-4'>{reviewName}</p>
           <div className='flex'>
-              <button className='border border-white p-2 text-xs mr-2'>Saber más</button>
-              <button className='border border-white p-2 text-xs'>Comprar</button>
+              <button className='border border-white p-2 text-xs mr-2 rounded-md'>Saber más</button>
+              <button className='border border-white p-2 text-xs rounded-md'>Comprar</button>
           </div>
         </div>
     </div>

@@ -40,7 +40,7 @@ const ShopItem = ({
         </div>
         <div className="flex flex-col">
           <p className="text-sm font-bold mb-2">{price}</p>
-          <button className="border border-white p-2 text-xs w-16">
+          <button className="border border-white p-2 text-xs w-16 rounded-md">
             Comprar
           </button>
         </div>

@@ -14,7 +14,7 @@ const Dropdown = () => {
   return (
     <div className="relative md:hidden w-full border border-white border-x-0 font-neue-display">
       <div className='flex w-full px-2 justify-around items-center' id="dropdownDefaultButton" onClick={toggleDropdown}>
-        <p className="text-white w-full text-xl"> MENU </p>
+        <p className="text-white w-full text-xl"> Menu   </p>
         <svg 
           className={`${isOpen ? 'transform rotate-180' : ''}`} 
           width="16" 
@@ -30,13 +30,13 @@ const Dropdown = () => {
 
       {/* Dropdown menu */}
       {isOpen && (
-        <div className="z-20 absolute bg-black divide-y divide-white w-full text-xl">
-            <Link href='/' className='block border border-t-white border-x-0 border-b-0 px-2 py-1 hover:bg-hover-gray' onClick={() => setIsOpen(false)}>INDEX</Link>
-            <Link href='/blog' className='block px-2 py-1 active:bg-hover-gray' onClick={() => setIsOpen(false)}>BLOG</Link>
-            <Link href='/shop' className='block px-2 py-1 active:bg-hover-gray' onClick={() => setIsOpen(false)}>TIENDA</Link>
-            <Link href='/events' className='block px-2 py-1 active:bg-hover-gray' onClick={() => setIsOpen(false)}>EVENTOS</Link>
-            <Link href='/authors' className='block px-2 py-1 active:bg-hover-gray' onClick={() => setIsOpen(false)}>AUTORXS</Link>
-            <Link href='/contact' className='block border border-b-white border-x-0 border-t-0 px-2 py-1 active:bg-hover-gray' onClick={() => setIsOpen(false)}>CONTACTO</Link>
+        <div className="z-20 absolute bg-[#0a0a0a] divide-y divide-white w-full text-xl">
+            <Link href='/' className='block border border-t-white border-x-0 border-b-0 px-2 py-1 hover:bg-hover-gray' onClick={() => setIsOpen(false)}>Index</Link>
+            {/* <Link href='/blog' className='block px-2 py-1 active:bg-hover-gray' onClick={() => setIsOpen(false)}>BLOG</Link> */}
+            <Link href='/shop' className='block px-2 py-1 active:bg-hover-gray' onClick={() => setIsOpen(false)}>Tienda</Link>
+            <Link href='/events' className='block px-2 py-1 active:bg-hover-gray' onClick={() => setIsOpen(false)}>Eventos</Link>
+            <Link href='/authors' className='block px-2 py-1 active:bg-hover-gray' onClick={() => setIsOpen(false)}>Autorxs</Link>
+            <Link href='/contact' className='block border border-b-white border-x-0 border-t-0 px-2 py-1 active:bg-hover-gray' onClick={() => setIsOpen(false)}>Contacto</Link>
         </div>
       )}
     </div>
