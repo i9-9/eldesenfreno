@@ -20,13 +20,13 @@ const Dropdown = () => {
   }, [isOpen]);
 
   return (
-    <div className="relative md:hidden w-full font-neue-display">
+    <div className="relative md:hidden w-full font-neue-display z-[1000]">
       <div
         className="flex w-full px-2 justify-around items-center border-white border-[0.5px] border-x-0"
         id="dropdownDefaultButton"
         onClick={toggleDropdown}
       >
-        <p className="text-white w-full text-base py-2">Menu</p>
+        <p className="text-white w-full text-base py-1">Menu</p>
         <svg
           className={`${
             isOpen ? 'transform rotate-180 transition-all duration-700' : 'transition-all duration-700'
