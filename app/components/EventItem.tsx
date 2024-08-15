@@ -11,7 +11,7 @@ interface EventItemProps {
 }
 const EventItem = ({ flyer, title, location, date, description, eventLink }: EventItemProps) => {
   return (
-    <div className='m-2 max-w-full flex flex-col lg:flex-row font-neue-display'>
+    <div className='ml-1 my-1 max-w-full flex flex-col lg:flex-row font-neue-display'>
         <Image className='mb-2 object-cover saturate-0' src={flyer} alt={title} width={400} height={400}/>
         <div className='md:max-w-[400px] pb-4 md:mx-4'>
           <div className=' p-2 text-xs bg-[#121212]  transition-all duration-700 drop-shadow	 opacity-80 rounded-md'>

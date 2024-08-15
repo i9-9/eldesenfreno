@@ -7,7 +7,7 @@ const Locations = () => {
 
         <h2 className='font-bold text-sm mb-4'>Puntos de venta:</h2>
         <br/>
-        <p className="font-bold pb-6">CABA:</p>
+        <p className="font-bold pb-6 italic">CABA:</p>
         <p className="font-semibold">ARCADIA (CENTRO)</p>
         <p>Marcelo T. de Alvear 1548</p>
   
@@ -46,10 +46,10 @@ const Locations = () => {
         <p>@mantraslibros</p>
   
         <p className="font-semibold mt-4">ARENGA LIBROS</p>
-        <p><a href="https://www.arengalibros.com.ar" className="text-gray-500 hover:underline">https://www.arengalibros.com.ar</a></p>
+        <p><a href="https://www.arengalibros.com.ar" className="text-gray-500 hover:underline mb-4">https://www.arengalibros.com.ar</a></p>
         <p>@arengalibros</p>
   
-        <p className="font-bold mt-6 pb-6">LA PLATA:</p>
+        <p className="font-bold mt-6 pb-6 italic">LA PLATA:</p>
         <p className="font-semibold">HAURISMAKI (CENTRO)</p>
         <p>Calle 11 Nº 1362</p>
   
@@ -59,23 +59,23 @@ const Locations = () => {
         <p className="font-semibold mt-4">CARIÑO (Villa Elisa)</p>
         <p>Calle 419 Nº 2216</p>
   
-        <p className="font-bold mt-6 pb-6">MAR DEL PLATA:</p>
+        <p className="font-bold mt-6 pb-6 italic">MAR DEL PLATA:</p>
         <p className="font-semibold">EL GRAN PEZ</p>
         <p>Santiago del Estero 2052</p>
   
-        <p className="font-bold mt-6 pb-6">ENTRE RÍOS</p>
+        <p className="font-bold mt-6 pb-6 italic">ENTRE RÍOS</p>
         <p className="font-semibold">MALA PALABRA (CONCEPCIÓN DEL URUGUAY)</p>
         <p>Eva Perón 38 - Local 30</p>
   
-        <p className="font-bold mt-6 pb-6">CÓRDOBA</p>
+        <p className="font-bold mt-6 pb-6 italic">CÓRDOBA</p>
         <p className="font-semibold">VOLCÁN AZUL</p>
         <p>Independencia 1247</p>
   
-        <p className="font-bold mt-6 pb-6">SAN LUIS</p>
+        <p className="font-bold mt-6 pb-6 italic">SAN LUIS</p>
         <p className="font-semibold">BRIZNAL (VIRTUAL Y VISITA PACTADA)</p>
         <p>@Briznal.libros</p>
   
-        <p className="font-bold mt-6 pb-6">MENDOZA</p>
+        <p className="font-bold mt-6 pb-6 italic">MENDOZA</p>
         <p className="font-semibold">CARDO RUSO (VIRTUAL)</p>
         
         <Link href='https://www.instagram.com/Cardorusolibros'>
