@@ -5,7 +5,7 @@ import AuthorItem from '../components/AuthorItem';
 const Authors = () => {
   return (
     <div className='flex flex-col font-neue-display'>
-      <h1 className='mx-2 text-md leading-5'>Autorxs</h1>
+      <h1 className='mx-2 text-md leading-5 mb-4'>Autorxs</h1>
           {authors.map((author, index) => (
             <div key={index} id={`${index}`}>
               <AuthorItem 

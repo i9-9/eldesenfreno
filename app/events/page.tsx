@@ -5,7 +5,7 @@ import EventItem from '../components/EventItem'
 const Events = () => {
   return (
     <div className='flex flex-col font-neue-display lg:mr-4 lg:ml-2'>
-      <h3 className="-tracking-wide text-xl mb-2 ml-2">EVENTOS</h3>
+      <h3 className="-tracking-wide text-xs mb-2 ml-2">Eventos</h3>
       <div className='flex flex-col'>
         {events.map((event, index) => (
           <div key={index} id={`${index}`}>
