@@ -27,7 +27,7 @@ const ShopItem = ({
         alt={title}
         width={200}
         height={300}
-        className="border border-white mr-4 w-[400px] lg:w-[200px]"
+        className="rounded-md mr-4 w-[400px] lg:w-[200px]"
       />
       <div className="flex flex-col justify-between">
         <div className="flex flex-col">

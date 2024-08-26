@@ -9,7 +9,7 @@ const MarqueeTitle = () => {
         gradient={false}
         direction="left"
         speed={1}
-        className="text-8xl"
+        className="text-8xl overflow-hidden"
         style={{
         }}
       >

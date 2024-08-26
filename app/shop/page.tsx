@@ -5,8 +5,7 @@ import ShopItem from '../components/ShopItem'
 const Shop = () => {
   return (
     <div className="flex flex-col font-neue-display mr-4 ml-2">
-      <h3 className="tracking-wide text-base leading-5 mb-2">Tienda</h3>
-      <div className="flex flex-col">
+      <div className="flex flex-col pt-4">
         {editions.map((edition, index) => (
           <div key={index} id={`${index}`}>
             <ShopItem

@@ -1,21 +1,43 @@
-import React from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-
+import React from 'react';
+import Link from 'next/link';
 
 const MenuHeader = () => {
   return (
-    <header className="hidden md:fixed top-0 left-0 right-0 z-10 md:flex ml-8 items-center h-8 border-b shrink-0 md:ml-8 bg-[#0a0a0a] divide-y-2 font-neue-display">
-        <div className='flex w-full justify-between text-sm'>
-          <Link href='/' className='hover:underline'>Index</Link>
-          {/* <Link href='/blog' className=' hover:underline'>Blog</Link> */}
-          <Link href='/shop' className='hover:underline'>Tienda</Link>
-          <Link href='/events' className='hover:underline'>Eventos</Link>
-          <Link href='/authors' className='hover:underline'>Autorxs</Link>
-          <Link href='/contact' className='hover:underline pr-4'>Contacto</Link>
-        </div>
+    <header className="hidden md:fixed top-0 left-0 right-0 z-10 md:flex items-center h-10 shrink-0 bg-[#0a0a0a] font-neue-display">
+      <div className="flex w-full justify-between items-center text-sm h-full gap-1">
+        <Link href="/" className="w-full">
+          <button className="p-2 bg-[#2C2C2C] hover:text-[#121212] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs rounded-md w-full">
+            Index
+          </button>
+        </Link>
+        {/* <Link href="/blog" className="w-full">
+          <button className="p-2 bg-[#121212] hover:text-[#121212] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs rounded-md w-full">
+            Blog
+          </button>
+        </Link> */}
+        <Link href="/shop" className="w-full">
+          <button className="p-2 bg-[#2C2C2C] hover:text-[#121212] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs rounded-md w-full">
+            Tienda
+          </button>
+        </Link>
+        <Link href="/events" className="w-full">
+          <button className="p-2 bg-[#2C2C2C] hover:text-[#121212] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs rounded-md w-full">
+            Eventos
+          </button>
+        </Link>
+        <Link href="/authors" className="w-full">
+          <button className="p-2 bg-[#2C2C2C] hover:text-[#121212] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs rounded-md w-full">
+            Autorxs
+          </button>
+        </Link>
+        <Link href="/contact" className="w-full">
+          <button className="p-2 bg-[#2c2c2c] hover:text-[#121212] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs rounded-md w-full">
+            Contacto
+          </button>
+        </Link>
+      </div>
     </header>
-  )
-}
+  );
+};
 
-export default MenuHeader
+export default MenuHeader;
