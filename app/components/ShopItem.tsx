@@ -39,7 +39,7 @@ const ShopItem = ({
           <p className="text-xs italic mb-4">{reviewName}</p>
         </div>
         <div className="flex flex-col w-20">   
-          <button className="p-2 bg-[#121212] hover:text-[#121212] hover:bg-gray-400 transition-all duration-700 drop-shadow	opacity-80 text-xs mr-2 rounded-md hover:text">
+          <button className="p-2 bg-[#2c2c2c]  hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs rounded-md">
             Comprar
           </button>
         </div>

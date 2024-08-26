@@ -22,7 +22,7 @@ const EdItem = ({image, title, author, review, reviewName, link}: EdItemProps) =
           <p className='text-xs italic mb-6'>{reviewName}</p>
           <div className='flex'>
             <Link href={link}>
-              <button className=' p-2 bg-[#121212] hover:text-[#121212] hover:bg-gray-400 transition-all duration-700 drop-shadow	 opacity-80 text-xs mr-2 rounded-md hover:text'>Saber más</button>
+              <button className=' p-2 bg-[#121212] text-white hover:bg-gray-400 transition-all duration-700 drop-shadow	 opacity-80 text-xs mr-2 rounded-md '>Saber más</button>
             </Link>
               
           </div>

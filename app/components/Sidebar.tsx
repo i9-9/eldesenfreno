@@ -10,8 +10,6 @@ const Sidebar = () => {
         <MarqueeTitle />
         <div className="flex flex-col overflow-y-auto hide-scrollbar h-full">
           <Bio />
-          
-          
         </div>
       </div>
     </aside>
