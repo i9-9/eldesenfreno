@@ -4,9 +4,8 @@ import editions from "./editions";
 
 export default function Home() {
   return (
-    <div className="flex flex-col pt-4">
-      {/* <h3 className="font-neue-display ml-2 -tracking-wide">Index</h3> */}
-      <div className="flex flex-col md:flex-row rounded-md bg-[#0B0B0B] pt-6">
+    <div className="flex flex-col pt-2">
+      <div className="flex flex-col md:flex-row rounded-md bg-[#0B0B0B] pt-2">
         {editions.map((edition, index) => (
           <div key={index} id={`${index}`}>
             <EdItem
