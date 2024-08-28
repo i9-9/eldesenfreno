@@ -5,7 +5,7 @@ const ContactForm = () => {
   return (
     <div className="flex flex-col items-start pt-2 px-2 max-w-lg mx-0 rounded-lg shadow-lg">
       <div className='flex flex-col'>
-        <p className="text-xs text-white mb-2">
+        <p className="text-xs text-white mb-2 font-bold">
           Dudas, consultas, propuestas
         </p>
         <Link href="mailto:eldesenfreno@gmail.com" className="text-white py-2 hover:underline text-xs">
