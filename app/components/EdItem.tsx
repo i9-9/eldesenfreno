@@ -15,7 +15,7 @@ const EdItem = ({image, title, author, review, reviewName, link}: EdItemProps) =
   return (
     <div className='m-2 font-neue-display'>
         <Image className= 'rounded-md mb-2 drop-shadow-md border border-[#666666] border-opacity-20 ' src={image} alt={title} width={500} height={600}/>
-        <div className='md:max-w-[500px] pb-4'>
+        <div className='md:max-w-[500px] pb-4 px-2'>
           <h4 className='font-semibold'>{title}</h4>
           <h5 className=' text-xs mb-4 font-semibold'>{author}</h5>
           <p className='text-xs mb-4 leading-5'>{review}</p>
