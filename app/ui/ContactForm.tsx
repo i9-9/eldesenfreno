@@ -10,7 +10,7 @@ const ContactForm = () => {
         </p>
         <Link href="mailto:eldesenfreno@gmail.com" className="text-white py-2 hover:underline text-xs">
         <button type="submit" className="p-2 bg-[#2C2C2C] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs w-full bg-opacity-10 border border-white border-opacity-20 rounded-lg">
-          eldesenfreno@gmail.com
+          eldesenfreno@gmail.contacto
         </button>
         </Link>
       </div>
