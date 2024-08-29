@@ -5,6 +5,7 @@ import MobileHeader from "./components/MobileHeader";
 import Sidebar from "./components/Sidebar";
 import Footer from "./components/Footer";
 import Head from "next/head";
+import type { Metadata } from "next";
 
 const aggie = localFont({
   src: [
@@ -16,18 +17,20 @@ const aggie = localFont({
   variable: "--font-aggie",
 });
 
-export const metadata = {
-  stylesheet: "https://use.typekit.net/maa8yuy.css",
+export const metadata: Metadata = {
   title: "El Desenfreno Ediciones",
   description: "Editorial argentina de poesía.",
+  icons: {
+    icon: "/favicon.ico",
+  },
+  other: {
+    stylesheet: "https://use.typekit.net/maa8yuy.css",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <Head>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <body
         className={aggie.className}
         style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
