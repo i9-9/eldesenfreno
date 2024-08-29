@@ -3,7 +3,6 @@ import emailjs from '@emailjs/browser';
 import Link from 'next/link';
 
 const ContactForm = () => {
-  // Define estados separados para cada campo del formulario
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -14,12 +13,11 @@ const ContactForm = () => {
     e.preventDefault();
     setSending(true);
 
-    // Utiliza emailjs para enviar el formulario
+    // Enviar el formulario usando emailjs
     emailjs.sendForm('service_jo40tzl', 'template_5fep019', e.target, 'cWBowbfYgWXQ64nWu')
       .then((result) => {
         console.log(result.text);
         setSuccess(true);
-        // Limpia los campos del formulario
         setName('');
         setEmail('');
         setMessage('');
@@ -51,8 +49,8 @@ const ContactForm = () => {
           type="text"
           id="name"
           name="from_name"
-          value={name} // Usa el estado `name` como el valor del input
-          onChange={(e) => setName(e.target.value)} // Actualiza el estado `name`
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           className="p-2 mb-4 bg-[#121212] border border-white border-opacity-20 rounded-md text-white focus:border-gray-400 focus:outline-none"
           placeholder="Su nombre"
           required
@@ -62,8 +60,8 @@ const ContactForm = () => {
           type="email"
           id="email"
           name="from_email"
-          value={email} // Usa el estado `email` como el valor del input
-          onChange={(e) => setEmail(e.target.value)} // Actualiza el estado `email`
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="p-2 mb-4 bg-[#121212] border border-white border-opacity-20 rounded-md text-white focus:border-gray-400 focus:outline-none"
           placeholder="Su correo electrónico"
           required
@@ -72,13 +70,14 @@ const ContactForm = () => {
         <textarea
           id="message"
           name="message"
-          value={message} // Usa el estado `message` como el valor del textarea
-          onChange={(e) => setMessage(e.target.value)} // Actualiza el estado `message`
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
           rows={4}
           className="p-2 mb-4 bg-[#121212] border border-white border-opacity-20 rounded-md text-white focus:border-gray-400 focus:outline-none"
           placeholder="Escriba su mensaje aquí"
           required
         />
+        <input type="hidden" name="reply_to" value={email} /> {/* Campo oculto para reply_to */}
         <button
           type="submit"
           className={`p-2 mt-2 ${sending ? 'bg-gray-600 cursor-not-allowed' : 'bg-[#2C2C2C] hover:bg-gray-400'} transition-all duration-700 text-xs w-full text-white border border-white border-opacity-20 rounded-lg`}
