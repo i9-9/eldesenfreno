@@ -1,6 +1,6 @@
-import React from 'react'
-import events from '../events'
-import EventItem from '../components/EventItem'
+import React from 'react';
+import events from '../events'; // Adjust the path if necessary
+import EventItem from '../components/EventItem'; // Adjust the path if necessary
 
 const Events = () => {
   return (
@@ -10,17 +10,19 @@ const Events = () => {
           <div key={index} id={`${index}`}>
             <EventItem
               flyer={event.flyer}
+              flyerHover={event.flyerHover} // Pass the hover image prop
               title={event.title}
               location={event.location}
               date={event.date}
               description={event.description}
               eventLink={event.eventLink}
-              />
+              isFirstEvent={index === 0} // Set true for the first event
+            />
           </div>
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Events
+export default Events;
