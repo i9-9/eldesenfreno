@@ -4,7 +4,7 @@ import React from 'react';
 interface AuthorItemProps {
     image: string;
     author: string;
-    description: string;
+    description: React.ReactNode; // Cambiado a React.ReactNode
     link: string;
 }
 
