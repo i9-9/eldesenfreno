@@ -5,12 +5,13 @@ import Image from 'next/image';
 
 interface EventItemProps {
     flyer: string;
-    flyerHover?: string; // Optional hover image
+    flyerHover?: string;
     title: string;
     location: string;
     date: string;
     description: string;
     eventLink: string;
+    isFirstEvent?: boolean;
 }
 
 const EventItem = ({
@@ -21,6 +22,7 @@ const EventItem = ({
     date,
     description,
     eventLink,
+    isFirstEvent, // Asegúrate de incluir esto
 }: EventItemProps) => {
     const [isHovered, setIsHovered] = useState(false);
 
