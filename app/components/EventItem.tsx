@@ -22,19 +22,19 @@ const EventItem = ({
     date,
     description,
     eventLink,
-    isFirstEvent, // Asegúrate de incluir esto
+    isFirstEvent,
 }: EventItemProps) => {
     const [isHovered, setIsHovered] = useState(false);
 
     return (
         <div className="ml-1 my-1 flex flex-col lg:flex-row font-neue-display">
             <div
-                className="relative w-full lg:w-auto"
+                className="relative w-full lg:w-auto p-2"
                 onMouseEnter={() => flyerHover && setIsHovered(true)}
                 onMouseLeave={() => flyerHover && setIsHovered(false)}
             >
                 <Image
-                    className={`mb-2 px-2 object-cover rounded-md transition-opacity duration-700 ${isHovered ? 'opacity-0' : 'opacity-100'}`}
+                    className="mb-2 object-cover transition-opacity duration-700"
                     src={flyer}
                     alt={title}
                     width={400}
@@ -42,7 +42,7 @@ const EventItem = ({
                 />
                 {flyerHover && (
                     <Image
-                        className={`absolute top-0 left-0 mb-2 px-2 object-cover rounded-md transition-opacity duration-1000 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+                        className={`absolute top-0 left-0 mb-2 object-cover transition-opacity duration-1000 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
                         src={flyerHover}
                         alt={`${title} hover`}
                         width={400}
@@ -50,7 +50,7 @@ const EventItem = ({
                     />
                 )}
             </div>
-            <div className="md:max-w-[400px] pb-4 md:mx-4">
+            <div className="w-full lg:max-w-[400px] pb-4 md:mx-4">
                 <div className="p-2 mx-2 md:mx-0 bg-[#2c2c2c] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs rounded-md">
                     <h4 className="font-semibold mb-2">{title}</h4>
                     <p className="text-xs">{location}</p>
