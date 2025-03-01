@@ -3,18 +3,21 @@ import React from 'react'
 import Link from 'next/link';
 
 interface EdItemProps {
-    image: string;
+    image: string | null;
     title: string;
     author: string;
     review: string;
     reviewName: string;
     link: string;
 }
+
 const EdItem = ({image, title, author, review, reviewName, link}: EdItemProps) => {
 
   return (
     <div className='m-2 font-neue-display'>
-        <Image className= 'rounded-md mb-2 drop-shadow-md border border-[#666666] border-opacity-20' src={image} alt={title} width={500} height={600}/>
+        {image && (
+          <Image className= 'rounded-md mb-2 drop-shadow-md border border-[#666666] border-opacity-20' src={image} alt={title} width={500} height={600}/>
+        )}
         <div className='md:max-w-[500px] pb-4 px-2'>
           <h4 className='font-semibold text-lg '>{title}</h4>
           <h5 className='text-xs mb-4'>{author}</h5>

@@ -9,7 +9,7 @@ const events = [
     },
     {
         "flyer": "/funeral.png",
-        "flyerHover": "/funeral2.png", // Keep hover image for this event
+        "flyerHover": "/funeral2.png", 
         "title": "El Desenfreno + Cine Espejo presentan: Funeral Parade of Roses",
         "location": "Casa Dasein (Av. Estado de Israel 4116)",
         "date": "Sábado 16 de marzo - 20:00hs",
