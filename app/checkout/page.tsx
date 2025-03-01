@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { useCarrito } from '../../context/CarritoContext';
+"use client"
 
+import { useState } from 'react';
+import { useCarrito } from '../context/CarritoContext'
 export default function Checkout() {
   const { productos } = useCarrito();
   const [loading, setLoading] = useState(false);
