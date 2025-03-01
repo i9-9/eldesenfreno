@@ -39,3 +39,12 @@
 //     </div>
 //   );
 // }
+
+// Make sure you have a default export
+export default function CheckoutPage() {
+  return (
+    <div>
+      {/* Your checkout page content */}
+    </div>
+  )
+}
