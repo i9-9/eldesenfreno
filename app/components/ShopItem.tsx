@@ -23,13 +23,15 @@ const ShopItem = ({
 }: ShopItemProps) => {
   return (
     <div className="flex flex-col lg:flex-row mb-4 shadow-sm">
-      <Image
-        src={image}
-        alt={title}
-        width={400}
-        height={300}
-        className="rounded-md w-full lg:w-[200px] mb-4 lg:mb-0"
-      />
+      <Link href={link}>
+        <Image
+          src={image}
+          alt={title}
+          width={500}
+          height={600}
+          className="rounded-md mb-2 drop-shadow-md border border-[#666666] border-opacity-20 object-contain w-full"
+        />
+      </Link>
       <div className="flex flex-col justify-between px-4 md:pt-2">
         <div className="flex flex-col">
           <h4 className="font-semibold">{title}</h4>

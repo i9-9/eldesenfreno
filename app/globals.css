@@ -54,3 +54,11 @@ body {
   scrollbar-width: none; /* Firefox */
 }
 
+/* Add this to your global CSS file */
+.scrollbar-hidden {
+  scrollbar-width: none; /* For Firefox */
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}

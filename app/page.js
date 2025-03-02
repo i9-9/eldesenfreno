@@ -40,7 +40,7 @@ export default function Home() {
 
         {/* Remaining Books in Pairs */}
         {reversedEditions.slice(1).map((edition, index) => (
-          <div key={index} className="rounded-md overflow-hidden">
+          <div key={index} className="rounded-md overflow-hidden max-w-[500px] w-full">
             <EdItem
               image={edition.image}
               title={edition.title}
