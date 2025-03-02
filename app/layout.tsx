@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className="overflow-x-hidden">
       <body
         className={aggie.className}
         style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}

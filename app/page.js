@@ -13,19 +13,19 @@ export default function Home() {
         {reversedEditions.length > 0 && (
           <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 items-start rounded-md">
             {/* Image on the left */}
-            <div className="rounded-md overflow-hidden">
+            <div className="rounded-md overflow-hidden max-w-[500px] w-full">
               {reversedEditions[0].image && (
                 <Image
                   src={reversedEditions[0].image}
                   alt={reversedEditions[0].title}
                   width={500}
                   height={600}
-                  className="rounded-md mb-2 drop-shadow-md border border-[#666666] border-opacity-20"
+                  className="rounded-md mb-2 drop-shadow-md border border-[#666666] border-opacity-20 object-contain w-full"
                 />
               )}
             </div>
             {/* EdItem for the content on the right */}
-            <div className="px-2">
+            <div className="px-2 w-full max-w-[500px]">
               <EdItem
                 image={null} // Ensures the image isn't rendered again inside EdItem
                 title={reversedEditions[0].title}
