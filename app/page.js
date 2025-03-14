@@ -13,7 +13,7 @@ export default function Home() {
         {reversedEditions.length > 0 && (
           <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 items-start rounded-md">
             {/* Image on the left */}
-            <div className="rounded-md overflow-hidden max-w-[500px] w-full">
+            <div className="m-2 font-neue-display">
               {reversedEditions[0].image && (
                 <Image
                   src={reversedEditions[0].image}
@@ -25,9 +25,9 @@ export default function Home() {
               )}
             </div>
             {/* EdItem for the content on the right */}
-            <div className="px-2 w-full max-w-[500px]">
+            <div className="m-2 font-neue-display">
               <EdItem
-                image={null} // Ensures the image isn't rendered again inside EdItem
+                image={null}
                 title={reversedEditions[0].title}
                 author={reversedEditions[0].author}
                 review={reversedEditions[0].review}
@@ -40,7 +40,7 @@ export default function Home() {
 
         {/* Remaining Books in Pairs */}
         {reversedEditions.slice(1).map((edition, index) => (
-          <div key={index} className="rounded-md overflow-hidden max-w-[500px] w-full">
+          <div key={index}>
             <EdItem
               image={edition.image}
               title={edition.title}

@@ -72,7 +72,7 @@ const authors = [
         author: 'María Magdalena',
         description: (
             <>
-                <br />María Magdalena (1984, Buenos Aires). Poeta y escritora. Psicoanalista.
+                (1984, Buenos Aires). Poeta y escritora. Psicoanalista.
                 Editora en <i>Las Furias</i>.<br /><br />Publicó los libros de poesía <i>Spleen</i> (2013, Letra
                 Viva), <i>Los nombres del padre</i> (2016, Buenos Aires Poetry), la plaquette
                 artesanal <i>La pequeña muerte</i> (2015), <i>Continente negro</i> (2018, Alción; 2021, el

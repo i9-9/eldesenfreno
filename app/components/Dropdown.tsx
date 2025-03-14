@@ -21,7 +21,7 @@ const Dropdown = () => {
   return (
     <div className="relative md:hidden w-full font-neue-display z-[1000]">
       <div
-        className="flex w-full px-2 justify-around items-center rounded-md bg-gray"
+        className="flex w-full justify-around items-center rounded-md bg-gray"
         id="dropdownDefaultButton"
         onClick={toggleDropdown}
       >
