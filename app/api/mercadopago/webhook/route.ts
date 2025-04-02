@@ -58,8 +58,13 @@ async function sendCustomerConfirmation(orderData: {
 }) {
   console.log('Preparando email de confirmación para el cliente:', orderData.customerEmail);
   
+  if (!orderData.customerEmail) {
+    console.error('No se encontró email del cliente');
+    return;
+  }
+  
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: `"El Desenfreno Ediciones" <${process.env.EMAIL_USER}>`,
     to: orderData.customerEmail,
     subject: `¡Gracias por tu compra en El Desenfreno Ediciones! #${orderData.paymentId}`,
     html: `
@@ -136,7 +141,6 @@ async function sendCustomerConfirmation(orderData: {
       console.error('Error name:', error.name);
       console.error('Error message:', error.message);
     }
-    throw error;
   }
 }
 
@@ -318,12 +322,9 @@ export async function POST(req: Request) {
     // Solo enviar emails si el pago está aprobado
     if (paymentInfo.status === 'approved') {
       console.log('Pago aprobado, enviando notificaciones');
-      console.log('Datos del comprador:', {
-        nombre: `${payer.first_name || ''} ${payer.last_name || ''}`.trim(),
-        email: payer.email || '',
-        teléfono: additional_info?.payer?.phone?.number || '',
-        dirección: additional_info?.shipments?.receiver_address || {}
-      });
+      console.log('Datos completos del pago:', JSON.stringify(paymentInfo, null, 2));
+      console.log('Datos del pagador:', JSON.stringify(payer, null, 2));
+      console.log('Datos adicionales:', JSON.stringify(additional_info, null, 2));
       
       // Extraer los items de la preferencia
       const items = additional_info?.items || [];
@@ -349,6 +350,8 @@ export async function POST(req: Request) {
         date: new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' }),
         preferenceDetails: preferenceDetails
       };
+      
+      console.log('Datos del pedido a enviar:', JSON.stringify(orderData, null, 2));
       
       // Enviar notificación al propietario
       console.log('Enviando notificación al propietario:', process.env.OWNER_EMAIL);
