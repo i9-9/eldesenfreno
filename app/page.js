@@ -27,12 +27,14 @@ export default function Home() {
             {/* EdItem for the content on the right */}
             <div className="m-2 font-neue-display">
               <EdItem
+                id={reversedEditions[0].id}
                 image={null}
                 title={reversedEditions[0].title}
                 author={reversedEditions[0].author}
                 review={reversedEditions[0].review}
                 reviewName={reversedEditions[0].reviewName}
                 link={reversedEditions[0].link}
+                price={reversedEditions[0].price}
               />
             </div>
           </div>
@@ -42,12 +44,14 @@ export default function Home() {
         {reversedEditions.slice(1).map((edition, index) => (
           <div key={index}>
             <EdItem
+              id={edition.id}
               image={edition.image}
               title={edition.title}
               author={edition.author}
               review={edition.review}
               reviewName={edition.reviewName}
               link={edition.link}
+              price={edition.price}
             />
           </div>
         ))}

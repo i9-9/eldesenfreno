@@ -9,6 +9,7 @@ const Shop = () => {
         {editions.slice().reverse().map((edition, index) => (
           <div key={index} id={`${index}`}>
             <ShopItem
+              id={edition.id}
               image={edition.image}
               title={edition.title}
               author={edition.author}

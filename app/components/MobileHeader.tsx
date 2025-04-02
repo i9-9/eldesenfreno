@@ -21,7 +21,9 @@ const MobileHeader = () => {
           </h5>
         </Marquee>
       </Link>
-      <Dropdown />
+      <div className='flex justify-between items-center w-full px-2 py-2'>
+        <Dropdown />
+      </div>
     </div>
   )
 }
