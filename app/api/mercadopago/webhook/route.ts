@@ -277,23 +277,17 @@ export async function POST(req: Request) {
       console.log('Notificaciones enviadas correctamente');
     } else {
       console.log('Pago no aprobado, estado:', paymentInfo.status);
-      return NextResponse.json({ 
-        message: 'Pago no aprobado', 
-        status: paymentInfo.status 
-      });
     }
     
-    return NextResponse.json({ success: true, message: 'Webhook procesado correctamente' });
-    
+    return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error('Error al procesar webhook:', error);
+    console.error('Error en el webhook:', error);
     console.error('Stack trace:', error.stack);
-    
-    return NextResponse.json({
-      success: false,
-      error: 'Error al procesar la notificación',
-      details: error.message
-    }, { status: 500 });
+    if (error instanceof Error) {
+      console.error('Error name:', error.name);
+      console.error('Error message:', error.message);
+    }
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
