@@ -23,7 +23,7 @@ export async function GET() {
       subject: 'Test de notificación de pedido',
       html: `
         <h1 style="color: #333; font-family: Arial, sans-serif;">¡Gracias por tu compra!</h1>
-        <p>Hola Cliente de Prueba,</p>
+        <p>Hola ${customerEmail.split('@')[0]},</p>
         <p>Tu pedido ha sido confirmado. Acá te dejamos los detalles:</p>
         
         <p><strong>Número de pedido:</strong> TEST-123456</p>
