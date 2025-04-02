@@ -258,7 +258,7 @@ export async function POST(req: Request) {
       };
       
       // Enviar notificación al propietario
-      console.log('Enviando notificación al propietario...');
+      console.log('Enviando notificación al propietario:', process.env.OWNER_EMAIL);
       await sendOrderNotification(orderData);
       console.log('Notificación al propietario enviada');
 
