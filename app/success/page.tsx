@@ -12,13 +12,13 @@ export default function SuccessPage() {
   useEffect(() => {
     // Obtener los parámetros de la URL
     const params = new URLSearchParams(window.location.search);
-    const paymentId = params.get('payment_id');
-    const status = params.get('status');
+    const collectionId = params.get('collection_id');
+    const collectionStatus = params.get('collection_status');
     
     // Limpiar el carrito cuando llegamos a la página de éxito
     clearCart();
 
-    if (status === 'success' && paymentId) {
+    if (collectionStatus === 'approved' && collectionId) {
       setStatus('success');
       setMessage('¡Gracias por tu compra! Te enviaremos un email con los detalles de tu pedido.');
     } else {

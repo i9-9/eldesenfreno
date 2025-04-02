@@ -12,96 +12,6 @@ const transporter = nodemailer.createTransport({
   debug: true, // Habilitar logs de nodemailer
 });
 
-export async function POST(req: Request) {
-  try {
-    console.log('Webhook recibido');
-    
-    // Obtener los datos de la notificación
-    const data = await req.text();
-    console.log('Datos del webhook:', data);
-    
-    const params = new URLSearchParams(data);
-    const type = params.get('type');
-    const dataId = params.get('data.id');
-    
-    console.log('Tipo de notificación:', type);
-    console.log('ID de datos:', dataId);
-    
-    // Procesar diferentes tipos de notificaciones
-    if (type === 'payment' || type === 'order' || (!type && dataId)) {
-      console.log('Procesando notificación de tipo:', type || 'desconocido');
-    } else {
-      console.log('Ignorando notificación de tipo:', type);
-      return NextResponse.json({ message: 'Notificación recibida pero no es de pago u orden' });
-    }
-    
-    if (!dataId) {
-      console.error('ID no proporcionado');
-      return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
-    }
-    
-    // Obtener detalles del pago
-    const token = process.env.MP_ACCESS_TOKEN;
-    if (!token) {
-      console.error('Token de acceso no configurado');
-      return NextResponse.json({ error: 'Token de acceso no configurado' }, { status: 500 });
-    }
-    
-    console.log('Configurando cliente de MercadoPago');
-    const client = new MercadoPagoConfig({
-      accessToken: token,
-    });
-    
-    const payment = new Payment(client);
-    console.log('Obteniendo detalles del pago:', dataId);
-    const paymentInfo = await payment.get({ id: dataId });
-    
-    console.log('Información del pago:', JSON.stringify(paymentInfo, null, 2));
-    
-    // Extraer información del cliente y del pedido
-    const { payer, additional_info, transaction_details } = paymentInfo;
-    
-    // Enviar correo electrónico al dueño
-    if (paymentInfo.status === 'approved') {
-      console.log('Pago aprobado, enviando notificación');
-      
-      // Extraer los items de la preferencia
-      const items = additional_info?.items || [];
-      const total = items.reduce((sum: number, item: any) => 
-        sum + (item.unit_price * item.quantity), 0
-      );
-      
-      const orderData = {
-        paymentId: dataId,
-        customerName: additional_info?.payer?.first_name + ' ' + additional_info?.payer?.last_name,
-        customerEmail: payer?.email || '',
-        customerPhone: additional_info?.payer?.phone?.number,
-        shippingAddress: additional_info?.shipments?.receiver_address,
-        items: items,
-        total: total,
-        date: new Date().toLocaleString()
-      };
-      
-      console.log('Datos de la orden:', JSON.stringify(orderData, null, 2));
-      await sendOrderNotification(orderData);
-    } else {
-      console.log('Pago no aprobado, estado:', paymentInfo.status);
-    }
-    
-    return NextResponse.json({ success: true, message: 'Webhook procesado correctamente' });
-    
-  } catch (error: any) {
-    console.error('Error al procesar webhook:', error);
-    console.error('Stack trace:', error.stack);
-    
-    return NextResponse.json({
-      success: false,
-      error: 'Error al procesar la notificación',
-      details: error.message
-    }, { status: 500 });
-  }
-}
-
 async function sendOrderNotification(orderData: {
   paymentId: string;
   customerName: string;
@@ -182,6 +92,117 @@ async function sendOrderNotification(orderData: {
       console.error('Error message:', error.message);
     }
     throw error; // Re-lanzar el error para que sea manejado por el llamador
+  }
+}
+
+export async function POST(req: Request) {
+  try {
+    console.log('=== WEBHOOK RECIBIDO ===');
+    console.log('Headers:', JSON.stringify(Object.fromEntries(req.headers.entries()), null, 2));
+    
+    // Obtener los datos de la notificación
+    const data = await req.text();
+    console.log('Datos raw del webhook:', data);
+    
+    const params = new URLSearchParams(data);
+    console.log('Parámetros parseados:', JSON.stringify(Object.fromEntries(params.entries()), null, 2));
+    
+    const type = params.get('type');
+    const dataId = params.get('data.id');
+    
+    console.log('Tipo de notificación:', type);
+    console.log('ID de datos:', dataId);
+    
+    // Procesar diferentes tipos de notificaciones
+    if (type === 'payment' || type === 'order' || (!type && dataId)) {
+      console.log('Procesando notificación de tipo:', type || 'desconocido');
+    } else {
+      console.log('Ignorando notificación de tipo:', type);
+      return NextResponse.json({ message: 'Notificación recibida pero no es de pago u orden' });
+    }
+    
+    if (!dataId) {
+      console.error('ID no proporcionado');
+      return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
+    }
+    
+    // Obtener detalles del pago
+    const token = process.env.MP_ACCESS_TOKEN;
+    if (!token) {
+      console.error('Token de acceso no configurado');
+      return NextResponse.json({ error: 'Token de acceso no configurado' }, { status: 500 });
+    }
+    
+    console.log('Configurando cliente de MercadoPago');
+    const client = new MercadoPagoConfig({
+      accessToken: token,
+    });
+    
+    const payment = new Payment(client);
+    console.log('Obteniendo detalles del pago:', dataId);
+    const paymentInfo = await payment.get({ id: dataId });
+    
+    console.log('Información del pago:', JSON.stringify(paymentInfo, null, 2));
+    
+    // Extraer información del cliente y del pedido
+    const { payer, additional_info, transaction_details } = paymentInfo;
+    
+    // Verificar que tenemos toda la información necesaria
+    if (!payer || !additional_info) {
+      console.error('Faltan datos del pago:', { payer, additional_info });
+      return NextResponse.json({ error: 'Datos incompletos del pago' }, { status: 400 });
+    }
+    
+    // Solo enviar email si el pago está aprobado
+    if (paymentInfo.status === 'approved') {
+      console.log('Pago aprobado, enviando notificación');
+      
+      // Extraer los items de la preferencia
+      const items = additional_info?.items || [];
+      const total = items.reduce((sum: number, item: any) => 
+        sum + (item.unit_price * item.quantity), 0
+      );
+      
+      const orderData = {
+        paymentId: dataId,
+        customerName: `${payer.first_name || ''} ${payer.last_name || ''}`.trim(),
+        customerEmail: payer.email || '',
+        customerPhone: additional_info?.payer?.phone?.number || '',
+        shippingAddress: additional_info?.shipments?.receiver_address || {},
+        items: items,
+        total: total,
+        date: new Date().toLocaleString()
+      };
+      
+      console.log('Datos de la orden:', JSON.stringify(orderData, null, 2));
+      
+      // Verificar que tenemos los datos mínimos necesarios
+      if (!orderData.customerName || !orderData.customerEmail) {
+        console.error('Faltan datos del cliente:', orderData);
+        return NextResponse.json({ error: 'Datos incompletos del cliente' }, { status: 400 });
+      }
+      
+      await sendOrderNotification(orderData);
+      console.log('Notificación enviada correctamente');
+    } else {
+      console.log('Pago no aprobado, estado:', paymentInfo.status);
+      return NextResponse.json({ 
+        message: 'Pago no aprobado', 
+        status: paymentInfo.status 
+      });
+    }
+    
+    return NextResponse.json({ success: true, message: 'Webhook procesado correctamente' });
+    
+  } catch (error: any) {
+    console.error('Error al procesar webhook:', error);
+    console.error('Stack trace:', error.stack);
+    
+    return NextResponse.json({
+      success: false,
+      error: 'Error al procesar la notificación',
+      details: error.message
+    }, { status: 500 });
   }
 }
 
