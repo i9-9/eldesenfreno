@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useCart } from '../context/CartContext'
 
 const Dropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { totalItems } = useCart();
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -82,6 +84,18 @@ const Dropdown = () => {
           onClick={() => setIsOpen(false)}
         >
           Contacto
+        </Link>
+        <Link
+          href="/cart"
+          className="block w-full text-left px-2 py-3 mt-2 rounded-md transition-all duration-700 text-xs text-white hover:bg-gray-400 bg-[#2C2C2C] bg-opacity-10 border border-white border-opacity-20 backdrop-blur-lg shadow-lg relative"
+          onClick={() => setIsOpen(false)}
+        >
+          Carrito
+          {totalItems > 0 && (
+            <span className="absolute top-3 right-3 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
+              {totalItems}
+            </span>
+          )}
         </Link>
       </div>
     </div>

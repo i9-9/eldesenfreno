@@ -1,8 +1,10 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import AddToCartButton from './AddToCartButton';
 
 interface ShopItemProps {
+  id: string;
   image: string;
   title: string;
   author: string;
@@ -13,6 +15,7 @@ interface ShopItemProps {
 }
 
 const ShopItem = ({
+  id,
   image,
   title,
   author,
@@ -22,31 +25,33 @@ const ShopItem = ({
   link,
 }: ShopItemProps) => {
   return (
-    <div className="flex flex-col lg:flex-row mb-4 shadow-sm">
-      <Link href={link}>
-        <Image
-          src={image}
-          alt={title}
-          width={500}
-          height={600}
-          className="rounded-md mb-2 drop-shadow-md border border-[#666666] border-opacity-20 object-contain w-full"
-        />
-      </Link>
-      <div className="flex flex-col justify-between px-4 md:pt-2">
-        <div className="flex flex-col">
-          <h4 className="font-semibold">{title}</h4>
-          <h5 className="text-xs mb-2 font-semibold">{author}</h5>
-          <p className="text-xs mb-4 leading-4 tracking-wide max-w-[600px]">
-            {review}
-          </p>
-          <p className="text-xs italic mb-4">{reviewName}</p>
-        </div>
-        <div className="flex flex-col w-full mt-4">   
-          <Link href={link}>
-            <button className="w-full p-2 bg-[#2c2c2c] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs rounded-md">
-              Comprar
-            </button>
+    <div className="mb-8 p-4 bg-[#0B0B0B] rounded-lg">
+      <div className="flex flex-col md:flex-row">
+        <div className="md:w-1/3 mb-4 md:mb-0">
+          <Link href={`/product/${id}`}>
+            <Image
+              src={image}
+              alt={title}
+              width={300}
+              height={400}
+              className="rounded-md mb-2 drop-shadow-md border border-[#666666] border-opacity-20 object-contain w-full"
+            />
           </Link>
+        </div>
+        <div className="md:w-2/3 md:pl-6">
+          <h2 className="text-xl font-bold mb-2">{title}</h2>
+          <h3 className="text-md mb-2">{author}</h3>
+          <p className="text-lg font-bold mb-4">${price}</p>
+          <p className="text-sm mb-4 line-clamp-3">{review}</p>
+          <div className="flex space-x-3">
+            <Link href={`/product/${id}`}>
+              <button className="p-2 bg-[#121212] text-white hover:bg-gray-400 transition-all 
+              duration-700 drop-shadow opacity-80 text-xs rounded-md">
+                Ver detalles
+              </button>
+            </Link>
+            <AddToCartButton id={id} title={title} price={price} image={image} />
+          </div>
         </div>
       </div>
     </div>

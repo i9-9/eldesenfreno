@@ -11,12 +11,14 @@
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@next/font": "^14.1.0",
+    "@types/mercadopago": "^1.5.11",
     "emailjs-com": "^3.2.0",
     "gray-matter": "^4.0.3",
     "gsap": "^3.12.5",
     "markdown-it": "^14.1.0",
-    "mercadopago": "^2.3.0",
+    "mercadopago": "^2.0.5",
     "next": "14.0.3",
+    "nodemailer": "^6.10.0",
     "react": "^18",
     "react-dom": "^18",
     "react-fast-marquee": "^1.6.4",
@@ -25,6 +27,7 @@
   },
   "devDependencies": {
     "@types/node": "20.11.5",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "18.2.48",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",

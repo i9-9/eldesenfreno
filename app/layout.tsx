@@ -3,9 +3,12 @@ import localFont from "next/font/local";
 import MenuHeader from "./components/MenuHeader";
 import MobileHeader from "./components/MobileHeader";
 import Sidebar from "./components/Sidebar";
-import Footer from "./components/Footer";
 import Head from "next/head";
 import type { Metadata } from "next";
+import { Inter } from 'next/font/google'
+import { CartProvider } from './context/CartContext'
+import { ToastProvider } from './context/ToastContext'
+import ToastProviderWrapper from './components/ToastProviderWrapper'
 
 const aggie = localFont({
   src: [
@@ -16,6 +19,8 @@ const aggie = localFont({
   ],
   variable: "--font-aggie",
 });
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: "El Desenfreno Ediciones",
@@ -35,13 +40,16 @@ export default function RootLayout({ children }) {
         className={aggie.className}
         style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >
-        <MenuHeader />
-        <MobileHeader />
-        <div className="flex flex-1 flex-col">
-          <Sidebar />
-          <main className="md:ml-[500px] md:mt-10 md:flex-1">{children}</main>
-        </div>
-        {/* <Footer /> */}
+        <CartProvider>
+          <ToastProviderWrapper>
+            <MenuHeader />
+            <MobileHeader />
+            <div className="flex flex-1 flex-col">
+              <Sidebar />
+              <main className="md:ml-[500px] md:mt-10 md:flex-1">{children}</main>
+            </div>
+          </ToastProviderWrapper>
+        </CartProvider>
       </body>
     </html>
   );
