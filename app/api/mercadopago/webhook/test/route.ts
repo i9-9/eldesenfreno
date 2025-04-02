@@ -15,7 +15,7 @@ export async function GET() {
   try {
     // Simular datos de un pago exitoso
     const paymentData = {
-      id: 'TEST-' + Date.now(),
+      id: 'MP-' + Date.now(),
       status: 'approved',
       payer: {
         first_name: 'Ivan',
