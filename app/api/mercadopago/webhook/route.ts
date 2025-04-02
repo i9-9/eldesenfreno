@@ -131,6 +131,11 @@ async function sendCustomerConfirmation(orderData: {
   
   try {
     console.log('Enviando email de confirmación al cliente...');
+    console.log('Configuración del email:', {
+      from: process.env.EMAIL_USER,
+      to: orderData.customerEmail,
+      subject: `¡Gracias por tu compra en El Desenfreno Ediciones! #${orderData.paymentId}`
+    });
     const info = await transporter.sendMail(mailOptions);
     console.log('Email de confirmación enviado correctamente:', info.messageId);
     console.log('Respuesta del servidor SMTP:', info.response);
@@ -332,10 +337,17 @@ export async function POST(req: Request) {
         sum + (item.unit_price * item.quantity), 0
       );
       
+      // Verificar el email del pagador
+      console.log('Email del pagador:', payer.email);
+      if (!payer.email) {
+        console.error('No se encontró email del pagador en los datos de MercadoPago');
+        return NextResponse.json({ error: 'Email del pagador no encontrado' }, { status: 400 });
+      }
+      
       const orderData = {
         paymentId: dataId,
         customerName: `${payer.first_name || ''} ${payer.last_name || ''}`.trim(),
-        customerEmail: payer.email || '',
+        customerEmail: payer.email,
         customerPhone: additional_info?.payer?.phone?.number || '',
         shippingAddress: additional_info?.shipments?.receiver_address || {},
         items: items.map(item => ({
@@ -352,6 +364,9 @@ export async function POST(req: Request) {
       };
       
       console.log('Datos del pedido a enviar:', JSON.stringify(orderData, null, 2));
+      console.log('Email del comprador:', orderData.customerEmail);
+      console.log('Email del propietario:', process.env.OWNER_EMAIL);
+      console.log('Email de envío:', process.env.EMAIL_USER);
       
       // Enviar notificación al propietario
       console.log('Enviando notificación al propietario:', process.env.OWNER_EMAIL);
