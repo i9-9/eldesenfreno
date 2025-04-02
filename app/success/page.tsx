@@ -2,16 +2,21 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useCart } from '@/app/context/CartContext';
 
 export default function SuccessPage() {
   const [status, setStatus] = useState('loading');
   const [message, setMessage] = useState('');
+  const { clearCart } = useCart();
 
   useEffect(() => {
     // Obtener los parámetros de la URL
     const params = new URLSearchParams(window.location.search);
     const paymentId = params.get('payment_id');
     const status = params.get('status');
+    
+    // Limpiar el carrito cuando llegamos a la página de éxito
+    clearCart();
 
     if (status === 'success' && paymentId) {
       setStatus('success');
@@ -20,7 +25,7 @@ export default function SuccessPage() {
       setStatus('error');
       setMessage('Hubo un problema con tu pago. Por favor, contacta a soporte.');
     }
-  }, []);
+  }, [clearCart]);
 
   return (
     <div className="container mx-auto p-4 text-center font-neue-display">

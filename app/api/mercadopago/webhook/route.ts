@@ -27,15 +27,17 @@ export async function POST(req: Request) {
     console.log('Tipo de notificación:', type);
     console.log('ID de datos:', dataId);
     
-    // Solo procesar notificaciones de pago
-    if (type !== 'payment') {
+    // Procesar diferentes tipos de notificaciones
+    if (type === 'payment' || type === 'order' || (!type && dataId)) {
+      console.log('Procesando notificación de tipo:', type || 'desconocido');
+    } else {
       console.log('Ignorando notificación de tipo:', type);
-      return NextResponse.json({ message: 'Notificación recibida pero no es de pago' });
+      return NextResponse.json({ message: 'Notificación recibida pero no es de pago u orden' });
     }
     
     if (!dataId) {
-      console.error('ID de pago no proporcionado');
-      return NextResponse.json({ error: 'ID de pago no proporcionado' }, { status: 400 });
+      console.error('ID no proporcionado');
+      return NextResponse.json({ error: 'ID no proporcionado' }, { status: 400 });
     }
     
     // Obtener detalles del pago
@@ -118,6 +120,11 @@ async function sendOrderNotification(orderData: {
   }
   
   console.log('Preparando email para:', ownerEmail);
+  console.log('Datos del email:', {
+    from: process.env.EMAIL_USER,
+    to: ownerEmail,
+    subject: `Nuevo pedido #${orderData.paymentId}`
+  });
   
   const mailOptions = {
     from: process.env.EMAIL_USER,
@@ -166,9 +173,14 @@ async function sendOrderNotification(orderData: {
     console.log('Enviando email...');
     const info = await transporter.sendMail(mailOptions);
     console.log('Email enviado correctamente:', info.messageId);
+    console.log('Respuesta del servidor SMTP:', info.response);
   } catch (error) {
     console.error('Error al enviar correo:', error);
     console.error('Stack trace:', error.stack);
+    if (error instanceof Error) {
+      console.error('Error name:', error.name);
+      console.error('Error message:', error.message);
+    }
     throw error; // Re-lanzar el error para que sea manejado por el llamador
   }
 }
