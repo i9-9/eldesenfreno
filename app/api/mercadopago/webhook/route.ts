@@ -234,6 +234,11 @@ export async function POST(req: Request) {
     // Solo enviar emails si el pago está aprobado
     if (paymentInfo.status === 'approved') {
       console.log('Pago aprobado, enviando notificaciones');
+      console.log('Datos del comprador:', {
+        nombre: `${payer.first_name || ''} ${payer.last_name || ''}`.trim(),
+        email: payer.email || '',
+        teléfono: additional_info?.payer?.phone?.number || ''
+      });
       
       // Extraer los items de la preferencia
       const items = additional_info?.items || [];
@@ -252,35 +257,22 @@ export async function POST(req: Request) {
         date: new Date().toLocaleString()
       };
       
-      console.log('Datos de la orden:', JSON.stringify(orderData, null, 2));
-      
-      // Verificar que tenemos los datos mínimos necesarios
-      if (!orderData.customerName || !orderData.customerEmail) {
-        console.error('Faltan datos del cliente:', orderData);
-        return NextResponse.json({ error: 'Datos incompletos del cliente' }, { status: 400 });
-      }
-      
       // Enviar notificación al propietario
-      await sendOrderNotification({
-        paymentId: dataId,
-        customerName: `${payer.first_name} ${payer.last_name}`,
-        customerEmail: payer.email,
-        customerPhone: additional_info?.payer?.phone?.number || '',
-        shippingAddress: additional_info?.shipments?.receiver_address || {},
-        items: items,
-        total: total,
-        date: new Date().toLocaleString()
-      });
+      console.log('Enviando notificación al propietario...');
+      await sendOrderNotification(orderData);
+      console.log('Notificación al propietario enviada');
 
       // Enviar confirmación al comprador
+      console.log('Enviando confirmación al comprador:', orderData.customerEmail);
       await sendCustomerConfirmation({
         paymentId: dataId,
-        customerName: `${payer.first_name} ${payer.last_name}`,
-        customerEmail: payer.email,
+        customerName: orderData.customerName,
+        customerEmail: orderData.customerEmail,
         items: items,
         total: total,
         date: new Date().toLocaleString()
       });
+      console.log('Confirmación al comprador enviada');
       
       console.log('Notificaciones enviadas correctamente');
     } else {
