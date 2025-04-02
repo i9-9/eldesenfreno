@@ -1,6 +1,40 @@
-import { MercadoPagoConfig, Payment } from 'mercadopago';
+import { MercadoPagoConfig, Payment, Preference } from 'mercadopago';
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+
+// Interfaces para los datos adicionales
+interface AdditionalInfo {
+  preference_id?: string;
+  payer?: {
+    phone?: {
+      number?: string;
+    };
+  };
+  shipments?: {
+    receiver_address?: {
+      street_name?: string;
+      street_number?: string;
+      city?: {
+        name?: string;
+      };
+      state?: {
+        name?: string;
+      };
+      zip_code?: string;
+      country?: {
+        name?: string;
+      };
+    };
+  };
+  items?: Array<{
+    title?: string;
+    description?: string;
+    unit_price?: number;
+    quantity?: number;
+    currency_id?: string;
+    picture_url?: string;
+  }>;
+}
 
 // Configuración del transporte de correo
 const transporter = nodemailer.createTransport({
@@ -19,6 +53,8 @@ async function sendCustomerConfirmation(orderData: {
   items: any[];
   total: number;
   date: string;
+  shippingAddress: any;
+  preferenceDetails?: any;
 }) {
   console.log('Preparando email de confirmación para el cliente:', orderData.customerEmail);
   
@@ -34,6 +70,12 @@ async function sendCustomerConfirmation(orderData: {
       <p><strong>Número de pedido:</strong> ${orderData.paymentId}</p>
       <p><strong>Fecha:</strong> ${orderData.date}</p>
       
+      <h2 style="color: #333; font-family: Arial, sans-serif;">Datos de envío</h2>
+      <p><strong>Dirección:</strong> ${orderData.shippingAddress?.street_name || ''} ${orderData.shippingAddress?.street_number || ''}</p>
+      <p><strong>Ciudad:</strong> ${orderData.shippingAddress?.city?.name || ''}</p>
+      <p><strong>Provincia:</strong> ${orderData.shippingAddress?.state?.name || ''}</p>
+      <p><strong>Código Postal:</strong> ${orderData.shippingAddress?.zip_code || ''}</p>
+      
       <h2 style="color: #333; font-family: Arial, sans-serif;">Productos</h2>
       <table style="width: 100%; border-collapse: collapse;">
         <thead>
@@ -46,16 +88,19 @@ async function sendCustomerConfirmation(orderData: {
         <tbody>
           ${orderData.items.map(item => `
             <tr>
-              <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">${item.title}</td>
+              <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">
+                ${item.picture_url ? `<img src="${item.picture_url}" alt="${item.title}" style="max-width: 50px; margin-right: 10px;">` : ''}
+                ${item.title}
+              </td>
               <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">${item.quantity}</td>
-              <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">$${item.unit_price}</td>
+              <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">$${item.unit_price.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</td>
             </tr>
           `).join('')}
         </tbody>
       </table>
       
       <h2 style="color: #333; font-family: Arial, sans-serif;">Total</h2>
-      <p style="font-size: 18px; font-weight: bold;">$${orderData.total}</p>
+      <p style="font-size: 18px; font-weight: bold;">$${orderData.total.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</p>
       
       <h2 style="color: #333; font-family: Arial, sans-serif;">Contacto</h2>
       <p>Si tenés alguna duda sobre tu pedido, podés contactarnos por:</p>
@@ -104,6 +149,7 @@ async function sendOrderNotification(orderData: {
   items: any[];
   total: number;
   date: string;
+  preferenceDetails?: any;
 }) {
   const ownerEmail = process.env.OWNER_EMAIL;
   
@@ -122,15 +168,18 @@ async function sendOrderNotification(orderData: {
       <h1 style="color: #333; font-family: Arial, sans-serif;">Nuevo pedido recibido</h1>
       <p><strong>ID de pago:</strong> ${orderData.paymentId}</p>
       <p><strong>Fecha:</strong> ${orderData.date}</p>
+      
       <h2 style="color: #333; font-family: Arial, sans-serif;">Datos del cliente</h2>
       <p><strong>Nombre:</strong> ${orderData.customerName}</p>
       <p><strong>Email:</strong> ${orderData.customerEmail}</p>
       <p><strong>Teléfono:</strong> ${orderData.customerPhone}</p>
       
       <h2 style="color: #333; font-family: Arial, sans-serif;">Dirección de envío</h2>
-      <p>${orderData.shippingAddress?.street_name || ''} ${orderData.shippingAddress?.street_number || ''}</p>
-      <p>${orderData.shippingAddress?.city?.name || ''}, ${orderData.shippingAddress?.state?.name || ''}</p>
-      <p>${orderData.shippingAddress?.zip_code || ''}</p>
+      <p><strong>Dirección:</strong> ${orderData.shippingAddress?.street_name || ''} ${orderData.shippingAddress?.street_number || ''}</p>
+      <p><strong>Ciudad:</strong> ${orderData.shippingAddress?.city?.name || ''}</p>
+      <p><strong>Provincia:</strong> ${orderData.shippingAddress?.state?.name || ''}</p>
+      <p><strong>Código Postal:</strong> ${orderData.shippingAddress?.zip_code || ''}</p>
+      <p><strong>País:</strong> ${orderData.shippingAddress?.country?.name || 'Argentina'}</p>
       
       <h2 style="color: #333; font-family: Arial, sans-serif;">Productos</h2>
       <table style="width: 100%; border-collapse: collapse;">
@@ -138,22 +187,41 @@ async function sendOrderNotification(orderData: {
           <tr style="background-color: #f2f2f2;">
             <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Producto</th>
             <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Cantidad</th>
-            <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Precio</th>
+            <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Precio unitario</th>
+            <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Subtotal</th>
           </tr>
         </thead>
         <tbody>
           ${orderData.items.map(item => `
             <tr>
-              <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">${item.title}</td>
+              <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">
+                ${item.picture_url ? `<img src="${item.picture_url}" alt="${item.title}" style="max-width: 50px; margin-right: 10px;">` : ''}
+                ${item.title}
+                ${item.description ? `<br><small style="color: #666;">${item.description}</small>` : ''}
+              </td>
               <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">${item.quantity}</td>
-              <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">$${item.unit_price}</td>
+              <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">$${item.unit_price.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</td>
+              <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">$${(item.unit_price * item.quantity).toLocaleString('es-AR', { minimumFractionDigits: 2 })}</td>
             </tr>
           `).join('')}
         </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" style="padding: 8px; text-align: right; border: 1px solid #ddd;"><strong>Total</strong></td>
+            <td style="padding: 8px; text-align: left; border: 1px solid #ddd;"><strong>$${orderData.total.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</strong></td>
+          </tr>
+        </tfoot>
       </table>
       
-      <h2 style="color: #333; font-family: Arial, sans-serif;">Total</h2>
-      <p style="font-size: 18px; font-weight: bold;">$${orderData.total}</p>
+      ${orderData.preferenceDetails ? `
+        <h2 style="color: #333; font-family: Arial, sans-serif;">Detalles adicionales</h2>
+        <p><strong>ID de preferencia:</strong> ${orderData.preferenceDetails.id}</p>
+        <p><strong>Fecha de creación:</strong> ${new Date(orderData.preferenceDetails.date_created).toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}</p>
+      ` : ''}
+      
+      <p style="margin-top: 20px; color: #666; font-size: 14px;">
+        Este es un email automático, por favor no responder.
+      </p>
     `
   };
   
@@ -231,13 +299,30 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Datos incompletos del pago' }, { status: 400 });
     }
     
+    // Obtener la preferencia de pago para tener todos los detalles
+    const additionalInfo = additional_info as AdditionalInfo;
+    const preferenceId = additionalInfo?.preference_id;
+    let preferenceDetails = null;
+    
+    if (preferenceId) {
+      try {
+        const preferenceClient = new Preference(client);
+        const preference = await preferenceClient.get({ preferenceId });
+        console.log('Detalles de la preferencia:', JSON.stringify(preference, null, 2));
+        preferenceDetails = preference;
+      } catch (error) {
+        console.error('Error al obtener detalles de la preferencia:', error);
+      }
+    }
+    
     // Solo enviar emails si el pago está aprobado
     if (paymentInfo.status === 'approved') {
       console.log('Pago aprobado, enviando notificaciones');
       console.log('Datos del comprador:', {
         nombre: `${payer.first_name || ''} ${payer.last_name || ''}`.trim(),
         email: payer.email || '',
-        teléfono: additional_info?.payer?.phone?.number || ''
+        teléfono: additional_info?.payer?.phone?.number || '',
+        dirección: additional_info?.shipments?.receiver_address || {}
       });
       
       // Extraer los items de la preferencia
@@ -252,9 +337,17 @@ export async function POST(req: Request) {
         customerEmail: payer.email || '',
         customerPhone: additional_info?.payer?.phone?.number || '',
         shippingAddress: additional_info?.shipments?.receiver_address || {},
-        items: items,
+        items: items.map(item => ({
+          ...item,
+          title: item.title || item.description || 'Producto',
+          unit_price: item.unit_price || 0,
+          quantity: item.quantity || 1,
+          currency_id: item.currency_id || 'ARS',
+          picture_url: item.picture_url || ''
+        })),
         total: total,
-        date: new Date().toLocaleString()
+        date: new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' }),
+        preferenceDetails: preferenceDetails
       };
       
       // Enviar notificación al propietario
@@ -264,14 +357,7 @@ export async function POST(req: Request) {
 
       // Enviar confirmación al comprador
       console.log('Enviando confirmación al comprador:', orderData.customerEmail);
-      await sendCustomerConfirmation({
-        paymentId: dataId,
-        customerName: orderData.customerName,
-        customerEmail: orderData.customerEmail,
-        items: items,
-        total: total,
-        date: new Date().toLocaleString()
-      });
+      await sendCustomerConfirmation(orderData);
       console.log('Confirmación al comprador enviada');
       
       console.log('Notificaciones enviadas correctamente');
