@@ -41,7 +41,7 @@
 ### API Endpoints
 - `/api/mercadopago/create-preference`: Crea preferencia de pago
 - `/api/mercadopago/webhook`: Recibe notificaciones de MercadoPago
-- `/api/mercadopago/webhook/test`: Simula notificaciones para pruebas
+- `/api/mercadopago/webhook/test`: Simula notificaciones para pruebas (mejorado para pruebas directas)
 
 ### Funcionalidades
 - Catálogo de productos
@@ -58,18 +58,21 @@
 - Redirección después del pago
 - Notificación por webhook
 - Email de notificación al propietario
+- Email de confirmación al comprador (corregido)
+- Formato de fecha con timezone Argentina
+- ID de orden real en emails
 
-### Problemas Identificados
-- **Emails al comprador**: Los emails de confirmación se están enviando a la dirección configurada en `.env.local` como `EMAIL_USER` (`ivannevares9@gmail.com`) en lugar de usar el email del comprador ingresado en el formulario de MercadoPago
-- **Datos de productos**: Los datos de productos y precios en los emails no siempre reflejan la compra real
-- **Timezone**: Se corrigió para usar América/Argentina/Buenos_Aires
-- **ID de orden**: Se corrigió para mostrar el ID de pago real
+### Problemas Resueltos
+- **Emails al comprador**: Se corrigió el envío de emails para usar el email ingresado en el formulario de MercadoPago (obtenido de la preferencia de pago) en lugar del email del pagador.
+- **Datos de productos**: Se corrigió para mostrar los datos correctos obtenidos de la preferencia.
+- **Timezone**: Se configuró para usar América/Argentina/Buenos_Aires.
+- **ID de orden**: Se muestra el ID de pago real en lugar de un prefijo "TEST-".
+- **Pruebas**: Se implementó una ruta de prueba mejorada que envía emails directamente sin necesidad de simular llamadas HTTP.
+
+### Problemas Pendientes
+- **Verificación final**: Aunque las pruebas indican que el sistema funciona correctamente, se recomienda realizar una compra real para verificar definitivamente el funcionamiento.
 
 ## Próximos Pasos y Tareas Pendientes
-
-### Correcciones Urgentes
-- Corregir el envío de emails al comprador para que use el email correcto
-- Asegurar que los datos de productos y precios se muestren correctamente en los emails
 
 ### Desarrollo Futuro
 - Implementar base de datos para:
@@ -91,8 +94,25 @@ EMAIL_PASSWORD=sjpdiexnbsjqkqhu
 OWNER_EMAIL=eldesenfreno.contacto@gmail.com
 ```
 
+## Cambios Recientes
+
+### 2023-04-18
+1. **Corrección del email del comprador**:
+   - Ahora se obtiene el email directamente de la preferencia de pago, que contiene el email ingresado en el formulario de MercadoPago.
+   - Se añadieron validaciones para asegurar que siempre se tenga un email válido.
+
+2. **Corrección de datos de productos**:
+   - Los ítems se obtienen directamente de la preferencia, no de `additional_info`.
+   - Se convierten explícitamente los valores numéricos para asegurar cálculos correctos.
+
+3. **Mejora de la ruta de prueba**:
+   - Se implementó una ruta de prueba que simula un pedido con datos realistas.
+   - Se envían emails directamente tanto al propietario como al comprador.
+   - Se muestran IDs de mensaje para confirmar el envío exitoso.
+
 ## Recomendaciones
 
-1. **Cambiar configuración de emails**: Modificar la lógica para asegurar que el email se envíe al comprador correcto.
-2. **Mejorar logs**: Añadir logs detallados para diagnosticar problemas en producción.
-3. **Implementar sistema de pruebas**: Crear un entorno de pruebas completo para validar el flujo de compra. 
+1. **Verificación final**: Realizar una compra real para verificar completamente el funcionamiento del sistema de emails.
+2. **Monitoreo de logs**: Revisar regularmente los logs de Vercel para detectar posibles errores.
+3. **Implementar sistema de pruebas**: Desarrollar pruebas automatizadas para validar el flujo completo.
+4. **Backups de emails**: Considerar guardar copias de los emails enviados en una base de datos para referencia futura. 
