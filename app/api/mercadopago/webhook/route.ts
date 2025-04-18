@@ -312,6 +312,7 @@ export async function POST(req: Request) {
     const additionalInfo = additional_info as AdditionalInfo;
     const preferenceId = additionalInfo?.preference_id;
     let preferenceDetails = null;
+    let customerEmail = null; // Inicializamos como null para forzar la obtención desde la preferencia
     
     if (preferenceId) {
       try {
@@ -319,9 +320,22 @@ export async function POST(req: Request) {
         const preference = await preferenceClient.get({ preferenceId });
         console.log('Detalles de la preferencia:', JSON.stringify(preference, null, 2));
         preferenceDetails = preference;
+        
+        // Obtener el email del comprador de la preferencia
+        if (preference.payer && preference.payer.email) {
+          customerEmail = preference.payer.email;
+          console.log('Email del comprador encontrado en la preferencia:', customerEmail);
+        } else {
+          console.error('No se encontró email del comprador en la preferencia');
+          return NextResponse.json({ error: 'Email del comprador no encontrado en la preferencia' }, { status: 400 });
+        }
       } catch (error) {
         console.error('Error al obtener detalles de la preferencia:', error);
+        return NextResponse.json({ error: 'Error al obtener detalles de la preferencia' }, { status: 500 });
       }
+    } else {
+      console.error('No se encontró ID de preferencia');
+      return NextResponse.json({ error: 'ID de preferencia no encontrado' }, { status: 400 });
     }
     
     // Solo enviar emails si el pago está aprobado
@@ -332,33 +346,26 @@ export async function POST(req: Request) {
       console.log('Datos adicionales:', JSON.stringify(additional_info, null, 2));
       
       // Extraer los items de la preferencia
-      const items = additional_info?.items || [];
+      const items = preferenceDetails?.items || [];
       const total = items.reduce((sum: number, item: any) => 
         sum + (item.unit_price * item.quantity), 0
       );
       
-      // Verificar el email del pagador
-      console.log('Email del pagador:', payer.email);
-      if (!payer.email) {
-        console.error('No se encontró email del pagador en los datos de MercadoPago');
-        return NextResponse.json({ error: 'Email del pagador no encontrado' }, { status: 400 });
-      }
-      
       const orderData = {
         paymentId: dataId,
         customerName: `${payer.first_name || ''} ${payer.last_name || ''}`.trim(),
-        customerEmail: payer.email,
+        customerEmail: customerEmail, // Usar el email del comprador de la preferencia
         customerPhone: additional_info?.payer?.phone?.number || '',
         shippingAddress: additional_info?.shipments?.receiver_address || {},
         items: items.map(item => ({
           ...item,
           title: item.title || item.description || 'Producto',
-          unit_price: item.unit_price || 0,
-          quantity: item.quantity || 1,
+          unit_price: Number(item.unit_price) || 0,
+          quantity: Number(item.quantity) || 1,
           currency_id: item.currency_id || 'ARS',
           picture_url: item.picture_url || ''
         })),
-        total: total,
+        total: Number(total),
         date: new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' }),
         preferenceDetails: preferenceDetails
       };
