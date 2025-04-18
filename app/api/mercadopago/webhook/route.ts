@@ -375,6 +375,35 @@ export async function POST(req: Request) {
       console.log('Email del propietario:', process.env.OWNER_EMAIL);
       console.log('Email de envío:', process.env.EMAIL_USER);
       
+      // Guardar los datos del cliente en la base de datos
+      try {
+        console.log('Guardando datos del cliente en la base de datos...');
+        const customerData = {
+          name: orderData.customerName,
+          email: orderData.customerEmail,
+          phone: orderData.customerPhone,
+          address: orderData.shippingAddress,
+          paymentId: orderData.paymentId,
+          preferenceId: preferenceId,
+          total: orderData.total,
+          items: orderData.items
+        };
+        
+        const customerResponse = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/customers`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(customerData)
+        });
+        
+        const customerResult = await customerResponse.json();
+        console.log('Resultado de guardar el cliente:', customerResult);
+      } catch (error) {
+        console.error('Error al guardar los datos del cliente:', error);
+        // No interrumpir el proceso si falla el guardado del cliente
+      }
+      
       // Enviar notificación al propietario
       console.log('Enviando notificación al propietario:', process.env.OWNER_EMAIL);
       await sendOrderNotification(orderData);
