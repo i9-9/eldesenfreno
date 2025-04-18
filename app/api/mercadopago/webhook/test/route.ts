@@ -20,152 +20,135 @@ export async function GET() {
       payer: {
         first_name: 'Ivan',
         last_name: 'Nevares',
-        email: 'ivannevares9@gmail.com',
+        email: 'ivannevares9@gmail.com', // Este es el email del pagador en MercadoPago
         phone: {
           number: '1123884162'
         }
       },
       additional_info: {
+        preference_id: 'TEST-PREF-' + Date.now(),
         items: [
           {
-            title: 'El Desenfreno',
+            title: 'El Desenfreno - Poesía',
             quantity: 1,
-            unit_price: 1500
+            unit_price: 3500
+          },
+          {
+            title: 'Antología Poética',
+            quantity: 2,
+            unit_price: 2800
           }
         ],
         shipments: {
           receiver_address: {
-            street_name: 'Calle de prueba',
-            street_number: '123',
+            street_name: 'Avenida Siempreviva',
+            street_number: '742',
             city: {
-              name: 'Ciudad de prueba'
+              name: 'Buenos Aires'
             },
             state: {
-              name: 'Estado de prueba'
+              name: 'CABA'
             },
-            zip_code: '1234'
+            zip_code: '1425'
           }
         }
       },
       transaction_details: {
-        total_paid_amount: 1500
+        total_paid_amount: 9100
+      }
+    };
+    
+    // Simular una preferencia de pago con el email del comprador
+    const preferenceData = {
+      id: paymentData.additional_info.preference_id,
+      payer: {
+        email: 'yvan.vrs@gmail.com', // Este es el email que queremos usar (el del formulario)
+        name: 'Ivan Nevares',
+        phone: {
+          number: '1123884162'
+        }
+      },
+      items: [
+        {
+          title: 'El Desenfreno - Poesía',
+          quantity: 1,
+          unit_price: 3500,
+          currency_id: 'ARS',
+          description: 'Libro de poesía contemporánea'
+        },
+        {
+          title: 'Antología Poética',
+          quantity: 2,
+          unit_price: 2800,
+          currency_id: 'ARS',
+          description: 'Compilación de autores latinoamericanos'
+        }
+      ],
+      date_created: new Date().toISOString(),
+      shipments: {
+        receiver_address: {
+          street_name: 'Avenida Siempreviva',
+          street_number: '742',
+          city: {
+            name: 'Buenos Aires'
+          },
+          state: {
+            name: 'CABA'
+          },
+          zip_code: '1425'
+        }
       }
     };
 
-    // Enviar notificación al propietario
-    console.log('Enviando notificación al propietario...');
-    const ownerMailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.OWNER_EMAIL,
-      subject: `Nuevo pedido #${paymentData.id}`,
-      html: `
-        <h1 style="color: #333; font-family: Arial, sans-serif;">Nuevo pedido recibido</h1>
-        <p><strong>ID de pago:</strong> ${paymentData.id}</p>
-        <p><strong>Fecha:</strong> ${new Date().toLocaleString()}</p>
-        <h2 style="color: #333; font-family: Arial, sans-serif;">Datos del cliente</h2>
-        <p><strong>Nombre:</strong> ${paymentData.payer.first_name} ${paymentData.payer.last_name}</p>
-        <p><strong>Email:</strong> ${paymentData.payer.email}</p>
-        <p><strong>Teléfono:</strong> ${paymentData.payer.phone.number}</p>
-        
-        <h2 style="color: #333; font-family: Arial, sans-serif;">Dirección de envío</h2>
-        <p>${paymentData.additional_info.shipments.receiver_address.street_name} ${paymentData.additional_info.shipments.receiver_address.street_number}</p>
-        <p>${paymentData.additional_info.shipments.receiver_address.city.name}, ${paymentData.additional_info.shipments.receiver_address.state.name}</p>
-        <p>${paymentData.additional_info.shipments.receiver_address.zip_code}</p>
-        
-        <h2 style="color: #333; font-family: Arial, sans-serif;">Productos</h2>
-        <table style="width: 100%; border-collapse: collapse;">
-          <thead>
-            <tr style="background-color: #f2f2f2;">
-              <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Producto</th>
-              <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Cantidad</th>
-              <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Precio</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${paymentData.additional_info.items.map(item => `
-              <tr>
-                <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">${item.title}</td>
-                <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">${item.quantity}</td>
-                <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">$${item.unit_price}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-        
-        <h2 style="color: #333; font-family: Arial, sans-serif;">Total</h2>
-        <p style="font-size: 18px; font-weight: bold;">$${paymentData.transaction_details.total_paid_amount}</p>
-      `
+    // Llamar al webhook con los datos simulados
+    console.log('Llamando al webhook con datos simulados...');
+    const webhookUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/mercadopago/webhook`;
+    
+    // Construir el cuerpo de la notificación
+    const notificationBody = new URLSearchParams({
+      'type': 'payment',
+      'data.id': paymentData.id
+    }).toString();
+    
+    // Mock de la API de MercadoPago
+    // Sobrescribir temporalmente las funciones que serían llamadas
+    const originalFetch = global.fetch;
+    global.fetch = async (url: string, options: any) => {
+      if (url.includes('/v1/payments/')) {
+        return {
+          ok: true,
+          json: async () => paymentData
+        } as Response;
+      } else if (url.includes('/checkout/preferences/')) {
+        return {
+          ok: true,
+          json: async () => preferenceData
+        } as Response;
+      }
+      return originalFetch(url, options);
     };
-
-    await transporter.sendMail(ownerMailOptions);
-    console.log('Notificación al propietario enviada');
-
-    // Enviar confirmación al comprador
-    console.log('Enviando confirmación al comprador:', paymentData.payer.email);
-    const customerMailOptions = {
-      from: process.env.EMAIL_USER,
-      to: paymentData.payer.email,
-      subject: `¡Gracias por tu compra en El Desenfreno Ediciones! #${paymentData.id}`,
-      html: `
-        <h1 style="color: #333; font-family: Arial, sans-serif;">¡Gracias por tu compra!</h1>
-        <p>Hola ${paymentData.payer.first_name} ${paymentData.payer.last_name},</p>
-        <p>Tu pedido ha sido confirmado. Acá te dejamos los detalles:</p>
-        
-        <p><strong>Número de pedido:</strong> ${paymentData.id}</p>
-        <p><strong>Fecha:</strong> ${new Date().toLocaleString()}</p>
-        
-        <h2 style="color: #333; font-family: Arial, sans-serif;">Productos</h2>
-        <table style="width: 100%; border-collapse: collapse;">
-          <thead>
-            <tr style="background-color: #f2f2f2;">
-              <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Producto</th>
-              <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Cantidad</th>
-              <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Precio</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${paymentData.additional_info.items.map(item => `
-              <tr>
-                <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">${item.title}</td>
-                <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">${item.quantity}</td>
-                <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">$${item.unit_price}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-        
-        <h2 style="color: #333; font-family: Arial, sans-serif;">Total</h2>
-        <p style="font-size: 18px; font-weight: bold;">$${paymentData.transaction_details.total_paid_amount}</p>
-        
-        <h2 style="color: #333; font-family: Arial, sans-serif;">Contacto</h2>
-        <p>Si tenés alguna duda sobre tu pedido, podés contactarnos por:</p>
-        <ul style="list-style: none; padding: 0;">
-          <li style="margin: 10px 0;">
-            <strong>WhatsApp:</strong> 
-            <a href="https://wa.me/5491123884162" style="color: #25D366; text-decoration: none;">
-              +54 9 11 2388-4162
-            </a>
-          </li>
-          <li style="margin: 10px 0;">
-            <strong>Email:</strong> 
-            <a href="mailto:eldesenfreno.contacto@gmail.com" style="color: #333; text-decoration: none;">
-              eldesenfreno.contacto@gmail.com
-            </a>
-          </li>
-        </ul>
-        
-        <p style="margin-top: 20px;">¡Gracias por confiar en El Desenfreno Ediciones!</p>
-        <p style="color: #666; font-size: 14px;">Saludos,<br>El Desenfreno Ediciones</p>
-      `
-    };
-
-    await transporter.sendMail(customerMailOptions);
-    console.log('Confirmación al comprador enviada');
+    
+    // Llamada simulada al webhook
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: notificationBody
+    });
+    
+    // Restaurar fetch original
+    global.fetch = originalFetch;
+    
+    // Verificar respuesta
+    const responseData = await response.json();
     
     return NextResponse.json({ 
       success: true, 
       message: 'Test de notificación completado',
-      paymentData
+      paymentData,
+      preferenceData,
+      webhookResponse: responseData
     });
     
   } catch (error: any) {
