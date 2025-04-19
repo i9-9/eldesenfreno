@@ -5,14 +5,14 @@
 ### Frontend
 - **Framework**: Next.js
 - **Lenguaje**: TypeScript
-- **Estilos**: CSS/Tailwind (por confirmar)
+- **Estilos**: CSS/Tailwind
 - **Hosting**: Vercel
 
 ### Backend
 - **API Routes**: Next.js API Routes
 - **Integración de pagos**: MercadoPago
 - **Email**: Nodemailer con Gmail SMTP
-- **Base de datos**: No implementada aún
+- **Base de datos**: Archivo JSON (clientes y compras)
 
 ## Flujo de Compra Actual
 
@@ -25,7 +25,7 @@
    - Pending: `/pending` (pago pendiente)
    - Failure: `/failure` (pago rechazado)
 6. MercadoPago envía una notificación webhook a `/api/mercadopago/webhook`
-7. El webhook procesa la notificación y envía emails al propietario y al comprador
+7. El webhook procesa la notificación, almacena los datos del cliente y envía emails al propietario y al comprador
 
 ## Componentes Implementados
 
@@ -37,17 +37,24 @@
 - Contacto
 - Carrito
 - Success/Pending/Failure
+- Admin (Panel de administración)
+  - Clientes (Gestión de clientes)
+  - Marketing (Gestión de campañas y SEO)
 
 ### API Endpoints
 - `/api/mercadopago/create-preference`: Crea preferencia de pago
 - `/api/mercadopago/webhook`: Recibe notificaciones de MercadoPago
-- `/api/mercadopago/webhook/test`: Simula notificaciones para pruebas (mejorado para pruebas directas)
+- `/api/mercadopago/webhook/test`: Simula notificaciones para pruebas
+- `/api/customers`: Gestiona los datos de clientes
 
 ### Funcionalidades
 - Catálogo de productos
 - Carrito de compras
 - Integración de pagos con MercadoPago
 - Notificaciones por email al propietario y comprador
+- Sistema de clientes (almacenamiento y gestión)
+- Marketing y SEO (gestión de metadatos)
+- Panel de administración
 
 ## Estado Actual y Problemas
 
@@ -61,6 +68,8 @@
 - Email de confirmación al comprador (corregido)
 - Formato de fecha con timezone Argentina
 - ID de orden real en emails
+- Almacenamiento de datos de clientes
+- Panel de administración básico
 
 ### Problemas Resueltos
 - **Emails al comprador**: Se corrigió el envío de emails para usar el email ingresado en el formulario de MercadoPago (obtenido de la preferencia de pago) en lugar del email del pagador.
@@ -68,6 +77,14 @@
 - **Timezone**: Se configuró para usar América/Argentina/Buenos_Aires.
 - **ID de orden**: Se muestra el ID de pago real en lugar de un prefijo "TEST-".
 - **Pruebas**: Se implementó una ruta de prueba mejorada que envía emails directamente sin necesidad de simular llamadas HTTP.
+- **Almacenamiento de compradores**: Se implementó un sistema para guardar los datos de los compradores.
+
+### Funcionalidades Implementadas para SEO y Marketing
+- **Panel de administración**: Se creó un panel completo para administrar la tienda.
+- **Gestión de clientes**: Sistema para ver y gestionar los clientes y sus compras.
+- **Marketing por email**: Interfaz para crear y enviar campañas de email.
+- **Integración con redes sociales**: Interfaz para gestionar publicaciones en Instagram, Facebook y Twitter.
+- **Gestión de SEO**: Herramientas para optimizar el contenido para buscadores (metadatos, palabras clave).
 
 ### Problemas Pendientes
 - **Verificación final**: Aunque las pruebas indican que el sistema funciona correctamente, se recomienda realizar una compra real para verificar definitivamente el funcionamiento.
@@ -76,14 +93,13 @@
 
 ### Desarrollo Futuro
 - Implementar base de datos para:
-  - Almacenar historial de pedidos
   - Gestionar inventario
-  - Crear panel de administración
+  - Sistema de autenticación para el panel admin
 - Mejorar el diseño responsive
 - Implementar sistema de seguimiento de pedidos
-- Añadir autenticación de usuarios
-- Crear sección de "Mi cuenta" para usuarios registrados
-- Implementar análisis y métricas
+- Integración con plataformas adicionales (Google Analytics, Facebook Pixel)
+- Sistema de cupones y descuentos
+- Implementar análisis y métricas avanzadas
 
 ## Variables de Entorno
 ```
@@ -97,22 +113,26 @@ OWNER_EMAIL=eldesenfreno.contacto@gmail.com
 ## Cambios Recientes
 
 ### 2023-04-18
-1. **Corrección del email del comprador**:
-   - Ahora se obtiene el email directamente de la preferencia de pago, que contiene el email ingresado en el formulario de MercadoPago.
-   - Se añadieron validaciones para asegurar que siempre se tenga un email válido.
+1. **Sistema de clientes**:
+   - Implementación de almacenamiento de datos de clientes en archivo JSON.
+   - Creación de panel de administración para visualizar y gestionar clientes.
+   - Historial de compras por cliente.
 
-2. **Corrección de datos de productos**:
-   - Los ítems se obtienen directamente de la preferencia, no de `additional_info`.
-   - Se convierten explícitamente los valores numéricos para asegurar cálculos correctos.
+2. **Marketing y SEO**:
+   - Implementación de herramientas para gestión de campañas de email.
+   - Integración con redes sociales (interfaz para programar publicaciones).
+   - Gestión de metadatos SEO para optimización en buscadores.
+   - Interfaz para configurar títulos, descripciones y palabras clave.
 
-3. **Mejora de la ruta de prueba**:
-   - Se implementó una ruta de prueba que simula un pedido con datos realistas.
-   - Se envían emails directamente tanto al propietario como al comprador.
-   - Se muestran IDs de mensaje para confirmar el envío exitoso.
+3. **Panel de administración**:
+   - Creación de un panel completo con diferentes secciones.
+   - Navegación intuitiva y responsive.
+   - Herramientas de gestión para diversas áreas del negocio.
 
 ## Recomendaciones
 
-1. **Verificación final**: Realizar una compra real para verificar completamente el funcionamiento del sistema de emails.
+1. **Verificación final**: Realizar una compra real para verificar completamente el funcionamiento del sistema de emails y almacenamiento de clientes.
 2. **Monitoreo de logs**: Revisar regularmente los logs de Vercel para detectar posibles errores.
 3. **Implementar sistema de pruebas**: Desarrollar pruebas automatizadas para validar el flujo completo.
-4. **Backups de emails**: Considerar guardar copias de los emails enviados en una base de datos para referencia futura. 
+4. **Backups de datos**: Considerar una solución de backup para los datos de clientes almacenados en JSON.
+5. **Migración a base de datos**: En el futuro, migrar el almacenamiento de JSON a una base de datos más robusta (MongoDB, PostgreSQL). 
