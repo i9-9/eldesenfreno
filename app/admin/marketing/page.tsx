@@ -74,7 +74,7 @@ export default function MarketingPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Marketing</h1>
+      <h1 className="text-2xl font-neue-display font-bold mb-4">Marketing</h1>
       <Link href="/admin" className="text-blue-500 hover:underline mb-4 inline-block">
         ← Volver al panel de administración
       </Link>
@@ -118,7 +118,7 @@ export default function MarketingPage() {
         <div className="mt-4">
           {activeTab === 'email' && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Campañas de Email</h2>
+              <h2 className="text-xl font-neue-display font-semibold mb-4">Campañas de Email</h2>
               <p className="mb-4 text-gray-600">
                 Configura y envía campañas de email a tus clientes. Puedes segmentar por tipo de cliente o enviar a todos.
               </p>
@@ -185,7 +185,7 @@ export default function MarketingPage() {
 
           {activeTab === 'social' && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Redes Sociales</h2>
+              <h2 className="text-xl font-neue-display font-semibold mb-4">Redes Sociales</h2>
               <p className="mb-4 text-gray-600">
                 Programa publicaciones para tus redes sociales. Puedes elegir en qué plataformas publicar.
               </p>
@@ -255,7 +255,7 @@ export default function MarketingPage() {
 
           {activeTab === 'seo' && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">SEO</h2>
+              <h2 className="text-xl font-neue-display font-semibold mb-4">SEO</h2>
               <p className="mb-4 text-gray-600">
                 Configura los metadatos SEO de tu tienda para mejorar tu visibilidad en los motores de búsqueda.
               </p>

@@ -91,14 +91,14 @@ export default function CustomersPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Clientes</h1>
+      <h1 className="text-2xl font-neue-display font-bold mb-4">Clientes</h1>
       <Link href="/admin" className="text-blue-500 hover:underline mb-4 inline-block">
         ← Volver al panel de administración
       </Link>
       
       <div className="mt-4 flex flex-col md:flex-row gap-4">
         <div className="md:w-1/3">
-          <h2 className="text-xl font-semibold mb-2">Lista de clientes ({customers.length})</h2>
+          <h2 className="text-xl font-neue-display font-semibold mb-2">Lista de clientes ({customers.length})</h2>
           {customers.length === 0 ? (
             <p>No hay clientes registrados.</p>
           ) : (
@@ -123,9 +123,9 @@ export default function CustomersPage() {
         <div className="md:w-2/3">
           {selectedCustomer ? (
             <div>
-              <h2 className="text-xl font-semibold mb-2">Detalles del cliente</h2>
+              <h2 className="text-xl font-neue-display font-semibold mb-2">Detalles del cliente</h2>
               <div className="border rounded p-4 mb-4">
-                <h3 className="text-lg font-medium">{selectedCustomer.name}</h3>
+                <h3 className="text-lg font-neue-display font-medium">{selectedCustomer.name}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                   <div>
                     <p><strong>Email:</strong> {selectedCustomer.email}</p>
@@ -144,7 +144,7 @@ export default function CustomersPage() {
                 </div>
               </div>
               
-              <h3 className="text-lg font-semibold mb-2">Historial de compras ({selectedCustomer.purchases.length})</h3>
+              <h3 className="text-lg font-neue-display font-semibold mb-2">Historial de compras ({selectedCustomer.purchases.length})</h3>
               {selectedCustomer.purchases.map((purchase) => (
                 <div key={purchase.id} className="border rounded mb-2 overflow-hidden">
                   <div className="bg-gray-100 p-3 border-b">

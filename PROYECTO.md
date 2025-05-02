@@ -101,14 +101,12 @@
 - Sistema de cupones y descuentos
 - Implementar análisis y métricas avanzadas
 
-## Variables de Entorno
-```
-MP_ACCESS_TOKEN=APP_USR-8788163376285178-040212-9096812aac5be17aa651c0b7b9ca8b1b-155134411
-NEXT_PUBLIC_SITE_URL=https://eldesenfreno.com
-EMAIL_USER=ivannevares9@gmail.com
-EMAIL_PASSWORD=sjpdiexnbsjqkqhu
-OWNER_EMAIL=eldesenfreno.contacto@gmail.com
-```
+## Variables de Entorno Requeridas
+- MP_ACCESS_TOKEN: Token de acceso de MercadoPago
+- NEXT_PUBLIC_SITE_URL: URL del sitio desplegado
+- EMAIL_USER: Email para envío de notificaciones
+- EMAIL_PASSWORD: Contraseña de la cuenta de email
+- OWNER_EMAIL: Email del propietario para recibir notificaciones
 
 ## Cambios Recientes
 

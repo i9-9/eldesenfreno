@@ -3,11 +3,11 @@ import Link from 'next/link';
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen font-neue-haas-grotesk">
       <header className="bg-gray-800 text-white p-4">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-4">
-            <Link href="/admin" className="text-xl font-bold">
+            <Link href="/admin" className="text-xl font-neue-display font-bold">
               El Desenfreno Admin
             </Link>
           </div>
