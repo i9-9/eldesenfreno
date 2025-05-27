@@ -2,9 +2,11 @@ const editions = [
   {
     id: "test-prod",
     image: "/1.png",
-    title: "🧪 PRODUCTO DE PRUEBA - PRODUCCIÓN",
+    title: "🧪 PRODUCTO DIGITAL DE PRUEBA - PRODUCCIÓN",
     author: "El Desenfreno Ediciones",
-    review: `⚠️ ESTE ES UN PRODUCTO DE PRUEBA PARA VERIFICAR EL SISTEMA DE PAGOS EN PRODUCCIÓN. 
+    review: `⚠️ PRODUCTO DIGITAL DE PRUEBA - NO REQUIERE ENVÍO FÍSICO
+    
+    Este es un producto de prueba para verificar el sistema de pagos en producción.
     
     Al comprar este producto por $1 ARS, estarás probando:
     • Integración real con MercadoPago
@@ -12,9 +14,11 @@ const editions = [
     • Webhook en producción
     • Almacenamiento de datos de clientes
     
-    Este producto NO incluye envío físico. Es solo para testing del sistema.
+    🔹 PRODUCTO DIGITAL: No requiere dirección de envío
+    🔹 ENTREGA INMEDIATA: Confirmación por email
+    🔹 SOLO PARA TESTING: Será removido después de las pruebas
     
-    Una vez confirmado que todo funciona, este producto será removido del catálogo.`,
+    Perfecto para probar el sistema sin complicaciones de envío.`,
     reviewName: "Sistema de Testing",
     price: "1",
     link: "",

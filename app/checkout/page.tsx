@@ -9,6 +9,10 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Detectar si hay productos digitales (productos de prueba)
+  const hasDigitalProducts = cart.some(item => item.id === 'test-prod');
+  const isDigitalOnly = cart.every(item => item.id === 'test-prod');
+
   // Datos del cliente
   const [formData, setFormData] = useState({
     name: '',
@@ -23,14 +27,14 @@ export default function CheckoutPage() {
     apartment: '', // Nuevo campo para departamento
   });
 
-  const [shippingCost, setShippingCost] = useState(5000); // Costo por defecto para CABA
+  const [shippingCost, setShippingCost] = useState(isDigitalOnly ? 0 : 5000); // Sin costo para productos digitales
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     
-    // Actualizar costo de envío cuando cambie la zona
-    if (name === 'zone') {
+    // Actualizar costo de envío cuando cambie la zona (solo para productos físicos)
+    if (name === 'zone' && !isDigitalOnly) {
       setShippingCost(value === 'CABA' ? 5000 : 9000);
     }
   };
@@ -57,13 +61,14 @@ export default function CheckoutPage() {
               unit_price: parseFloat(item.price),
               currency_id: 'ARS',
             })),
-            {
+            // Solo agregar envío si no es producto digital
+            ...(isDigitalOnly ? [] : [{
               id: 'shipping',
               title: `Envío - ${formData.zone}`,
               quantity: 1,
               unit_price: shippingCost,
               currency_id: 'ARS',
-            }
+            }])
           ],
           payer: {
             name: formData.name,
@@ -114,6 +119,16 @@ export default function CheckoutPage() {
   };
 
   const validateForm = () => {
+    // Para productos digitales, solo validar datos básicos
+    if (isDigitalOnly) {
+      if (!formData.name || !formData.email || !formData.phone) {
+        setError('Por favor completa nombre, email y teléfono');
+        return false;
+      }
+      return true;
+    }
+    
+    // Para productos físicos, validar todos los campos
     if (!formData.name || !formData.email || !formData.phone || 
         !formData.address || !formData.street_number || !formData.city || 
         !formData.state || !formData.postalCode || !formData.zone) {
@@ -142,22 +157,37 @@ export default function CheckoutPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Formulario de datos del cliente */}
         <div>
-          <h2 className="text-xl font-semibold mb-4">Datos de envío</h2>
+          <h2 className="text-xl font-semibold mb-4">
+            {isDigitalOnly ? 'Datos del comprador' : 'Datos de envío'}
+          </h2>
+          
+          {hasDigitalProducts && (
+            <div className="bg-blue-100 text-blue-800 p-3 rounded mb-4">
+              <p className="text-sm">
+                {isDigitalOnly 
+                  ? '🔹 Producto digital - No requiere dirección de envío'
+                  : '⚠️ Tu carrito contiene productos digitales y físicos'
+                }
+              </p>
+            </div>
+          )}
           
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1 text-white">Zona de envío</label>
-              <select
-                name="zone"
-                value={formData.zone}
-                onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
-                required
-              >
-                <option value="CABA">CABA - $5,000</option>
-                <option value="Resto del País">Resto del País - $9,000</option>
-              </select>
-            </div>
+            {!isDigitalOnly && (
+              <div>
+                <label className="block text-sm font-medium mb-1 text-white">Zona de envío</label>
+                <select
+                  name="zone"
+                  value={formData.zone}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded bg-[#121212] text-white"
+                  required
+                >
+                  <option value="CABA">CABA - $5,000</option>
+                  <option value="Resto del País">Resto del País - $9,000</option>
+                </select>
+              </div>
+            )}
             <div>
               <label className="block text-sm font-medium mb-1 text-white">Nombre completo</label>
               <input
@@ -194,77 +224,81 @@ export default function CheckoutPage() {
                 required
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1 text-white">Dirección</label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
-                placeholder="Nombre de la calle"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1 text-white">Número de calle</label>
-              <input
-                type="text"
-                name="street_number"
-                value={formData.street_number}
-                onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
-                placeholder="1234"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1 text-white">Departamento</label>
-              <input
-                type="text"
-                name="apartment"
-                value={formData.apartment}
-                onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
-                placeholder="Número de departamento, piso, etc."
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1 text-white">Ciudad</label>
-              <input
-                type="text"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
-                placeholder="Ciudad"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1 text-white">Provincia</label>
-              <input
-                type="text"
-                name="state"
-                value={formData.state}
-                onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
-                placeholder="Provincia"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1 text-white">Código postal</label>
-              <input
-                type="text"
-                name="postalCode"
-                value={formData.postalCode}
-                onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
-                placeholder="1234"
-                required
-              />
-            </div>
+            {!isDigitalOnly && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-white">Dirección</label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded bg-[#121212] text-white"
+                    placeholder="Nombre de la calle"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-white">Número de calle</label>
+                  <input
+                    type="text"
+                    name="street_number"
+                    value={formData.street_number}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded bg-[#121212] text-white"
+                    placeholder="1234"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-white">Departamento</label>
+                  <input
+                    type="text"
+                    name="apartment"
+                    value={formData.apartment}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded bg-[#121212] text-white"
+                    placeholder="Número de departamento, piso, etc."
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-white">Ciudad</label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded bg-[#121212] text-white"
+                    placeholder="Ciudad"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-white">Provincia</label>
+                  <input
+                    type="text"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded bg-[#121212] text-white"
+                    placeholder="Provincia"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-white">Código postal</label>
+                  <input
+                    type="text"
+                    name="postalCode"
+                    value={formData.postalCode}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded bg-[#121212] text-white"
+                    placeholder="1234"
+                    required
+                  />
+                </div>
+              </>
+            )}
           </div>
         </div>
         
@@ -283,10 +317,19 @@ export default function CheckoutPage() {
               </div>
             ))}
             
-            <div className="flex justify-between py-2 border-b">
-              <p>Envío ({formData.zone})</p>
-              <p>${shippingCost}</p>
-            </div>
+            {!isDigitalOnly && (
+              <div className="flex justify-between py-2 border-b">
+                <p>Envío ({formData.zone})</p>
+                <p>${shippingCost}</p>
+              </div>
+            )}
+            
+            {isDigitalOnly && (
+              <div className="flex justify-between py-2 border-b">
+                <p>Envío (Producto digital)</p>
+                <p>Gratis</p>
+              </div>
+            )}
             
             <div className="flex justify-between py-2 font-bold">
               <p>Total</p>
