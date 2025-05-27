@@ -1,29 +1,5 @@
 const editions = [
   {
-    id: "test-prod",
-    image: "/1.png",
-    title: "🧪 PRODUCTO DIGITAL DE PRUEBA - PRODUCCIÓN",
-    author: "El Desenfreno Ediciones",
-    review: `⚠️ PRODUCTO DIGITAL DE PRUEBA - NO REQUIERE ENVÍO FÍSICO
-    
-    Este es un producto de prueba para verificar el sistema de pagos en producción.
-    
-    Al comprar este producto por $1 ARS, estarás probando:
-    • Integración real con MercadoPago
-    • Sistema de emails funcionando
-    • Webhook en producción
-    • Almacenamiento de datos de clientes
-    
-    🔹 PRODUCTO DIGITAL: No requiere dirección de envío
-    🔹 ENTREGA INMEDIATA: Confirmación por email
-    🔹 SOLO PARA TESTING: Será removido después de las pruebas
-    
-    Perfecto para probar el sistema sin complicaciones de envío.`,
-    reviewName: "Sistema de Testing",
-    price: "1",
-    link: "",
-  },
-  {
     id: "1",
     image: "/1.png",
     title: "Láudano para el corazón negro",
