@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:mp": "node scripts/test-mp.js",
+    "test:mp:approved": "node scripts/test-mp.js approved preference",
+    "test:mp:rejected": "node scripts/test-mp.js rejected preference",
+    "test:mp:pending": "node scripts/test-mp.js pending preference",
+    "test:mp:webhook": "node scripts/test-mp.js approved webhook_simulation"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

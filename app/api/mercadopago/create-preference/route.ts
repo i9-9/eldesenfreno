@@ -35,6 +35,9 @@ export async function POST(request: Request) {
       );
     }
 
+    // Agregar log para depuración
+    console.log('Valor de NEXT_PUBLIC_SITE_URL:', process.env.NEXT_PUBLIC_SITE_URL);
+
     const preference = {
       items: items,
       back_urls: {
