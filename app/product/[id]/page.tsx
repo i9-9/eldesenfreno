@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import editions from '../../editions';
 import AddToCartButton from '../../components/AddToCartButton';
+import { formatPrice } from '../../utils/formatPrice';
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -32,7 +33,7 @@ const ProductPage = () => {
         <div className="w-full md:w-1/2 md:pl-8">
           <h1 className="text-2xl font-bold mb-2">{product.title}</h1>
           <h2 className="text-lg mb-4">{product.author}</h2>
-          <p className="text-2xl font-bold mb-6">${product.price}</p>
+          <p className="text-2xl font-bold mb-6">{formatPrice(product.price)}</p>
           
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-2">Descripción</h3>

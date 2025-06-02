@@ -4,6 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '../context/CartContext';
+import { formatPrice } from '../utils/formatPrice';
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, totalPrice } = useCart();
@@ -44,7 +45,7 @@ const CartPage = () => {
             
             <div className="w-full md:w-2/4 px-4">
               <h3 className="text-lg font-semibold">{item.title}</h3>
-              <p className="text-lg mt-2">${item.price}</p>
+              <p className="text-lg mt-2">{formatPrice(item.price)}</p>
             </div>
             
             <div className="w-full md:w-1/4 flex flex-col items-start md:items-end">
@@ -77,7 +78,7 @@ const CartPage = () => {
       
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-[#0B0B0B] rounded-lg p-4">
         <div>
-          <p className="text-xl font-semibold">Total: ${totalPrice.toFixed(2)}</p>
+          <p className="text-xl font-semibold">Total: {formatPrice(totalPrice)}</p>
         </div>
         
         <div className="mt-4 md:mt-0">

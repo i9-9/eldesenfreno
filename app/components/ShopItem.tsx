@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import AddToCartButton from './AddToCartButton';
+import { formatPrice } from '../utils/formatPrice';
 
 interface ShopItemProps {
   id: string;
@@ -41,7 +42,7 @@ const ShopItem = ({
         <div className="md:w-2/3 md:pl-6">
           <h2 className="text-xl font-bold mb-2">{title}</h2>
           <h3 className="text-md mb-2">{author}</h3>
-          <p className="text-lg font-bold mb-4">${price}</p>
+          <p className="text-lg font-bold mb-4">{formatPrice(price)}</p>
           <p className="text-sm mb-4 line-clamp-3">{review}</p>
           <div className="flex space-x-3">
             <Link href={`/product/${id}`}>

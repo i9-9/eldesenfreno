@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import Link from 'next/link';
+import { formatPrice } from '../utils/formatPrice';
 
 export default function CheckoutPage() {
   const { cart, totalPrice, clearCart } = useCart();
@@ -156,8 +157,8 @@ export default function CheckoutPage() {
                 className="w-full p-2 border rounded bg-[#121212] text-white"
                 required
               >
-                <option value="CABA">CABA - $5,000</option>
-                <option value="Resto del País">Resto del País - $10,000</option>
+                <option value="CABA">CABA - {formatPrice(5000)}</option>
+                <option value="Resto del País">Resto del País - {formatPrice(10000)}</option>
               </select>
             </div>
             <div>
@@ -281,18 +282,18 @@ export default function CheckoutPage() {
                   <p className="font-medium">{item.title}</p>
                   <p className="text-sm text-gray-600">Cantidad: {item.quantity}</p>
                 </div>
-                <p className="font-medium">${parseFloat(item.price) * item.quantity}</p>
+                <p className="font-medium">{formatPrice(parseFloat(item.price) * item.quantity)}</p>
               </div>
             ))}
             
             <div className="flex justify-between py-2 border-b">
               <p>Envío ({formData.zone})</p>
-              <p>${shippingCost}</p>
+              <p>{formatPrice(shippingCost)}</p>
             </div>
             
             <div className="flex justify-between py-2 font-bold">
               <p>Total</p>
-              <p>${totalPrice + shippingCost}</p>
+              <p>{formatPrice(totalPrice + shippingCost)}</p>
             </div>
           </div>
           

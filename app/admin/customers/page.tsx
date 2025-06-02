@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { formatPrice } from '../../utils/formatPrice';
 
 interface Address {
   street_name?: string;
@@ -172,15 +173,15 @@ export default function CustomersPage() {
                               {item.description && <div className="text-xs text-gray-500">{item.description}</div>}
                             </td>
                             <td className="p-2 text-right">{item.quantity}</td>
-                            <td className="p-2 text-right">${item.unit_price.toLocaleString('es-AR')}</td>
-                            <td className="p-2 text-right">${(item.quantity * item.unit_price).toLocaleString('es-AR')}</td>
+                            <td className="p-2 text-right">{formatPrice(item.unit_price)}</td>
+                            <td className="p-2 text-right">{formatPrice(item.quantity * item.unit_price)}</td>
                           </tr>
                         ))}
                       </tbody>
                       <tfoot>
                         <tr className="border-t font-medium">
                           <td colSpan={3} className="p-2 text-right">Total</td>
-                          <td className="p-2 text-right">${purchase.total.toLocaleString('es-AR')}</td>
+                          <td className="p-2 text-right">{formatPrice(purchase.total)}</td>
                         </tr>
                       </tfoot>
                     </table>

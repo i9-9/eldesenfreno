@@ -2,6 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 import Link from 'next/link';
 import AddToCartButton from './AddToCartButton';
+import { formatPrice } from '../utils/formatPrice';
 
 interface EdItemProps {
     id: string;
@@ -34,7 +35,7 @@ const EdItem = ({id, image, title, author, review, reviewName, link, price}: EdI
           <h5 className='text-xs mb-4'>{author}</h5>
           <p className='text-xs mb-4 leading-5'>{review}</p>
           <p className='text-xs italic mb-2'>{reviewName}</p>
-          <p className='text-lg font-bold mb-4'>${price}</p>
+          <p className='text-lg font-bold mb-4'>{formatPrice(price)}</p>
           <div className='flex'>
             <Link href={`/product/${id}`}>
               <button className='p-2 bg-[#121212] text-white hover:bg-gray-400 transition-all 
