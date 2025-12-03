@@ -12,6 +12,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             </Link>
           </div>
           <nav className="flex space-x-4">
+            <Link href="/admin/blog" className="hover:text-blue-300">
+              Blog
+            </Link>
             <Link href="/admin/customers" className="hover:text-blue-300">
               Clientes
             </Link>
@@ -36,4 +39,4 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       </footer>
     </div>
   );
-} 
+}
