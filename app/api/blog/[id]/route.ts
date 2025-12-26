@@ -1,33 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-const POSTS_FILE = path.join(process.cwd(), 'data', 'blog-posts.json');
-
-function readPosts() {
-  if (!fs.existsSync(POSTS_FILE)) {
-    return [];
-  }
-  const data = fs.readFileSync(POSTS_FILE, 'utf-8');
-  return JSON.parse(data);
-}
-
-function writePosts(posts: any[]) {
-  const dir = path.dirname(POSTS_FILE);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-  fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2));
-}
+import { getPostBySlug, getPostById, updatePost, deletePost } from '@/app/lib/contentful';
 
 // GET - Obtener un post por ID o slug
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const posts = readPosts();
-    const post = posts.find((p: any) => p.id === params.id || p.slug === params.id);
+    const { id } = await params;
+    
+    // Primero intentamos buscar por slug
+    let post = await getPostBySlug(id);
+    
+    // Si no lo encuentra por slug, intentamos por ID
+    if (!post) {
+      post = await getPostById(id);
+    }
     
     if (!post) {
       return NextResponse.json({ error: 'Post no encontrado' }, { status: 404 });
@@ -43,26 +31,17 @@ export async function GET(
 // PUT - Actualizar un post
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
-    const posts = readPosts();
-    const index = posts.findIndex((p: any) => p.id === params.id);
     
-    if (index === -1) {
-      return NextResponse.json({ error: 'Post no encontrado' }, { status: 404 });
+    const updatedPost = await updatePost(id, body);
+
+    if (!updatedPost) {
+      return NextResponse.json({ error: 'Post no encontrado o error al actualizar' }, { status: 404 });
     }
-
-    const updatedPost = {
-      ...posts[index],
-      ...body,
-      updatedAt: new Date().toISOString(),
-      slug: body.title ? generateSlug(body.title) : posts[index].slug
-    };
-
-    posts[index] = updatedPost;
-    writePosts(posts);
 
     return NextResponse.json(updatedPost);
   } catch (error) {
@@ -74,18 +53,16 @@ export async function PUT(
 // DELETE - Eliminar un post
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const posts = readPosts();
-    const index = posts.findIndex((p: any) => p.id === params.id);
+    const { id } = await params;
     
-    if (index === -1) {
-      return NextResponse.json({ error: 'Post no encontrado' }, { status: 404 });
+    const success = await deletePost(id);
+    
+    if (!success) {
+      return NextResponse.json({ error: 'Post no encontrado o error al eliminar' }, { status: 404 });
     }
-
-    posts.splice(index, 1);
-    writePosts(posts);
 
     return NextResponse.json({ message: 'Post eliminado correctamente' });
   } catch (error) {
@@ -93,15 +70,3 @@ export async function DELETE(
     return NextResponse.json({ error: 'Error al eliminar el post' }, { status: 500 });
   }
 }
-
-function generateSlug(title: string): string {
-  return title
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-}
-

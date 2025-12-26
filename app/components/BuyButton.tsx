@@ -42,7 +42,7 @@ const BuyButton = ({ title, price }: BuyButtonProps) => {
       onClick={handleBuy}
       disabled={isLoading}
       className="p-2 bg-[#121212] text-white hover:bg-gray-400 transition-all 
-      duration-700 drop-shadow opacity-80 text-xs mr-2 rounded-md"
+      duration-300 drop-shadow opacity-80 text-xs mr-2 rounded-md"
     >
       {isLoading ? 'Processing...' : 'Comprar'}
     </button>

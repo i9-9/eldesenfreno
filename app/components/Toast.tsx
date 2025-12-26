@@ -28,7 +28,7 @@ const Toast = ({ message, type, onClose, duration = 3000 }: ToastProps) => {
 
   return (
     <div 
-      className={`fixed bottom-4 right-4 z-50 p-4 rounded-lg ${bgColor} text-white flex items-center transition-all duration-700 ${isVisible ? 'opacity-80' : 'opacity-0'}`}
+      className={`fixed bottom-4 right-4 z-50 p-4 rounded-lg ${bgColor} text-white flex items-center transition-all duration-300 ${isVisible ? 'opacity-80' : 'opacity-0'}`}
     >
       <div className="mr-3">
         {type === 'success' && (

@@ -1,5 +1,6 @@
+'use client';
+
 import React, { useState } from 'react';
-import emailjs from '@emailjs/browser';
 import Link from 'next/link';
 
 const ContactForm = () => {
@@ -8,27 +9,65 @@ const ContactForm = () => {
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSending(true);
+    setSuccess(false);
+    setError('');
 
-    // Enviar el formulario usando emailjs
-    emailjs.sendForm('service_jo40tzl', 'template_5fep019', e.target, 'cWBowbfYgWXQ64nWu')
-      .then((result) => {
-        console.log(result.text);
-        setSuccess(true);
-        setName('');
-        setEmail('');
-        setMessage('');
-      })
-      .catch((error) => {
-        console.log(error.text);
-        setSuccess(false);
-      })
-      .finally(() => {
-        setSending(false);
+    // Validación adicional
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      setError('Por favor complete todos los campos');
+      setSending(false);
+      return;
+    }
+
+    // Validar email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Por favor ingrese un email válido');
+      setSending(false);
+      return;
+    }
+
+    try {
+      // Enviar a la API
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          message: message.trim(),
+        }),
       });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al enviar el mensaje');
+      }
+
+      console.log('Email enviado exitosamente:', data.messageId);
+      setSuccess(true);
+      setError('');
+      setName('');
+      setEmail('');
+      setMessage('');
+
+      // Ocultar mensaje de éxito después de 5 segundos
+      setTimeout(() => setSuccess(false), 5000);
+    } catch (err) {
+      console.error('Error al enviar email:', err);
+      setError(err instanceof Error ? err.message : 'Error al enviar el mensaje. Intente nuevamente más tarde.');
+      setSuccess(false);
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -38,7 +77,7 @@ const ContactForm = () => {
           Dudas, consultas, propuestas
         </p>
         <Link href="mailto:eldesenfreno.contacto@gmail.com">
-          <button type="button" className="p-2 bg-[#2C2C2C] hover:bg-gray-400 transition-all duration-700 text-xs w-full text-white border border-white border-opacity-20 rounded-lg">
+          <button type="button" className="p-2 bg-[#2C2C2C] hover:bg-gray-400 transition-all duration-300 text-xs w-full text-white border border-white border-opacity-20 rounded-lg">
             eldesenfreno.contacto@gmail.com
           </button>
         </Link>
@@ -77,15 +116,23 @@ const ContactForm = () => {
           placeholder="Escriba su mensaje aquí"
           required
         />
-        <input type="hidden" name="reply_to" value={email} /> {/* Campo oculto para reply_to */}
         <button
           type="submit"
-          className={`p-2 mt-2 ${sending ? 'bg-gray-600 cursor-not-allowed' : 'bg-[#2C2C2C] hover:bg-gray-400'} transition-all duration-700 text-xs w-full text-white border border-white border-opacity-20 rounded-lg`}
+          className={`p-2 mt-2 ${sending ? 'bg-gray-600 cursor-not-allowed' : 'bg-[#2C2C2C] hover:bg-gray-400'} transition-all duration-300 text-xs w-full text-white border border-white border-opacity-20 rounded-lg`}
           disabled={sending}
         >
           {sending ? 'Enviando...' : 'Enviar'}
         </button>
-        {success && <p className="text-green-500 mt-2">¡Mensaje enviado con éxito!</p>}
+        {success && (
+          <div className="mt-3 p-3 bg-green-900/30 border border-green-500/50 rounded-md">
+            <p className="text-green-400 text-xs">✓ ¡Mensaje enviado con éxito! Te responderemos pronto.</p>
+          </div>
+        )}
+        {error && (
+          <div className="mt-3 p-3 bg-red-900/30 border border-red-500/50 rounded-md">
+            <p className="text-red-400 text-xs">✗ {error}</p>
+          </div>
+        )}
       </form>
     </div>
   );

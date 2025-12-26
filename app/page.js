@@ -1,60 +1,68 @@
+'use client';
+
 import React from "react";
-import Image from "next/image";
+import Link from "next/link";
 import EdItem from "./components/EdItem";
+import AnimatedImage from "./components/AnimatedImage";
 import editions from "./editions";
 
 export default function Home() {
-  const reversedEditions = editions.slice().reverse();
+  // Obtener el último libro (novedad)
+  const latestBook = editions[editions.length - 1];
+
+  if (!latestBook) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <p className="text-gray-400">No hay libros disponibles.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col pt-2">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 rounded-md bg-[#0B0B0B] pt-2">
-        {/* First Book (Latest) - Custom Layout */}
-        {reversedEditions.length > 0 && (
-          <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 items-start rounded-md">
-            {/* Image on the left */}
-            <div className="m-2 font-neue-display">
-              {reversedEditions[0].image && (
-                <Image
-                  src={reversedEditions[0].image}
-                  alt={reversedEditions[0].title}
-                  width={500}
-                  height={600}
-                  className="rounded-md mb-2 drop-shadow-md border border-[#666666] border-opacity-20 object-contain w-full"
-                />
-              )}
-            </div>
-            {/* EdItem for the content on the right */}
-            <div className="m-2 font-neue-display">
-              <EdItem
-                id={reversedEditions[0].id}
-                image={null}
-                title={reversedEditions[0].title}
-                author={reversedEditions[0].author}
-                review={reversedEditions[0].review}
-                reviewName={reversedEditions[0].reviewName}
-                link={reversedEditions[0].link}
-                price={reversedEditions[0].price}
-              />
-            </div>
-          </div>
-        )}
+      {/* Título de la sección */}
+      <h2 className="text-xl font-neue-display font-bold -tracking-wide mx-2 mb-2">Novedades</h2>
 
-        {/* Remaining Books in Pairs */}
-        {reversedEditions.slice(1).map((edition, index) => (
-          <div key={index}>
-            <EdItem
-              id={edition.id}
-              image={edition.image}
-              title={edition.title}
-              author={edition.author}
-              review={edition.review}
-              reviewName={edition.reviewName}
-              link={edition.link}
-              price={edition.price}
+      {/* Novedad - Último libro */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start rounded-md bg-[#0B0B0B]">
+        {/* Imagen del libro */}
+        <div className="m-2 font-neue-display">
+          {latestBook.image && (
+            <AnimatedImage
+              src={latestBook.image}
+              alt={latestBook.title}
+              width={500}
+              height={600}
+              priority
+              className="rounded-md mb-2 drop-shadow-md border border-[#666666] border-opacity-20 object-contain w-full"
             />
-          </div>
-        ))}
+          )}
+        </div>
+        
+        {/* Información del libro */}
+        <div className="m-2 font-neue-display">
+          <EdItem
+            id={latestBook.id}
+            image={null}
+            title={latestBook.title}
+            author={latestBook.author}
+            review={latestBook.review}
+            reviewName={latestBook.reviewName}
+            link={latestBook.link}
+            price={latestBook.price}
+          />
+        </div>
+      </div>
+
+      {/* Link a la tienda para ver más */}
+      <div className="flex justify-center mt-8 mb-4">
+        <Link 
+          href="/shop"
+          className="text-sm text-gray-400 hover:text-white transition-colors border border-white/20 px-6 py-3 rounded-lg hover:bg-white/5"
+          style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}
+        >
+          Ver todo el catálogo →
+        </Link>
       </div>
     </div>
   );

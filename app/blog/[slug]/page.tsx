@@ -4,6 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import MarkdownContent from '@/app/components/MarkdownContent';
+import AnimatedImage from '@/app/components/AnimatedImage';
+import editions from '@/app/editions';
 
 interface Post {
   id: string;
@@ -12,7 +15,12 @@ interface Post {
   subtitle: string;
   content: string;
   author: string;
+  authorImage: string | null;
   image: string;
+  gallery: string[];
+  tags: string[];
+  featured: boolean;
+  relatedBookId: string | null;
   createdAt: string;
   updatedAt: string;
   published: boolean;
@@ -55,10 +63,15 @@ export default function BlogPostPage() {
     });
   };
 
+  // Obtener libro relacionado
+  const relatedBook = post?.relatedBookId 
+    ? editions.find(e => e.id === post.relatedBookId) 
+    : null;
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh] font-neue-display">
-        <p className="text-gray-400">Cargando...</p>
+        <div className="animate-pulse text-gray-500">Cargando...</div>
       </div>
     );
   }
@@ -70,7 +83,7 @@ export default function BlogPostPage() {
         <p className="text-gray-400 mb-6">La entrada que buscás no existe o fue eliminada.</p>
         <Link 
           href="/blog" 
-          className="bg-[#2C2C2C] hover:bg-gray-600 text-white px-6 py-2 rounded-md transition-colors"
+          className="text-sm px-6 py-2.5 bg-white text-black rounded-full font-medium hover:bg-gray-200 transition-colors"
         >
           Volver al blog
         </Link>
@@ -81,69 +94,168 @@ export default function BlogPostPage() {
   return (
     <article className="max-w-3xl mx-auto font-neue-display px-4 md:px-0">
       {/* Breadcrumb */}
-      <div className="mb-6">
-        <Link href="/blog" className="text-sm text-gray-400 hover:text-white transition-colors">
-          ← Volver al blog
+      <nav className="mb-8">
+        <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-colors group">
+          <span className="group-hover:-translate-x-1 transition-transform">←</span>
+          <span>Blog</span>
         </Link>
-      </div>
+      </nav>
 
       {/* Header */}
-      <header className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-3 leading-tight">
+      <header className="mb-10">
+        {/* Tags y Featured */}
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          {post.featured && (
+            <span className="text-[10px] px-2.5 py-1 bg-white text-black rounded-full font-medium">
+              ★ Destacado
+            </span>
+          )}
+          {post.tags && post.tags.map((tag) => (
+            <Link 
+              key={tag} 
+              href={`/blog/tag/${encodeURIComponent(tag)}`}
+              className="text-[10px] px-2.5 py-1 bg-[#1a1a1a] border border-white/10 rounded-full text-gray-400 hover:text-white hover:border-white/30 transition-all"
+            >
+              {tag}
+            </Link>
+          ))}
+        </div>
+
+        {/* Título */}
+        <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-[1.1] tracking-tight">
           {post.title}
         </h1>
+        
+        {/* Subtítulo */}
         {post.subtitle && (
-          <p className="text-lg text-gray-400 mb-4">
+          <p className="text-xl text-gray-400 mb-6 leading-relaxed">
             {post.subtitle}
           </p>
         )}
-        <div className="flex items-center gap-4 text-sm text-gray-500">
-          <div className="flex items-center gap-2">
-            <Image 
-              src='/post-rounded.svg' 
-              width={12} 
-              height={12} 
-              alt='Autor'
-            />
-            <span>{post.author}</span>
+        
+        {/* Meta: Autor y fecha */}
+        <div className="flex items-center gap-4 py-4 border-y border-white/10">
+          <div className="flex items-center gap-3">
+            {post.authorImage ? (
+              <Image 
+                src={post.authorImage} 
+                width={40} 
+                height={40} 
+                alt={post.author}
+                className="rounded-full object-cover"
+              />
+            ) : post.author === 'El Desenfreno Ediciones' ? (
+              <Image 
+                src="/logo.png" 
+                width={40} 
+                height={40} 
+                alt="El Desenfreno Ediciones"
+                className="rounded-full object-contain bg-white p-1"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-[#1a1a1a] flex items-center justify-center">
+                <span className="text-lg font-semibold text-gray-500">
+                  {post.author.charAt(0)}
+                </span>
+              </div>
+            )}
+            <div>
+              <p className="font-medium text-sm">{post.author}</p>
+              <time className="text-xs text-gray-500">{formatDate(post.createdAt)}</time>
+            </div>
           </div>
-          <span>•</span>
-          <span className="italic">{formatDate(post.createdAt)}</span>
         </div>
       </header>
 
       {/* Imagen destacada */}
-      <div className="mb-8 rounded-lg overflow-hidden">
-        <Image 
-          src={post.image} 
-          alt={post.title} 
-          width={800} 
-          height={450} 
-          className="w-full object-cover"
+      {post.image && post.image !== '/post-1.jpg' && (
+        <figure className="mb-10 -mx-4 md:mx-0">
+          <div className="rounded-none md:rounded-xl overflow-hidden">
+            <AnimatedImage
+              src={post.image}
+              alt={post.title}
+              width={800}
+              height={450}
+              className="w-full object-cover"
+            />
+          </div>
+        </figure>
+      )}
+
+      {/* Contenido Markdown */}
+      <div className="mb-12">
+        <MarkdownContent 
+          content={post.content} 
+          className="prose-blog"
         />
       </div>
 
-      {/* Contenido */}
-      <div className="prose prose-invert prose-lg max-w-none">
-        {post.content.split('\n').map((paragraph, index) => (
-          paragraph.trim() && (
-            <p key={index} className="mb-4 text-gray-200 leading-relaxed">
-              {paragraph}
-            </p>
-          )
-        ))}
-      </div>
+      {/* Galería de imágenes */}
+      {post.gallery && post.gallery.length > 0 && (
+        <section className="mb-12">
+          <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">
+            Galería
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {post.gallery.map((img, index) => (
+              <div key={index} className="rounded-lg overflow-hidden">
+                <AnimatedImage
+                  src={img}
+                  alt={`${post.title} - imagen ${index + 1}`}
+                  width={400}
+                  height={400}
+                  className="object-cover w-full aspect-square hover:scale-105 transition-transform duration-500"
+                  animationDelay={index * 100}
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Libro relacionado */}
+      {relatedBook && (
+        <section className="mb-12">
+          <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">
+            Libro relacionado
+          </h3>
+          <Link 
+            href={`/product/${relatedBook.id}`} 
+            className="flex gap-5 p-5 bg-[#111] rounded-xl border border-white/5 hover:border-white/20 transition-all group"
+          >
+            <div className="w-24 flex-shrink-0">
+              <Image
+                src={relatedBook.image}
+                alt={relatedBook.title}
+                width={96}
+                height={140}
+                className="rounded-md object-cover shadow-lg"
+              />
+            </div>
+            <div className="flex flex-col justify-center">
+              <h4 className="font-semibold text-lg group-hover:text-gray-300 transition-colors">
+                {relatedBook.title}
+              </h4>
+              <p className="text-sm text-gray-500 mb-2">{relatedBook.author}</p>
+              <span className="text-xs text-gray-400 group-hover:text-white transition-colors inline-flex items-center gap-1">
+                Ver libro 
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </div>
+          </Link>
+        </section>
+      )}
 
       {/* Footer */}
-      <footer className="mt-12 pt-8 border-t border-gray-800">
+      <footer className="pt-8 border-t border-white/10">
         <Link 
           href="/blog" 
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors group"
         >
-          ← Ver más entradas del blog
+          <span className="group-hover:-translate-x-1 transition-transform">←</span>
+          Ver más entradas
         </Link>
       </footer>
     </article>
   );
 }
-

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, ReactNode } from 'react';
 
 type CartItem = {
   id: string;
@@ -24,8 +24,6 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Load cart from localStorage on initial render
@@ -42,19 +40,31 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setIsInitialized(true);
   }, []);
 
-  // Save cart to localStorage whenever it changes
+  // Calculate totals with useMemo to avoid unnecessary recalculations
+  const totalItems = useMemo(() =>
+    cart.reduce((total, item) => total + item.quantity, 0),
+    [cart]
+  );
+
+  const totalPrice = useMemo(() =>
+    cart.reduce((total, item) => total + (parseFloat(item.price) * item.quantity), 0),
+    [cart]
+  );
+
+  // Debounced localStorage save - only save after 300ms of inactivity
   useEffect(() => {
     if (isInitialized) {
-      localStorage.setItem('cart', JSON.stringify(cart));
-      
-      // Calculate totals
-      const items = cart.reduce((total, item) => total + item.quantity, 0);
-      setTotalItems(items);
-      
-      const price = cart.reduce((total, item) => {
-        return total + (parseFloat(item.price) * item.quantity);
-      }, 0);
-      setTotalPrice(price);
+      const timeoutId = setTimeout(() => {
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(() => {
+            localStorage.setItem('cart', JSON.stringify(cart));
+          });
+        } else {
+          localStorage.setItem('cart', JSON.stringify(cart));
+        }
+      }, 300);
+
+      return () => clearTimeout(timeoutId);
     }
   }, [cart, isInitialized]);
 

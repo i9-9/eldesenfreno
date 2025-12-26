@@ -25,7 +25,7 @@ const AddToCartButton = ({ id, title, price, image }: AddToCartButtonProps) => {
     <button 
       onClick={handleAddToCart}
       className="p-2 bg-[#333333] text-white hover:bg-gray-500 transition-all 
-      duration-700 drop-shadow opacity-80 text-xs rounded-md"
+      duration-300 drop-shadow opacity-80 text-xs rounded-md"
     >
       Añadir al carrito
     </button>

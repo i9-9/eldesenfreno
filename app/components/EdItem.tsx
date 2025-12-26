@@ -1,7 +1,7 @@
-import Image from 'next/image'
 import React from 'react'
 import Link from 'next/link';
 import AddToCartButton from './AddToCartButton';
+import AnimatedImage from './AnimatedImage';
 import { formatPrice } from '../utils/formatPrice';
 
 interface EdItemProps {
@@ -21,12 +21,13 @@ const EdItem = ({id, image, title, author, review, reviewName, link, price}: EdI
     <div className='m-2 font-neue-display'>
         {image && (
           <Link href={`/product/${id}`}>
-            <Image 
+            <AnimatedImage
               className='rounded-md mb-2 drop-shadow-md border border-[#666666] border-opacity-20 object-contain w-full'
-              src={image} 
-              alt={title} 
+              src={image}
+              alt={title}
               width={500}
               height={600}
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           </Link>
         )}
@@ -39,7 +40,7 @@ const EdItem = ({id, image, title, author, review, reviewName, link, price}: EdI
           <div className='flex'>
             <Link href={`/product/${id}`}>
               <button className='p-2 bg-[#121212] text-white hover:bg-gray-400 transition-all 
-              duration-700 drop-shadow opacity-80 text-xs mr-2 rounded-md'>Ver detalles</button>
+              duration-300 drop-shadow opacity-80 text-xs mr-2 rounded-md'>Ver detalles</button>
             </Link>
             <AddToCartButton id={id} title={title} price={price} image={image} />
           </div>

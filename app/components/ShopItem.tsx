@@ -1,7 +1,7 @@
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import AddToCartButton from './AddToCartButton';
+import AnimatedImage from './AnimatedImage';
 import { formatPrice } from '../utils/formatPrice';
 
 interface ShopItemProps {
@@ -30,11 +30,12 @@ const ShopItem = ({
       <div className="flex flex-col md:flex-row">
         <div className="md:w-1/3 mb-4 md:mb-0">
           <Link href={`/product/${id}`}>
-            <Image
+            <AnimatedImage
               src={image}
               alt={title}
               width={300}
               height={400}
+              sizes="(max-width: 768px) 100vw, 33vw"
               className="rounded-md mb-2 drop-shadow-md border border-[#666666] border-opacity-20 object-contain w-full"
             />
           </Link>
@@ -47,7 +48,7 @@ const ShopItem = ({
           <div className="flex space-x-3">
             <Link href={`/product/${id}`}>
               <button className="p-2 bg-[#121212] text-white hover:bg-gray-400 transition-all 
-              duration-700 drop-shadow opacity-80 text-xs rounded-md">
+              duration-300 drop-shadow opacity-80 text-xs rounded-md">
                 Ver detalles
               </button>
             </Link>

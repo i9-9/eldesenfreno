@@ -18,6 +18,8 @@ const aggie = localFont({
     },
   ],
   variable: "--font-aggie",
+  display: 'swap',
+  preload: true,
 });
 
 const inter = Inter({ subsets: ['latin'] })

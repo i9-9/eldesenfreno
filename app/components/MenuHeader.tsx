@@ -1,45 +1,63 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
-import CartIconWrapper from './CartIconWrapper';
+import { useCart } from '../context/CartContext';
 
 const MenuHeader = () => {
+  const { totalItems } = useCart();
+
   return (
-    <header className="hidden md:fixed top-0 left-0 right-0 z-10 md:flex items-center h-10 shrink-0 bg-transparent font-neue-display">
-      <div className="flex w-full justify-between items-center text-sm h-full gap-1">
+    <header className="hidden md:fixed top-0 left-0 right-0 z-10 md:flex items-center h-12 shrink-0 bg-transparent font-neue-display px-4">
+      <div className="flex w-full justify-between items-center text-sm h-full gap-2">
         <Link href="/" className="w-full">
-          <button className="p-2 bg-[#2C2C2C] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs w-full bg-opacity-10 border border-white border-opacity-20 rounded-lg backdrop-blur-lg shadow-lg">
-            Index
+          <button className="p-2 bg-[#2C2C2C] hover:bg-gray-400 transition-all duration-300 drop-shadow opacity-80 text-xs w-full bg-opacity-10 border border-white border-opacity-20 rounded-lg backdrop-blur-lg shadow-lg">
+            Home
           </button>
         </Link>
-        {/* <Link href="/blog" className="w-full">
-          <button className="p-2 bg-[#121212] hover:text-[#121212] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs rounded-md w-full">
-            Blog
-          </button>
-        </Link> */}
         <Link href="/shop" className="w-full">
-          <button className="p-2 bg-[#2C2C2C] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs w-full bg-opacity-10 border border-white border-opacity-20 rounded-lg backdrop-blur-lg shadow-lg">
+          <button className="p-2 bg-[#2C2C2C] hover:bg-gray-400 transition-all duration-300 drop-shadow opacity-80 text-xs w-full bg-opacity-10 border border-white border-opacity-20 rounded-lg backdrop-blur-lg shadow-lg">
             Tienda
           </button>
         </Link>
-        <Link href="/events" className="w-full">
-          <button className="p-2 bg-[#2C2C2C] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs w-full bg-opacity-10 border border-white border-opacity-20 rounded-lg backdrop-blur-lg shadow-lg">
-            Eventos
-          </button>
-        </Link>
-        <Link href="/authors" className="w-full">
-          <button className="p-2 bg-[#2C2C2C] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs w-full bg-opacity-10 border border-white border-opacity-20 rounded-lg backdrop-blur-lg shadow-lg">
-            Autorxs
+        <Link href="/blog" className="w-full">
+          <button className="p-2 bg-[#2C2C2C] hover:bg-gray-400 transition-all duration-300 drop-shadow opacity-80 text-xs w-full bg-opacity-10 border border-white border-opacity-20 rounded-lg backdrop-blur-lg shadow-lg">
+            Blog
           </button>
         </Link>
         <Link href="/contact" className="w-full">
-          <button className="p-2 bg-[#2C2C2C] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs w-full bg-opacity-10 border border-white border-opacity-20 rounded-lg backdrop-blur-lg shadow-lg">
+          <button className="p-2 bg-[#2C2C2C] hover:bg-gray-400 transition-all duration-300 drop-shadow opacity-80 text-xs w-full bg-opacity-10 border border-white border-opacity-20 rounded-lg backdrop-blur-lg shadow-lg">
             Contacto
           </button>
         </Link>
-        <Link href="/cart" className="w-full">
-          <button className="p-2 bg-[#2C2C2C] hover:bg-gray-400 transition-all duration-700 drop-shadow opacity-80 text-xs w-full bg-opacity-10 border border-white border-opacity-20 rounded-lg backdrop-blur-lg shadow-lg">
-            Carrito
+        
+        {/* Carrito con badge */}
+        <Link href="/cart" className="flex-shrink-0 relative group">
+          <button className="p-2 bg-[#2C2C2C] hover:bg-gray-400 transition-all duration-300 drop-shadow opacity-80 text-xs bg-opacity-10 border border-white border-opacity-20 rounded-lg backdrop-blur-lg shadow-lg aspect-square flex items-center justify-center">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              width="16" 
+              height="16" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+              className="group-hover:scale-110 transition-transform"
+            >
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
           </button>
+          
+          {/* Badge con animación */}
+          {totalItems > 0 && (
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-white text-black text-[10px] font-bold rounded-full flex items-center justify-center px-1 animate-bounce-in">
+              {totalItems > 99 ? '99+' : totalItems}
+            </span>
+          )}
         </Link>
       </div>
     </header>
