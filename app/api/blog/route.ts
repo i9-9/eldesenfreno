@@ -16,11 +16,11 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, subtitle, content, author, image } = body;
+    const { title, subtitle, content, author, tags, featured, relatedBookId } = body;
 
-    if (!title || !content || !author) {
+    if (!title || !content) {
       return NextResponse.json(
-        { error: 'Título, contenido y autor son requeridos' },
+        { error: 'Título y contenido son requeridos' },
         { status: 400 }
       );
     }
@@ -30,7 +30,9 @@ export async function POST(request: NextRequest) {
       subtitle,
       content,
       author,
-      image,
+      tags,
+      featured,
+      relatedBookId,
     });
 
     if (!newPost) {
