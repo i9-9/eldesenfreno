@@ -106,9 +106,9 @@ const CartPage = () => {
             
             {/* Precio subtotal */}
             <div className="flex-shrink-0 text-right">
-              <p className="font-semibold">{formatPrice(item.price * item.quantity)}</p>
+              <p className="font-semibold">{formatPrice(parseFloat(item.price) * item.quantity)}</p>
               {item.quantity > 1 && (
-                <p className="text-xs text-gray-500">c/u {formatPrice(item.price)}</p>
+                <p className="text-xs text-gray-500">c/u {formatPrice(parseFloat(item.price))}</p>
               )}
             </div>
           </div>

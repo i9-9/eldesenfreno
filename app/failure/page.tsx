@@ -2,33 +2,37 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function FailurePage() {
+function FailureContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get('error') || 'Hubo un problema al procesar tu pago';
 
   return (
     <div className="container mx-auto p-4 text-center font-neue-display">
-      <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-red-600 mb-4">Pago no completado</h1>
-        <p className="mb-6 text-gray-700">
-          {error}
-          <br />
-          <span className="text-sm mt-2 block">
-            Si el problema persiste, por favor contacta a soporte en eldesenfreno.contacto@gmail.com
-          </span>
+      <div className="max-w-md mx-auto bg-[#111] p-8 rounded-xl border border-white/10">
+        <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-red-500/20 flex items-center justify-center">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-red-500">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M15 9l-6 6M9 9l6 6"/>
+          </svg>
+        </div>
+        <h1 className="text-2xl font-bold text-red-500 mb-4">Pago no completado</h1>
+        <p className="text-gray-400 mb-2">{error}</p>
+        <p className="text-sm text-gray-500 mb-6">
+          Si el problema persiste, contactanos en eldesenfreno.contacto@gmail.com
         </p>
         
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-center gap-3">
           <Link 
             href="/checkout" 
-            className="bg-[#121212] text-white px-6 py-3 rounded hover:bg-gray-800 transition"
+            className="px-6 py-2.5 bg-white text-black font-medium rounded-full hover:bg-gray-200 transition-colors"
           >
             Intentar nuevamente
           </Link>
           <Link 
             href="/shop" 
-            className="bg-gray-200 text-gray-800 px-6 py-3 rounded hover:bg-gray-300 transition"
+            className="px-6 py-2.5 bg-[#1a1a1a] text-white border border-white/20 rounded-full hover:bg-[#252525] transition-colors"
           >
             Volver a la tienda
           </Link>
@@ -36,4 +40,23 @@ export default function FailurePage() {
       </div>
     </div>
   );
-} 
+}
+
+export default function FailurePage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto p-4 text-center font-neue-display">
+        <div className="max-w-md mx-auto bg-[#111] p-8 rounded-xl border border-white/10">
+          <div className="animate-pulse">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gray-700" />
+            <div className="h-8 bg-gray-700 rounded mb-4 w-3/4 mx-auto" />
+            <div className="h-4 bg-gray-700 rounded mb-2 w-full" />
+            <div className="h-4 bg-gray-700 rounded mb-6 w-2/3 mx-auto" />
+          </div>
+        </div>
+      </div>
+    }>
+      <FailureContent />
+    </Suspense>
+  );
+}

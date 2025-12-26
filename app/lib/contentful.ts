@@ -74,7 +74,7 @@ export function transformEntry(entry: Entry<BlogPostSkeleton>): BlogPost {
     authorImage: getAssetUrl(fields.authorImage),
     image: getAssetUrl(fields.image) || '/post-1.jpg',
     gallery: (fields.gallery || []).map((asset: any) => getAssetUrl(asset)).filter(Boolean) as string[],
-    tags: (fields.tags as string[]) || [],
+    tags: Array.isArray(fields.tags) ? (fields.tags as string[]) : [],
     featured: Boolean(fields.featured),
     relatedBookId: fields.relatedBookId ? String(fields.relatedBookId) : null,
     createdAt: entry.sys.createdAt,
