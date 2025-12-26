@@ -19,7 +19,7 @@ export default async function Blog() {
   const tags = await getAllTags();
 
   return (
-    <div className='flex flex-col font-neue-display mx-2 md:mx-0'>
+    <div className='flex flex-col font-neue-display px-4 md:px-0'>
       {/* Header */}
       <header className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight mb-2">Blog</h1>

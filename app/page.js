@@ -28,14 +28,16 @@ export default function Home() {
         {/* Imagen del libro */}
         <div className="m-2 font-neue-display">
           {latestBook.image && (
-            <AnimatedImage
-              src={latestBook.image}
-              alt={latestBook.title}
-              width={500}
-              height={600}
-              priority
-              className="rounded-md mb-2 drop-shadow-md border border-[#666666] border-opacity-20 object-contain w-full"
-            />
+            <Link href={`/product/${latestBook.id}`}>
+              <AnimatedImage
+                src={latestBook.image}
+                alt={latestBook.title}
+                width={500}
+                height={600}
+                priority
+                className="rounded-md mb-2 drop-shadow-md border border-[#666666] border-opacity-20 object-contain w-full cursor-pointer hover:opacity-90 transition-opacity"
+              />
+            </Link>
           )}
         </div>
         

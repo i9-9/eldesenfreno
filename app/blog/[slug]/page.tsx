@@ -145,13 +145,15 @@ export default function BlogPostPage() {
                 className="rounded-full object-cover"
               />
             ) : post.author === 'El Desenfreno Ediciones' ? (
-              <Image 
-                src="/logo.png" 
-                width={40} 
-                height={40} 
-                alt="El Desenfreno Ediciones"
-                className="rounded-full object-contain bg-white p-1"
-              />
+              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden">
+                <Image 
+                  src="/logo.png" 
+                  width={28} 
+                  height={28} 
+                  alt="El Desenfreno Ediciones"
+                  className="object-contain"
+                />
+              </div>
             ) : (
               <div className="w-10 h-10 rounded-full bg-[#1a1a1a] flex items-center justify-center">
                 <span className="text-lg font-semibold text-gray-500">

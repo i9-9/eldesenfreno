@@ -1,17 +1,30 @@
-import { createClient, Entry, EntrySkeletonType, Asset } from 'contentful';
+import { createClient, Entry, EntrySkeletonType, Asset, ContentfulClientApi } from 'contentful';
 import { createClient as createManagementClient } from 'contentful-management';
 
-// Cliente para lectura (Content Delivery API)
-export const contentfulClient = createClient({
-  space: process.env.CONTENTFUL_SPACE_ID!,
-  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN!,
-  environment: process.env.CONTENTFUL_ENVIRONMENT || 'master',
-});
+// Cliente lazy - se inicializa solo cuando se usa
+let _contentfulClient: ContentfulClientApi<undefined> | null = null;
+
+function getContentfulClient() {
+  if (!_contentfulClient) {
+    if (!process.env.CONTENTFUL_SPACE_ID || !process.env.CONTENTFUL_ACCESS_TOKEN) {
+      throw new Error('Contentful environment variables are not configured');
+    }
+    _contentfulClient = createClient({
+      space: process.env.CONTENTFUL_SPACE_ID,
+      accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+      environment: process.env.CONTENTFUL_ENVIRONMENT || 'master',
+    });
+  }
+  return _contentfulClient;
+}
 
 // Cliente para escritura (Content Management API)
 export const getManagementClient = () => {
+  if (!process.env.CONTENTFUL_MANAGEMENT_TOKEN) {
+    throw new Error('Contentful Management Token is not configured');
+  }
   return createManagementClient({
-    accessToken: process.env.CONTENTFUL_MANAGEMENT_TOKEN!,
+    accessToken: process.env.CONTENTFUL_MANAGEMENT_TOKEN,
   });
 };
 
@@ -86,7 +99,8 @@ export function transformEntry(entry: Entry<BlogPostSkeleton>): BlogPost {
 // Obtener todos los posts
 export async function getPosts(): Promise<BlogPost[]> {
   try {
-    const entries = await contentfulClient.getEntries<BlogPostSkeleton>({
+    const client = getContentfulClient();
+    const entries = await client.getEntries<BlogPostSkeleton>({
       content_type: 'blogPost',
       order: ['-sys.createdAt'],
       include: 2,
@@ -113,7 +127,8 @@ export async function getPostsSorted(): Promise<BlogPost[]> {
 // Obtener posts por tag
 export async function getPostsByTag(tag: string): Promise<BlogPost[]> {
   try {
-    const entries = await contentfulClient.getEntries<BlogPostSkeleton>({
+    const client = getContentfulClient();
+    const entries = await client.getEntries<BlogPostSkeleton>({
       content_type: 'blogPost',
       'fields.tags[in]': tag,
       order: ['-sys.createdAt'],
@@ -137,7 +152,8 @@ export async function getAllTags(): Promise<string[]> {
 // Obtener un post por slug
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   try {
-    const entries = await contentfulClient.getEntries<BlogPostSkeleton>({
+    const client = getContentfulClient();
+    const entries = await client.getEntries<BlogPostSkeleton>({
       content_type: 'blogPost',
       'fields.slug[match]': slug,
       limit: 1,
@@ -158,7 +174,8 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 // Obtener un post por ID
 export async function getPostById(id: string): Promise<BlogPost | null> {
   try {
-    const entry = await contentfulClient.getEntry<BlogPostSkeleton>(id, { include: 2 });
+    const client = getContentfulClient();
+    const entry = await client.getEntry<BlogPostSkeleton>(id, { include: 2 });
     return transformEntry(entry);
   } catch (error) {
     console.error('Error fetching post from Contentful:', error);
