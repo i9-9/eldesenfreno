@@ -92,7 +92,7 @@ export default function BlogPostPage() {
   }
 
   return (
-    <article className="max-w-3xl mx-auto font-neue-display px-4 md:px-0">
+    <article className="max-w-3xl mx-auto font-neue-display px-4 md:px-0 pt-4 pb-16">
       {/* Breadcrumb */}
       <nav className="mb-8">
         <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-colors group">

@@ -19,9 +19,9 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col pt-2">
+    <div className="flex flex-col pt-6">
       {/* Título de la sección */}
-      <h2 className="text-xl font-neue-display font-bold -tracking-wide mx-2 mb-2">Novedades</h2>
+      <h2 className="text-3xl font-neue-display font-bold -tracking-wide mx-2 mb-4">Novedades</h2>
 
       {/* Novedad - Último libro */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start rounded-md bg-[#0B0B0B]">
