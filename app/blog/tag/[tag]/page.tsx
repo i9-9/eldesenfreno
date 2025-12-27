@@ -28,7 +28,7 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
   const allTags = await getAllTags();
 
   return (
-    <div className='flex flex-col font-neue-display px-4 md:px-0'>
+    <div className='flex flex-col font-neue-display px-4 md:px-0 pt-4'>
       {/* Breadcrumb */}
       <nav className="mb-6">
         <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-colors group">
