@@ -2,11 +2,18 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useCart } from '../context/CartContext'
 
 const Dropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { totalItems } = useCart();
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    return pathname.startsWith(href);
+  };
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -73,9 +80,11 @@ const Dropdown = () => {
             <Link
               key={item.href}
               href={item.href}
-              className={`block w-full text-left px-4 py-3 text-xs text-white hover:bg-white/10 transition-all duration-200 ${
+              className={`block w-full text-left px-4 py-3 text-xs text-white transition-all duration-200 ${
                 index !== menuItems.length - 1 ? 'border-b border-white/10' : ''
-              } ${isOpen ? 'animate-menu-item' : 'opacity-0 translate-x-[-10px]'}`}
+              } ${isOpen ? 'animate-menu-item' : 'opacity-0 translate-x-[-10px]'} ${
+                isActive(item.href) ? 'bg-white/10' : 'hover:bg-white/10'
+              }`}
               style={{ 
                 animationDelay: isOpen ? `${index * 50}ms` : '0ms',
                 animationFillMode: 'both'
@@ -89,9 +98,9 @@ const Dropdown = () => {
           {/* Carrito con badge */}
           <Link
             href="/cart"
-            className={`flex items-center justify-between w-full px-4 py-3 text-xs text-white hover:bg-white/10 transition-all duration-200 border-t border-white/10 ${
+            className={`flex items-center justify-between w-full px-4 py-3 text-xs text-white transition-all duration-200 border-t border-white/10 ${
               isOpen ? 'animate-menu-item' : 'opacity-0 translate-x-[-10px]'
-            }`}
+            } ${isActive('/cart') ? 'bg-white/10' : 'hover:bg-white/10'}`}
             style={{ 
               animationDelay: isOpen ? `${menuItems.length * 50}ms` : '0ms',
               animationFillMode: 'both'
