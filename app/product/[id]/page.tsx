@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation';
 import editions from '../../editions';
 import AddToCartButton from '../../components/AddToCartButton';
 import AnimatedImage from '../../components/AnimatedImage';
+import AuthorBio from '../../components/AuthorBio';
 import { formatPrice } from '../../utils/formatPrice';
 
 const ProductPage = () => {
@@ -61,42 +62,55 @@ const ProductPage = () => {
           {/* Descripción / Reseña */}
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-2">Sobre el libro</h3>
-            <p className="text-sm leading-7 text-gray-300">{product.review}</p>
+            <div className="text-sm leading-7 text-gray-300 whitespace-pre-line">{product.review}</div>
             <p className="text-sm italic mt-4 text-gray-500">— {product.reviewName}</p>
           </div>
           
-          <AddToCartButton 
-            id={product.id} 
-            title={product.title} 
-            price={product.price} 
-            image={product.image} 
+          <AddToCartButton
+            id={product.id}
+            title={product.title}
+            price={product.price}
+            image={product.image}
           />
         </div>
       </div>
 
-      {/* Sección del Autor */}
-      {product.authorImage && product.authorBio && (
-        <div className="mt-12 bg-[#1a1a1a] rounded-lg p-6 border border-white/10">
-          <h3 className="text-lg font-semibold mb-6">Sobre el autor</h3>
-          <div className="flex flex-col md:flex-row gap-6 items-start">
-            {/* Foto del autor */}
-            <div className="flex-shrink-0">
-              <AnimatedImage
-                src={product.authorImage}
-                alt={product.author}
-                width={120}
-                height={120}
-                animationDelay={200}
-                className="rounded-full object-cover w-[120px] h-[120px] border-2 border-white/20"
-              />
-            </div>
-            
-            {/* Bio del autor */}
-            <div className="flex-1">
-              <h4 className="text-xl font-medium mb-3">{product.author}</h4>
-              <p className="text-sm leading-7 text-gray-400">{product.authorBio}</p>
-            </div>
+      {/* Bio del autor */}
+      {product.authorBio && (
+        <AuthorBio
+          name={product.author}
+          bio={product.authorBio}
+          image={product.authorImage}
+        />
+      )}
+
+      {/* Tracklist */}
+      {(product as any).tracklist && (
+        <div className="mt-12 bg-[#0B0B0B] rounded-lg p-6">
+          <h3 className="text-lg font-semibold mb-4">Tracklist</h3>
+          <div className="space-y-2">
+            {((product as any).tracklist as Array<{ number: number; artist: string; title: string; duration: string }>).map((track) => (
+              <div key={track.number} className="flex items-start gap-4 text-sm text-gray-300 border-b border-white/10 pb-2 last:border-0">
+                <span className="text-gray-500 font-mono text-xs w-6 flex-shrink-0">{track.number}.</span>
+                <div className="flex-1">
+                  <div className="font-medium">{track.artist} - {track.title}</div>
+                </div>
+                <span className="text-gray-500 text-xs font-mono flex-shrink-0">{track.duration}</span>
+              </div>
+            ))}
           </div>
+        </div>
+      )}
+
+      {/* Bandcamp Embed para DESPARRAMO V/A */}
+      {product.id === "7" && (
+        <div className="mt-8 flex justify-center">
+          <iframe 
+            style={{ border: 0, width: '350px', height: '470px' }} 
+            src="https://bandcamp.com/EmbeddedPlayer/album=2883471037/size=large/bgcol=333333/linkcol=ffffff/tracklist=false/transparent=true/" 
+            seamless
+            title="DESPARRAMO V/A by El desenfreno"
+          />
         </div>
       )}
 

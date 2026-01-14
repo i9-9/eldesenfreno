@@ -39,6 +39,19 @@ export default function Home() {
               />
             </Link>
           )}
+          
+          {/* Bandcamp Embed para DESPARRAMO V/A */}
+          {latestBook.id === "7" && (
+            <div className="mt-4 w-full overflow-visible">
+              <iframe 
+                style={{ border: 0, width: '100%', height: '600px', minHeight: '600px' }} 
+                src="https://bandcamp.com/EmbeddedPlayer/album=2883471037/size=large/bgcol=333333/linkcol=ffffff/tracklist=false/transparent=true/" 
+                seamless
+                className="w-full"
+                title="DESPARRAMO V/A by El desenfreno"
+              />
+            </div>
+          )}
         </div>
         
         {/* Información del libro */}

@@ -48,7 +48,7 @@ const ShopItem = ({
           <div className="flex space-x-3">
             <Link href={`/product/${id}`}>
               <button className="p-2 bg-[#121212] text-white hover:bg-gray-400 transition-all 
-              duration-300 drop-shadow opacity-80 text-xs rounded-md">
+              duration-300 drop-shadow opacity-80 text-xs rounded-md border border-white border-opacity-20">
                 Ver detalles
               </button>
             </Link>

@@ -55,13 +55,6 @@ export default function BlogPostPage() {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-AR', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
-  };
 
   // Obtener libro relacionado
   const relatedBook = post?.relatedBookId 
@@ -132,41 +125,6 @@ export default function BlogPostPage() {
             {post.subtitle}
           </p>
         )}
-        
-        {/* Meta: Autor y fecha */}
-        <div className="flex items-center gap-4 py-4 border-y border-white/10">
-          <div className="flex items-center gap-3">
-            {post.authorImage ? (
-              <Image 
-                src={post.authorImage} 
-                width={40} 
-                height={40} 
-                alt={post.author}
-                className="rounded-full object-cover"
-              />
-            ) : post.author === 'El Desenfreno Ediciones' ? (
-              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden">
-                <Image 
-                  src="/logo.png" 
-                  width={28} 
-                  height={28} 
-                  alt="El Desenfreno Ediciones"
-                  className="object-contain"
-                />
-              </div>
-            ) : (
-              <div className="w-10 h-10 rounded-full bg-[#1a1a1a] flex items-center justify-center">
-                <span className="text-lg font-semibold text-gray-500">
-                  {post.author.charAt(0)}
-                </span>
-              </div>
-            )}
-            <div>
-              <p className="font-medium text-sm">{post.author}</p>
-              <time className="text-xs text-gray-500">{formatDate(post.createdAt)}</time>
-            </div>
-          </div>
-        </div>
       </header>
 
       {/* Imagen destacada */}

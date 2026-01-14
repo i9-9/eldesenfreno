@@ -1,4 +1,4 @@
-const editions = [
+  const editions = [
   {
     id: "1",
     image: "/1.webp",
@@ -71,12 +71,44 @@ const editions = [
     image: "/6.jpg",
     title: "Mordida por las flores",
     author: "Yanina Audisio",
-    authorImage: "/author-6.png",
+    authorImage: "/author-6.JPG",
     authorBio: "Yanina Audisio es poeta argentina. Su pluma originalísima despliega una lírica del dolor corporal y del desasosiego animada por un imaginario simbolista.",
     review: `Mordida por las flores -¡qué título tan baudeleriano!- nos propone una temporada en el infierno. Como una Rimbaud desenfocada, Yanina Audisio arroja imágenes artaudianas tan perturbadoras como excitantes. La sorpresa es permanente; el sobresalto, estético. Estas tres ineludibles herencias quedarán desfiguradas en la pluma originalísima de esta poeta argentina que despliega una lírica del dolor corporal y del desasosiego animada por un imaginario simbolista que, párrafo a párrafo, nos deja en estado de compasiva admiración. Es una escritura que nos retiene, en contra de todo intento de fuga, obligándonos al merodeo: paladear la imagen, recibir su belleza y su vértigo, experimentar, de verdad, el don poético como una incómoda celebración en la zona malograda de un cuerpo capaz de ahogarse en la palabra en pos de su resarcimiento.`,
     reviewName: "María Malusardi",
     price: "15000",
     link: "",
+  },
+  {
+    id: "7",
+    image: "/7.jpeg",
+    title: "DESPARRAMO V/A",
+    author: "Varios Artistas",
+    authorImage: null,
+    authorBio: null,
+    review: `Si una fuerza se expande es porque hay vértices que comulgan con ella, se estiran hasta el encuentro para que el acontecimiento suceda. Hay un orden cansado de sí mismo, un temblor anunciando la mutación de su forma.
+
+"Desparramo V/A" busca esa comunión entre lo sonoro y la palabra para que, ahí donde uno descansa, el otro sostenga el fuego.
+
+
+Idea y compilación: Enzo Amarillo
+Master: Oriana Tosi
+Artwork: Plantasia
+`,
+    reviewName: "El Desenfreno Ediciones",
+    price: "8000",
+    link: "",
+    tracklist: [
+      { number: 1, artist: "Catriel Nievas", title: "An(geologist) II", duration: "04:35" },
+      { number: 2, artist: "María Magdalena", title: "Láudano para el corazón negro", duration: "01:17" },
+      { number: 3, artist: "Lusiaen", title: "Dspota", duration: "02:40" },
+      { number: 4, artist: "María Malusardi", title: "Harán una película con mi entierro", duration: "01:22" },
+      { number: 5, artist: "Lila", title: "Anhelo", duration: "04:44" },
+      { number: 6, artist: "Rvrls", title: "Mates con iván", duration: "04:20" },
+      { number: 7, artist: "Diego Roel", title: "Padre tótem | Oscuros umbrales de revelación", duration: "01:13" },
+      { number: 8, artist: "Sáccea", title: "Refleja el río", duration: "03:20" },
+      { number: 9, artist: "Enzo Amarillo", title: "El veneno del manto", duration: "01:09" },
+      { number: 10, artist: "UnknownSoul", title: "Anábasis", duration: "03:51" },
+    ],
   },
 ];
 

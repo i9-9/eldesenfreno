@@ -22,7 +22,8 @@ const CartPage = () => {
         <h2 className="text-2xl font-bold mb-2">Tu carrito está vacío</h2>
         <p className="text-gray-400 mb-8 text-center">Explorá nuestra tienda y encontrá tu próxima lectura</p>
         <Link href="/shop">
-          <button className="px-8 py-3 bg-white text-black font-medium rounded-full hover:bg-gray-200 transition-all duration-300">
+          <button className="p-2 bg-white text-black hover:bg-gray-200 transition-all 
+          duration-300 drop-shadow opacity-80 text-xs rounded-md border border-white border-opacity-20">
             Ver catálogo
           </button>
         </Link>
@@ -138,7 +139,7 @@ const CartPage = () => {
           
           {/* Botón checkout */}
           <Link href="/checkout" className="block">
-            <button className="w-full py-4 bg-white text-black font-semibold rounded-xl hover:bg-gray-200 transition-all duration-300 flex items-center justify-center gap-2">
+            <button className="w-full py-4 bg-white text-black font-semibold rounded-xl hover:bg-gray-200 transition-all duration-300 flex items-center justify-center gap-2 border border-white border-opacity-20">
               <span>Finalizar compra</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
