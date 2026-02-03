@@ -179,8 +179,8 @@ export default function BlogPostPage() {
           <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">
             Libro relacionado
           </h3>
-          <Link 
-            href={`/product/${relatedBook.id}`} 
+          <Link
+            href={`/product/${relatedBook.slug}`}
             className="flex gap-5 p-5 bg-[#111] rounded-xl border border-white/5 hover:border-white/20 transition-all group"
           >
             <div className="w-24 flex-shrink-0">

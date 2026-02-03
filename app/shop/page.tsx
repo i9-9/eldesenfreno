@@ -12,6 +12,7 @@ const Shop = () => {
           <div key={index} id={`${index}`}>
             <ShopItem
               id={edition.id}
+              slug={edition.slug}
               image={edition.image}
               title={edition.title}
               author={edition.author}

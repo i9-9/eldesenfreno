@@ -6,6 +6,7 @@ import { formatPrice } from '../utils/formatPrice';
 
 interface EdItemProps {
     id: string;
+    slug: string;
     image: string | null;
     title: string;
     author: string;
@@ -15,12 +16,12 @@ interface EdItemProps {
     price: string;
 }
 
-const EdItem = ({id, image, title, author, review, reviewName, link, price}: EdItemProps) => {
+const EdItem = ({id, slug, image, title, author, review, reviewName, link, price}: EdItemProps) => {
 
   return (
     <div className='m-2 font-neue-display'>
         {image && (
-          <Link href={`/product/${id}`}>
+          <Link href={`/product/${slug}`}>
             <AnimatedImage
               className='rounded-md mb-2 drop-shadow-md border border-[#666666] border-opacity-20 object-contain w-full'
               src={image}
@@ -38,8 +39,8 @@ const EdItem = ({id, image, title, author, review, reviewName, link, price}: EdI
           <p className='text-xs italic mb-2'>{reviewName}</p>
           <p className='text-lg font-bold mb-4'>{formatPrice(price)}</p>
           <div className='flex'>
-            <Link href={`/product/${id}`}>
-              <button className='p-2 bg-[#121212] text-white hover:bg-gray-400 transition-all 
+            <Link href={`/product/${slug}`}>
+              <button className='p-2 bg-[#121212] text-white hover:bg-gray-400 transition-all
               duration-300 drop-shadow opacity-80 text-xs mr-2 rounded-md border border-white border-opacity-20'>Ver detalles</button>
             </Link>
             <AddToCartButton id={id} title={title} price={price} image={image} />

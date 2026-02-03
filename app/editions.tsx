@@ -1,6 +1,7 @@
   const editions = [
   {
     id: "1",
+    slug: "laudano-para-el-corazon-negro",
     image: "/1.webp",
     title: "Láudano para el corazón negro",
     author: "María Magdalena",
@@ -13,6 +14,7 @@
   },
   {
     id: "2",
+    slug: "haran-una-pelicula-con-mi-entierro",
     image: "/2.webp",
     title: "Harán una película con mi entierro",
     author: "María Malusardi",
@@ -25,6 +27,7 @@
   },
   {
     id: "3",
+    slug: "padre-totem-oscuros-umbrales-de-revelacion",
     image: "/3.webp",
     title: "Padre Tótem - Oscuros umbrales de revelación",
     author: "Diego Roel",
@@ -37,6 +40,7 @@
   },
   {
     id: "4",
+    slug: "el-veneno-del-manto",
     image: "/4.webp",
     title: "El veneno del manto",
     author: "Enzo Amarillo",
@@ -49,6 +53,7 @@
   },
   {
     id: "5",
+    slug: "maquina-para-hablar-con-los-muertos",
     image: "/5.webp",
     title: "Máquina para hablar con los muertos",
     author: "Carmen García Palma",
@@ -61,6 +66,7 @@
   },
   {
     id: "6",
+    slug: "mordida-por-las-flores",
     image: "/6.jpg",
     title: "Mordida por las flores",
     author: "Yanina Audisio",
@@ -73,6 +79,7 @@
   },
   {
     id: "7",
+    slug: "desparramo-va",
     image: "/7.jpeg",
     title: "DESPARRAMO V/A",
     author: "Varios Artistas",

@@ -6,6 +6,7 @@ import { formatPrice } from '../utils/formatPrice';
 
 interface ShopItemProps {
   id: string;
+  slug: string;
   image: string;
   title: string;
   author: string;
@@ -17,6 +18,7 @@ interface ShopItemProps {
 
 const ShopItem = ({
   id,
+  slug,
   image,
   title,
   author,
@@ -29,7 +31,7 @@ const ShopItem = ({
     <div className="mb-8 p-4 bg-[#0B0B0B] rounded-lg">
       <div className="flex flex-col md:flex-row">
         <div className="md:w-1/3 mb-4 md:mb-0">
-          <Link href={`/product/${id}`}>
+          <Link href={`/product/${slug}`}>
             <AnimatedImage
               src={image}
               alt={title}
@@ -46,8 +48,8 @@ const ShopItem = ({
           <p className="text-lg font-bold mb-4">{formatPrice(price)}</p>
           <p className="text-sm mb-4 line-clamp-3">{review}</p>
           <div className="flex space-x-3">
-            <Link href={`/product/${id}`}>
-              <button className="p-2 bg-[#121212] text-white hover:bg-gray-400 transition-all 
+            <Link href={`/product/${slug}`}>
+              <button className="p-2 bg-[#121212] text-white hover:bg-gray-400 transition-all
               duration-300 drop-shadow opacity-80 text-xs rounded-md border border-white border-opacity-20">
                 Ver detalles
               </button>

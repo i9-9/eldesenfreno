@@ -11,8 +11,8 @@ import AuthorBio from '../../components/AuthorBio';
 import { formatPrice } from '../../utils/formatPrice';
 
 const ProductPage = () => {
-  const { id } = useParams();
-  const currentIndex = editions.findIndex(edition => edition.id === id);
+  const { slug } = useParams();
+  const currentIndex = editions.findIndex(edition => edition.slug === slug);
   const product = editions[currentIndex];
 
   // Navegación entre libros
@@ -118,8 +118,8 @@ const ProductPage = () => {
       <div className="mt-12 flex justify-between items-center">
         {/* Flecha Anterior */}
         {prevProduct ? (
-          <Link 
-            href={`/product/${prevProduct.id}`}
+          <Link
+            href={`/product/${prevProduct.slug}`}
             className="group flex items-center gap-3 text-gray-400 hover:text-white transition-colors"
           >
             <span className="text-2xl group-hover:-translate-x-1 transition-transform">←</span>
@@ -134,8 +134,8 @@ const ProductPage = () => {
 
         {/* Flecha Siguiente */}
         {nextProduct ? (
-          <Link 
-            href={`/product/${nextProduct.id}`}
+          <Link
+            href={`/product/${nextProduct.slug}`}
             className="group flex items-center gap-3 text-gray-400 hover:text-white transition-colors"
           >
             <div className="hidden sm:block text-right">

@@ -28,7 +28,7 @@ export default function Home() {
         {/* Imagen del libro */}
         <div className="m-2 font-neue-display">
           {latestBook.image && (
-            <Link href={`/product/${latestBook.id}`}>
+            <Link href={`/product/${latestBook.slug}`}>
               <AnimatedImage
                 src={latestBook.image}
                 alt={latestBook.title}
@@ -58,6 +58,7 @@ export default function Home() {
         <div className="m-2 font-neue-display">
           <EdItem
             id={latestBook.id}
+            slug={latestBook.slug}
             image={null}
             title={latestBook.title}
             author={latestBook.author}

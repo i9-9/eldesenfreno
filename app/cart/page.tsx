@@ -5,9 +5,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../utils/formatPrice';
+import editions from '../editions';
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();
+
+  // Helper function to get slug from id
+  const getSlugFromId = (id: string) => {
+    const edition = editions.find(e => e.id === id);
+    return edition?.slug || id;
+  };
 
   if (cart.length === 0) {
     return (
@@ -52,21 +59,21 @@ const CartPage = () => {
             className="flex gap-4 p-4 bg-[#111] rounded-xl border border-white/5 hover:border-white/10 transition-colors"
           >
             {/* Imagen */}
-            <Link href={`/product/${item.id}`} className="flex-shrink-0">
+            <Link href={`/product/${getSlugFromId(item.id)}`} className="flex-shrink-0">
               {item.image && (
-                <Image 
-                  src={item.image} 
-                  alt={item.title} 
-                  width={80} 
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  width={80}
                   height={120}
                   className="rounded-lg object-cover shadow-lg"
                 />
               )}
             </Link>
-            
+
             {/* Info */}
             <div className="flex-grow min-w-0">
-              <Link href={`/product/${item.id}`}>
+              <Link href={`/product/${getSlugFromId(item.id)}`}>
                 <h3 className="font-semibold text-lg hover:text-gray-300 transition-colors truncate">
                   {item.title}
                 </h3>
