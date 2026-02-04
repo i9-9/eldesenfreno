@@ -35,7 +35,10 @@ const EdItem = ({id, slug, image, title, author, review, reviewName, link, price
         <div className='md:max-w-[500px] pb-4 px-2'>
           <h4 className='font-semibold text-lg'>{title}</h4>
           <h5 className='text-xs mb-4'>{author}</h5>
-          <div className='text-xs mb-4 leading-5 whitespace-pre-line'>{review}</div>
+          <div
+            className='text-xs mb-4 leading-5 whitespace-pre-line'
+            dangerouslySetInnerHTML={{ __html: review }}
+          />
           <p className='text-xs italic mb-2'>{reviewName}</p>
           <p className='text-lg font-bold mb-4'>{formatPrice(price)}</p>
           <div className='flex'>

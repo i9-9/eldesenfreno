@@ -46,7 +46,10 @@ const ShopItem = ({
           <h2 className="text-xl font-bold mb-2">{title}</h2>
           <h3 className="text-md mb-2">{author}</h3>
           <p className="text-lg font-bold mb-4">{formatPrice(price)}</p>
-          <p className="text-sm mb-4 line-clamp-3">{review}</p>
+          <div
+            className="text-sm mb-4 line-clamp-3"
+            dangerouslySetInnerHTML={{ __html: review }}
+          />
           <div className="flex space-x-3">
             <Link href={`/product/${slug}`}>
               <button className="p-2 bg-[#121212] text-white hover:bg-gray-400 transition-all
