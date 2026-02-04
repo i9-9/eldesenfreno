@@ -30,13 +30,12 @@ const AuthorBio: React.FC<AuthorBioProps> = ({ name, bio, image }) => {
         <div className="flex-1">
           <h4 className="text-base font-semibold mb-2">{name}</h4>
           <div className="relative">
-            <p
+            <div
               className={`text-sm leading-7 text-gray-300 transition-all duration-500 ease-in-out ${
                 isExpanded ? 'max-h-[2000px]' : 'max-h-[7rem] overflow-hidden'
               }`}
-            >
-              {bio}
-            </p>
+              dangerouslySetInnerHTML={{ __html: bio }}
+            />
             {!isExpanded && (
               <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#0B0B0B] to-transparent pointer-events-none" />
             )}

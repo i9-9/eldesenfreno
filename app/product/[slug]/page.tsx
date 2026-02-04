@@ -62,7 +62,10 @@ const ProductPage = () => {
           {/* Descripción / Reseña */}
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-2">Sobre el libro</h3>
-            <div className="text-sm leading-7 text-gray-300 whitespace-pre-line">{product.review}</div>
+            <div
+              className="text-sm leading-7 text-gray-300 whitespace-pre-line"
+              dangerouslySetInnerHTML={{ __html: product.review }}
+            />
             <p className="text-sm italic mt-4 text-gray-500">— {product.reviewName}</p>
           </div>
           
