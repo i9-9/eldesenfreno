@@ -7,7 +7,7 @@ import editions from '../../editions';
 import AddToCartButton from '../../components/AddToCartButton';
 import AnimatedImage from '../../components/AnimatedImage';
 import AuthorBio from '../../components/AuthorBio';
-import Tracklist, { type TracklistEntry } from '../../components/Tracklist';
+import DesparramoBandcampEmbeds from '../../components/DesparramoBandcampEmbeds';
 import { formatPrice } from '../../utils/formatPrice';
 
 const ProductPage = () => {
@@ -87,23 +87,8 @@ const ProductPage = () => {
         />
       )}
 
-      {(product as { tracklist?: TracklistEntry[] }).tracklist && (
-        <Tracklist
-          className="mt-12"
-          tracks={(product as { tracklist: TracklistEntry[] }).tracklist}
-        />
-      )}
-
       {product.id === "7" && (
-        <div className="mt-8 w-full max-w-2xl mx-auto">
-          <iframe
-            style={{ border: 0, width: '100%', height: '307px' }}
-            src="https://bandcamp.com/EmbeddedPlayer/album=2883471037/size=large/bgcol=333333/linkcol=ffffff/tracklist=false/transparent=true/"
-            seamless
-            className="w-full"
-            title="DESPARRAMO V/A by El desenfreno"
-          />
-        </div>
+        <DesparramoBandcampEmbeds className="mt-12" />
       )}
 
       {/* Navegación entre libros */}

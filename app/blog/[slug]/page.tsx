@@ -177,7 +177,7 @@ export default function BlogPostPage() {
       {/* Imagen destacada (cuadrada: horizontal y cuadrado se recortan al centro con object-cover) */}
       {post.image && post.image !== '/post-1.jpg' && (
         <figure className="mb-10 -mx-4 md:mx-0">
-          <div className="mx-auto max-w-2xl overflow-hidden rounded-none md:rounded-xl">
+          <div className="mx-auto max-w-2xl overflow-hidden rounded-none md:rounded-xl grayscale">
             <AnimatedImage
               src={post.image}
               alt={post.title}

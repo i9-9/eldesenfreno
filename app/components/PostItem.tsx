@@ -22,14 +22,16 @@ const PostItem = ({image, title, subtitle, date, author, authorImage, sectionLab
     <article className='group flex flex-col py-4 cursor-pointer'>
       {/* Imagen con overlay en hover */}
       <div className="relative overflow-hidden rounded-lg mb-4">
-        <AnimatedImage
-          src={image}
-          alt={title}
-          width={600}
-          height={600}
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
+        <div className="grayscale">
+          <AnimatedImage
+            src={image}
+            alt={title}
+            width={600}
+            height={600}
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        </div>
         <div className="absolute inset-0 z-[1] bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />
         {sectionLabel && (
           <span className="pointer-events-none absolute bottom-2 left-2 z-[2] rounded bg-black/65 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-white/95 backdrop-blur-sm">

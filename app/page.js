@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import EdItem from "./components/EdItem";
 import AnimatedImage from "./components/AnimatedImage";
-import Tracklist from "./components/Tracklist";
+import DesparramoBandcampEmbeds from "./components/DesparramoBandcampEmbeds";
 import editions from "./editions";
 
 export default function Home() {
@@ -41,19 +41,8 @@ export default function Home() {
             </Link>
           )}
           
-          {latestBook.id === "7" && latestBook.tracklist && (
-            <>
-              <Tracklist tracks={latestBook.tracklist} className="mt-4" />
-              <div className="mt-4 w-full">
-                <iframe
-                  style={{ border: 0, width: "100%", height: "307px", maxWidth: "700px" }}
-                  src="https://bandcamp.com/EmbeddedPlayer/album=2883471037/size=large/bgcol=333333/linkcol=ffffff/tracklist=false/transparent=true/"
-                  seamless
-                  className="w-full"
-                  title="DESPARRAMO V/A by El desenfreno"
-                />
-              </div>
-            </>
+          {latestBook.id === "7" && (
+            <DesparramoBandcampEmbeds className="mt-4" />
           )}
         </div>
         
