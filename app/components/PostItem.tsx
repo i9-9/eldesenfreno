@@ -1,8 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import React from 'react'
+import React from 'react';
 import AnimatedImage from './AnimatedImage';
+import AuthorPhotoLightbox from './AuthorPhotoLightbox';
 
 interface PostItemProps {
   image: string;
@@ -43,13 +44,7 @@ const PostItem = ({image, title, subtitle, date, author, authorImage}: PostItemP
         <div className='flex items-center justify-between text-xs text-gray-500 pt-2'>
           <div className='flex items-center gap-2'>
             {authorImage ? (
-              <Image
-                src={authorImage}
-                alt={author}
-                width={22}
-                height={22}
-                className="rounded-full object-cover flex-shrink-0"
-              />
+              <AuthorPhotoLightbox src={authorImage} alt={author} variant="sm" />
             ) : (
               <Image src='/post-rounded.svg' width={10} height={10} alt='Autor'/>
             )}

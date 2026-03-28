@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import MarkdownContent from '@/app/components/MarkdownContent';
 import AnimatedImage from '@/app/components/AnimatedImage';
+import AuthorPhotoLightbox from '@/app/components/AuthorPhotoLightbox';
 import editions from '@/app/editions';
 
 interface Post {
@@ -135,13 +136,7 @@ export default function BlogPostPage() {
 
         <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
           {post.authorImage && (
-            <Image
-              src={post.authorImage}
-              alt={post.author}
-              width={44}
-              height={44}
-              className="rounded-full object-cover border border-white/10"
-            />
+            <AuthorPhotoLightbox src={post.authorImage} alt={post.author} variant="lg" />
           )}
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <span className="text-gray-300 font-medium">{post.author}</span>
