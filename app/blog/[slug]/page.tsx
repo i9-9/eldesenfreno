@@ -7,6 +7,8 @@ import Link from 'next/link';
 import MarkdownContent from '@/app/components/MarkdownContent';
 import AnimatedImage from '@/app/components/AnimatedImage';
 import AuthorPhotoLightbox from '@/app/components/AuthorPhotoLightbox';
+import GallerySliderModal from '@/app/components/GallerySliderModal';
+import ShareBlogPost from '@/app/components/ShareBlogPost';
 import editions from '@/app/editions';
 
 interface Post {
@@ -171,27 +173,9 @@ export default function BlogPostPage() {
         />
       </div>
 
-      {/* Galería de imágenes */}
+      {/* Galería: rejilla + modal slider al hacer clic */}
       {post.gallery && post.gallery.length > 0 && (
-        <section className="mb-12">
-          <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">
-            Galería
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {post.gallery.map((img, index) => (
-              <div key={index} className="rounded-lg overflow-hidden">
-                <AnimatedImage
-                  src={img}
-                  alt={`${post.title} - imagen ${index + 1}`}
-                  width={400}
-                  height={400}
-                  className="object-cover w-full aspect-square hover:scale-105 transition-transform duration-500"
-                  animationDelay={index * 100}
-                />
-              </div>
-            ))}
-          </div>
-        </section>
+        <GallerySliderModal images={post.gallery} title={post.title} />
       )}
 
       {/* Libro relacionado */}
@@ -226,6 +210,8 @@ export default function BlogPostPage() {
           </Link>
         </section>
       )}
+
+      <ShareBlogPost title={post.title} />
 
       {/* Footer */}
       <footer className="pt-8 border-t border-white/10">
