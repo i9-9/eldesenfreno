@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import editions from '@/app/editions';
 
 interface Post {
   id: string;
@@ -9,7 +10,15 @@ interface Post {
   subtitle: string;
   content: string;
   author: string;
+  authorImage: string | null;
   image: string;
+  imageAssetId: string | null;
+  authorImageAssetId: string | null;
+  galleryAssetIds: string[];
+  gallery: string[];
+  tags: string[];
+  featured: boolean;
+  relatedBookId: string | null;
   createdAt: string;
   updatedAt: string;
   published: boolean;
@@ -28,7 +37,13 @@ export default function AdminBlogPage() {
     subtitle: '',
     content: '',
     author: '',
-    image: '/post-1.jpg'
+    tags: '',
+    featured: false,
+    published: true,
+    relatedBookId: '',
+    imageAssetId: '',
+    authorImageAssetId: '',
+    galleryAssetIds: '',
   });
 
   useEffect(() => {
@@ -96,15 +111,38 @@ export default function AdminBlogPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    const tags = formData.tags
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean);
+    const galleryAssetIds = formData.galleryAssetIds
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    const payload = {
+      title: formData.title,
+      subtitle: formData.subtitle,
+      content: formData.content,
+      author: formData.author,
+      tags,
+      featured: formData.featured,
+      published: formData.published,
+      relatedBookId: formData.relatedBookId,
+      imageAssetId: formData.imageAssetId.trim() || null,
+      authorImageAssetId: formData.authorImageAssetId.trim() || null,
+      galleryAssetIds,
+    };
+
     try {
       const url = editingPost ? `/api/blog/${editingPost.id}` : '/api/blog';
       const method = editingPost ? 'PUT' : 'POST';
-      
+
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload),
       });
 
       if (res.ok) {
@@ -123,7 +161,13 @@ export default function AdminBlogPage() {
       subtitle: post.subtitle,
       content: post.content,
       author: post.author,
-      image: post.image
+      tags: post.tags?.join(', ') ?? '',
+      featured: post.featured ?? false,
+      published: post.published ?? true,
+      relatedBookId: post.relatedBookId ?? '',
+      imageAssetId: post.imageAssetId ?? '',
+      authorImageAssetId: post.authorImageAssetId ?? '',
+      galleryAssetIds: post.galleryAssetIds?.join(', ') ?? '',
     });
     setShowForm(true);
   };
@@ -147,7 +191,13 @@ export default function AdminBlogPage() {
       subtitle: '',
       content: '',
       author: '',
-      image: '/post-1.jpg'
+      tags: '',
+      featured: false,
+      published: true,
+      relatedBookId: '',
+      imageAssetId: '',
+      authorImageAssetId: '',
+      galleryAssetIds: '',
     });
     setEditingPost(null);
     setShowForm(false);
@@ -275,17 +325,99 @@ export default function AdminBlogPage() {
                 required
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium mb-1 text-gray-400">
-                URL de imagen
+                Tags (separados por coma)
               </label>
               <input
                 type="text"
-                value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                value={formData.tags}
+                onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                 className="w-full p-3 bg-[#0b0b0b] border border-[#333333] rounded-md text-white focus:outline-none focus:border-white transition-colors"
-                placeholder="/post-1.jpg"
+                placeholder="poesía, novedades"
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-6">
+              <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300">
+                <input
+                  type="checkbox"
+                  checked={formData.featured}
+                  onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                  className="rounded border-[#333333] bg-[#0b0b0b]"
+                />
+                Destacado
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300">
+                <input
+                  type="checkbox"
+                  checked={formData.published}
+                  onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
+                  className="rounded border-[#333333] bg-[#0b0b0b]"
+                />
+                Publicado
+              </label>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-400">
+                Libro relacionado (opcional)
+              </label>
+              <select
+                value={formData.relatedBookId}
+                onChange={(e) => setFormData({ ...formData, relatedBookId: e.target.value })}
+                className="w-full p-3 bg-[#0b0b0b] border border-[#333333] rounded-md text-white focus:outline-none focus:border-white transition-colors"
+              >
+                <option value="">Ninguno</option>
+                {editions.map((book) => (
+                  <option key={book.id} value={book.id}>
+                    {book.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-400">
+                Imagen destacada — ID del asset (Contentful)
+              </label>
+              <input
+                type="text"
+                value={formData.imageAssetId}
+                onChange={(e) => setFormData({ ...formData, imageAssetId: e.target.value })}
+                className="w-full p-3 bg-[#0b0b0b] border border-[#333333] rounded-md text-white font-mono text-sm focus:outline-none focus:border-white transition-colors"
+                placeholder="ej. 4vST0..."
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                En Contentful: Media → elegí la imagen → el ID aparece en la URL o en el panel del asset.
+                Dejá vacío para quitar la imagen al editar.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-400">
+                Foto del autor — ID del asset (Contentful)
+              </label>
+              <input
+                type="text"
+                value={formData.authorImageAssetId}
+                onChange={(e) => setFormData({ ...formData, authorImageAssetId: e.target.value })}
+                className="w-full p-3 bg-[#0b0b0b] border border-[#333333] rounded-md text-white font-mono text-sm focus:outline-none focus:border-white transition-colors"
+                placeholder="ej. 7kLm2..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-400">
+                Galería — IDs de assets separados por coma
+              </label>
+              <input
+                type="text"
+                value={formData.galleryAssetIds}
+                onChange={(e) => setFormData({ ...formData, galleryAssetIds: e.target.value })}
+                className="w-full p-3 bg-[#0b0b0b] border border-[#333333] rounded-md text-white font-mono text-sm focus:outline-none focus:border-white transition-colors"
+                placeholder="id1, id2, id3"
               />
             </div>
             

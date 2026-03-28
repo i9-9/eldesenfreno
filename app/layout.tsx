@@ -9,6 +9,7 @@ import { Inter } from 'next/font/google'
 import { CartProvider } from './context/CartContext'
 import { ToastProvider } from './context/ToastContext'
 import ToastProviderWrapper from './components/ToastProviderWrapper'
+import { Analytics } from '@vercel/analytics/next'
 
 const aggie = localFont({
   src: [
@@ -52,6 +53,7 @@ export default function RootLayout({ children }) {
             </div>
           </ToastProviderWrapper>
         </CartProvider>
+        <Analytics />
       </body>
     </html>
   );

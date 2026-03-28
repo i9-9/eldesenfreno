@@ -38,9 +38,16 @@ export default function BlogPostPage() {
     }
   }, [params.slug]);
 
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString('es-AR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+
   const fetchPost = async () => {
     try {
-      const res = await fetch(`/api/blog/${params.slug}`);
+      const res = await fetch(`/api/blog/${params.slug}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         setPost(data);
@@ -125,6 +132,25 @@ export default function BlogPostPage() {
             {post.subtitle}
           </p>
         )}
+
+        <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
+          {post.authorImage && (
+            <Image
+              src={post.authorImage}
+              alt={post.author}
+              width={44}
+              height={44}
+              className="rounded-full object-cover border border-white/10"
+            />
+          )}
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="text-gray-300 font-medium">{post.author}</span>
+            <span className="text-gray-600" aria-hidden>
+              ·
+            </span>
+            <time dateTime={post.createdAt}>{formatDate(post.createdAt)}</time>
+          </div>
+        </div>
       </header>
 
       {/* Imagen destacada */}

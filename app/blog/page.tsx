@@ -71,6 +71,7 @@ export default async function Blog() {
                 subtitle={post.subtitle}
                 date={formatDate(post.createdAt)}
                 author={post.author}
+                authorImage={post.authorImage}
               />
             </Link>
           ))}

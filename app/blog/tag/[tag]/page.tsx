@@ -100,6 +100,7 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
                 subtitle={post.subtitle}
                 date={formatDate(post.createdAt)}
                 author={post.author}
+                authorImage={post.authorImage}
               />
             </Link>
           ))}

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPostBySlug, getPostById, updatePost, deletePost } from '@/app/lib/contentful';
+import { getPostBySlug, getPostById, updatePost, deletePost, type UpdateBlogPostInput } from '@/app/lib/contentful';
 
 // GET - Obtener un post por ID o slug
 export async function GET(
@@ -16,11 +16,15 @@ export async function GET(
     if (!post) {
       post = await getPostById(id);
     }
-    
+
     if (!post) {
       return NextResponse.json({ error: 'Post no encontrado' }, { status: 404 });
     }
-    
+
+    if (!post.published) {
+      return NextResponse.json({ error: 'Post no encontrado' }, { status: 404 });
+    }
+
     return NextResponse.json(post);
   } catch (error) {
     console.error('Error reading post:', error);
@@ -35,8 +39,8 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    const body = await request.json();
-    
+    const body = (await request.json()) as UpdateBlogPostInput;
+
     const updatedPost = await updatePost(id, body);
 
     if (!updatedPost) {

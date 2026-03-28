@@ -10,9 +10,11 @@ interface PostItemProps {
   subtitle: string;
   date: string;
   author: string;
+  /** Foto del autor (Contentful); si no hay, ícono por defecto */
+  authorImage?: string | null;
 }
   
-const PostItem = ({image, title, subtitle, date, author}: PostItemProps) => {
+const PostItem = ({image, title, subtitle, date, author, authorImage}: PostItemProps) => {
   return (
     <article className='group flex flex-col py-4 cursor-pointer'>
       {/* Imagen con overlay en hover */}
@@ -39,8 +41,18 @@ const PostItem = ({image, title, subtitle, date, author}: PostItemProps) => {
         
         {/* Meta info */}
         <div className='flex items-center justify-between text-xs text-gray-500 pt-2'>
-          <div className='flex items-center gap-1.5'>
-            <Image src='/post-rounded.svg' width={10} height={10} alt='Autor'/>
+          <div className='flex items-center gap-2'>
+            {authorImage ? (
+              <Image
+                src={authorImage}
+                alt={author}
+                width={22}
+                height={22}
+                className="rounded-full object-cover flex-shrink-0"
+              />
+            ) : (
+              <Image src='/post-rounded.svg' width={10} height={10} alt='Autor'/>
+            )}
             <span>{author}</span>
           </div>
           <time className='italic'>{date}</time>

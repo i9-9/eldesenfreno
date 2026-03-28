@@ -16,7 +16,19 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, subtitle, content, author, tags, featured, relatedBookId } = body;
+    const {
+      title,
+      subtitle,
+      content,
+      author,
+      tags,
+      featured,
+      relatedBookId,
+      published,
+      imageAssetId,
+      authorImageAssetId,
+      galleryAssetIds,
+    } = body;
 
     if (!title || !content) {
       return NextResponse.json(
@@ -33,6 +45,10 @@ export async function POST(request: NextRequest) {
       tags,
       featured,
       relatedBookId,
+      published,
+      imageAssetId,
+      authorImageAssetId,
+      galleryAssetIds,
     });
 
     if (!newPost) {

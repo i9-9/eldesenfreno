@@ -57,6 +57,10 @@ export interface BlogPost {
   content: string;
   author: string;
   authorImage: string | null;
+  /** IDs de assets en Contentful (para editar desde el admin) */
+  imageAssetId: string | null;
+  authorImageAssetId: string | null;
+  galleryAssetIds: string[];
   image: string;
   gallery: string[];
   tags: string[];
@@ -65,6 +69,25 @@ export interface BlogPost {
   createdAt: string;
   updatedAt: string;
   published: boolean;
+}
+
+const LOCALE = 'en-US';
+
+function getAssetIdFromField(field: unknown): string | null {
+  if (!field || typeof field !== 'object') return null;
+  const f = field as { sys?: { id?: string; type?: string; linkType?: string } };
+  if (f.sys?.linkType === 'Asset' && f.sys.id) return f.sys.id;
+  if (f.sys?.type === 'Asset' && f.sys.id) return f.sys.id;
+  return null;
+}
+
+function getGalleryAssetIds(gallery: unknown): string[] {
+  if (!Array.isArray(gallery)) return [];
+  return gallery.map(getAssetIdFromField).filter(Boolean) as string[];
+}
+
+function assetLink(id: string) {
+  return { sys: { type: 'Link' as const, linkType: 'Asset' as const, id } };
 }
 
 // Helper para obtener URL de asset
@@ -85,6 +108,9 @@ export function transformEntry(entry: Entry<BlogPostSkeleton>): BlogPost {
     content: String(fields.content || ''),
     author: String(fields.author || 'El Desenfreno Ediciones'),
     authorImage: getAssetUrl(fields.authorImage),
+    imageAssetId: getAssetIdFromField(fields.image),
+    authorImageAssetId: getAssetIdFromField(fields.authorImage),
+    galleryAssetIds: getGalleryAssetIds(fields.gallery),
     image: getAssetUrl(fields.image) || '/post-1.jpg',
     gallery: (fields.gallery || []).map((asset: any) => getAssetUrl(asset)).filter(Boolean) as string[],
     tags: Array.isArray(fields.tags) ? (fields.tags as string[]) : [],
@@ -142,10 +168,10 @@ export async function getPostsByTag(tag: string): Promise<BlogPost[]> {
   }
 }
 
-// Obtener todos los tags únicos
+// Obtener todos los tags únicos (solo entradas publicadas)
 export async function getAllTags(): Promise<string[]> {
-  const posts = await getPosts();
-  const allTags = posts.flatMap(post => post.tags);
+  const posts = (await getPosts()).filter((p) => p.published);
+  const allTags = posts.flatMap((post) => post.tags);
   return [...new Set(allTags)].sort();
 }
 
@@ -195,8 +221,7 @@ export function generateSlug(title: string): string {
     .replace(/-+/g, '-');
 }
 
-// Crear un nuevo post (requiere Management API)
-export async function createPost(data: {
+export type CreateBlogPostInput = {
   title: string;
   subtitle?: string;
   content: string;
@@ -204,54 +229,56 @@ export async function createPost(data: {
   tags?: string[];
   featured?: boolean;
   relatedBookId?: string;
-}): Promise<BlogPost | null> {
+  published?: boolean;
+  imageAssetId?: string | null;
+  authorImageAssetId?: string | null;
+  galleryAssetIds?: string[];
+};
+
+// Crear un nuevo post (requiere Management API)
+export async function createPost(data: CreateBlogPostInput): Promise<BlogPost | null> {
   try {
     const client = getManagementClient();
     const space = await client.getSpace(process.env.CONTENTFUL_SPACE_ID!);
     const environment = await space.getEnvironment(process.env.CONTENTFUL_ENVIRONMENT || 'master');
-    
-    const entry = await environment.createEntry('blogPost', {
-      fields: {
-        title: { 'en-US': data.title },
-        slug: { 'en-US': generateSlug(data.title) },
-        subtitle: { 'en-US': data.subtitle || '' },
-        content: { 'en-US': data.content },
-        author: { 'en-US': data.author || 'El Desenfreno Ediciones' },
-        tags: { 'en-US': data.tags || [] },
-        featured: { 'en-US': data.featured || false },
-        relatedBookId: { 'en-US': data.relatedBookId || '' },
-        published: { 'en-US': true },
-      },
-    });
-    
-    // Publicar el entry
-    await entry.publish();
-    
-    return {
-      id: entry.sys.id,
-      slug: generateSlug(data.title),
-      title: data.title,
-      subtitle: data.subtitle || '',
-      content: data.content,
-      author: data.author || 'El Desenfreno Ediciones',
-      authorImage: null,
-      image: '/post-1.jpg',
-      gallery: [],
-      tags: data.tags || [],
-      featured: data.featured || false,
-      relatedBookId: data.relatedBookId || null,
-      createdAt: entry.sys.createdAt,
-      updatedAt: entry.sys.updatedAt,
-      published: true,
+
+    const fields: Record<string, { [loc: string]: unknown }> = {
+      title: { [LOCALE]: data.title },
+      slug: { [LOCALE]: generateSlug(data.title) },
+      subtitle: { [LOCALE]: data.subtitle || '' },
+      content: { [LOCALE]: data.content },
+      author: { [LOCALE]: data.author || 'El Desenfreno Ediciones' },
+      tags: { [LOCALE]: data.tags || [] },
+      featured: { [LOCALE]: data.featured ?? false },
+      relatedBookId: { [LOCALE]: data.relatedBookId || '' },
+      published: { [LOCALE]: data.published ?? true },
     };
+
+    if (data.imageAssetId?.trim()) {
+      fields.image = { [LOCALE]: assetLink(data.imageAssetId.trim()) };
+    }
+    if (data.authorImageAssetId?.trim()) {
+      fields.authorImage = { [LOCALE]: assetLink(data.authorImageAssetId.trim()) };
+    }
+    if (data.galleryAssetIds?.length) {
+      const ids = data.galleryAssetIds.map((s) => s.trim()).filter(Boolean);
+      if (ids.length) {
+        fields.gallery = { [LOCALE]: ids.map(assetLink) };
+      }
+    }
+
+    const entry = await environment.createEntry('blogPost', { fields });
+
+    await entry.publish();
+
+    return getPostById(entry.sys.id);
   } catch (error) {
     console.error('Error creating post in Contentful:', error);
     return null;
   }
 }
 
-// Actualizar un post existente
-export async function updatePost(id: string, data: Partial<{
+export type UpdateBlogPostInput = Partial<{
   title: string;
   subtitle: string;
   content: string;
@@ -260,44 +287,63 @@ export async function updatePost(id: string, data: Partial<{
   featured: boolean;
   relatedBookId: string;
   published: boolean;
-}>): Promise<BlogPost | null> {
+  imageAssetId: string | null;
+  authorImageAssetId: string | null;
+  galleryAssetIds: string[] | null;
+}>;
+
+// Actualizar un post existente
+export async function updatePost(id: string, data: UpdateBlogPostInput): Promise<BlogPost | null> {
   try {
     const client = getManagementClient();
     const space = await client.getSpace(process.env.CONTENTFUL_SPACE_ID!);
     const environment = await space.getEnvironment(process.env.CONTENTFUL_ENVIRONMENT || 'master');
-    
+
     let entry = await environment.getEntry(id);
-    
+
     if (data.title !== undefined) {
-      entry.fields.title = { 'en-US': data.title };
-      entry.fields.slug = { 'en-US': generateSlug(data.title) };
+      entry.fields.title = { [LOCALE]: data.title };
+      entry.fields.slug = { [LOCALE]: generateSlug(data.title) };
     }
     if (data.subtitle !== undefined) {
-      entry.fields.subtitle = { 'en-US': data.subtitle };
+      entry.fields.subtitle = { [LOCALE]: data.subtitle };
     }
     if (data.content !== undefined) {
-      entry.fields.content = { 'en-US': data.content };
+      entry.fields.content = { [LOCALE]: data.content };
     }
     if (data.author !== undefined) {
-      entry.fields.author = { 'en-US': data.author };
+      entry.fields.author = { [LOCALE]: data.author };
     }
     if (data.tags !== undefined) {
-      entry.fields.tags = { 'en-US': data.tags };
+      entry.fields.tags = { [LOCALE]: data.tags };
     }
     if (data.featured !== undefined) {
-      entry.fields.featured = { 'en-US': data.featured };
+      entry.fields.featured = { [LOCALE]: data.featured };
     }
     if (data.relatedBookId !== undefined) {
-      entry.fields.relatedBookId = { 'en-US': data.relatedBookId };
+      entry.fields.relatedBookId = { [LOCALE]: data.relatedBookId };
     }
     if (data.published !== undefined) {
-      entry.fields.published = { 'en-US': data.published };
+      entry.fields.published = { [LOCALE]: data.published };
     }
-    
+    if (data.imageAssetId !== undefined) {
+      entry.fields.image = data.imageAssetId?.trim()
+        ? { [LOCALE]: assetLink(data.imageAssetId.trim()) }
+        : { [LOCALE]: null };
+    }
+    if (data.authorImageAssetId !== undefined) {
+      entry.fields.authorImage = data.authorImageAssetId?.trim()
+        ? { [LOCALE]: assetLink(data.authorImageAssetId.trim()) }
+        : { [LOCALE]: null };
+    }
+    if (data.galleryAssetIds !== undefined) {
+      const ids = (data.galleryAssetIds || []).map((s) => s.trim()).filter(Boolean);
+      entry.fields.gallery = { [LOCALE]: ids.map(assetLink) };
+    }
+
     entry = await entry.update();
     await entry.publish();
-    
-    // Obtener el post actualizado
+
     return getPostById(id);
   } catch (error) {
     console.error('Error updating post in Contentful:', error);
