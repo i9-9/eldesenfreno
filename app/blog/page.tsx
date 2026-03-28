@@ -1,6 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
 import PostItem from '../components/PostItem';
+import BlogSectionHero from '../components/BlogSectionHero';
+import {
+  BLOG_SECTIONS,
+  SECTION_LABELS,
+  type BlogSection,
+} from '../lib/blogSections';
 import { getPostsSorted, getAllTags } from '../lib/contentful';
 
 const formatDate = (dateString: string) => {
@@ -18,6 +24,14 @@ export default async function Blog() {
   const posts = allPosts.filter(p => p.published);
   const tags = await getAllTags();
 
+  const sectionCounts = BLOG_SECTIONS.reduce(
+    (acc, id) => {
+      acc[id] = posts.filter((p) => p.section === id).length;
+      return acc;
+    },
+    {} as Record<BlogSection, number>
+  );
+
   return (
     <div className='flex flex-col font-neue-display px-4 md:px-0 pt-4 pb-16'>
       {/* Header */}
@@ -28,9 +42,14 @@ export default async function Blog() {
         </p>
       </header>
 
+      <BlogSectionHero counts={sectionCounts} />
+
       {/* Tags */}
       {tags.length > 0 && (
-        <nav className="mb-8">
+        <nav className="mb-8" aria-label="Etiquetas">
+          <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-gray-500">
+            Etiquetas
+          </p>
           <div className="flex flex-wrap gap-2">
             <Link 
               href="/blog"
@@ -52,6 +71,12 @@ export default async function Blog() {
       )}
 
       {/* Posts Grid */}
+      <h2
+        id="entradas"
+        className="mb-6 text-lg font-semibold tracking-tight text-white/90"
+      >
+        Todas las entradas
+      </h2>
       {posts.length === 0 ? (
         <div className="py-16 text-center">
           <p className="text-gray-500">No hay entradas en el blog todavía.</p>
@@ -72,6 +97,7 @@ export default async function Blog() {
                 date={formatDate(post.createdAt)}
                 author={post.author}
                 authorImage={post.authorImage}
+                sectionLabel={SECTION_LABELS[post.section]}
               />
             </Link>
           ))}

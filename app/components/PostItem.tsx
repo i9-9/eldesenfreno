@@ -13,9 +13,11 @@ interface PostItemProps {
   author: string;
   /** Foto del autor (Contentful); si no hay, ícono por defecto */
   authorImage?: string | null;
+  /** Etiqueta de sección (Prensa, Eventos, Multimedia) */
+  sectionLabel?: string;
 }
   
-const PostItem = ({image, title, subtitle, date, author, authorImage}: PostItemProps) => {
+const PostItem = ({image, title, subtitle, date, author, authorImage, sectionLabel}: PostItemProps) => {
   return (
     <article className='group flex flex-col py-4 cursor-pointer'>
       {/* Imagen con overlay en hover */}
@@ -23,12 +25,17 @@ const PostItem = ({image, title, subtitle, date, author, authorImage}: PostItemP
         <AnimatedImage
           src={image}
           alt={title}
-          width={400}
-          height={280}
+          width={600}
+          height={600}
           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className='object-cover w-full aspect-[4/3] group-hover:scale-105 transition-transform duration-500'
+          className="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+        <div className="absolute inset-0 z-[1] bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />
+        {sectionLabel && (
+          <span className="pointer-events-none absolute bottom-2 left-2 z-[2] rounded bg-black/65 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-white/95 backdrop-blur-sm">
+            {sectionLabel}
+          </span>
+        )}
       </div>
       
       {/* Contenido */}

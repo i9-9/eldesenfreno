@@ -9,6 +9,11 @@ import AnimatedImage from '@/app/components/AnimatedImage';
 import AuthorPhotoLightbox from '@/app/components/AuthorPhotoLightbox';
 import GallerySliderModal from '@/app/components/GallerySliderModal';
 import ShareBlogPost from '@/app/components/ShareBlogPost';
+import {
+  SECTION_LABELS,
+  type BlogSection,
+  isBlogSectionId,
+} from '@/app/lib/blogSections';
 import editions from '@/app/editions';
 
 interface Post {
@@ -27,6 +32,7 @@ interface Post {
   createdAt: string;
   updatedAt: string;
   published: boolean;
+  section?: BlogSection;
 }
 
 export default function BlogPostPage() {
@@ -71,6 +77,9 @@ export default function BlogPostPage() {
     ? editions.find(e => e.id === post.relatedBookId) 
     : null;
 
+  const section: BlogSection =
+    post?.section && isBlogSectionId(post.section) ? post.section : 'prensa';
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh] font-neue-display">
@@ -97,10 +106,25 @@ export default function BlogPostPage() {
   return (
     <article className="max-w-3xl mx-auto font-neue-display px-4 md:px-0 pt-4 pb-16">
       {/* Breadcrumb */}
-      <nav className="mb-8">
-        <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-colors group">
-          <span className="group-hover:-translate-x-1 transition-transform">←</span>
-          <span>Blog</span>
+      <nav
+        className="mb-8 flex flex-wrap items-center gap-2 text-sm text-gray-500"
+        aria-label="Migas de pan"
+      >
+        <Link
+          href="/blog"
+          className="group inline-flex items-center gap-2 transition-colors hover:text-white"
+        >
+          <span className="transition-transform group-hover:-translate-x-1">←</span>
+          Blog
+        </Link>
+        <span className="text-gray-600" aria-hidden>
+          /
+        </span>
+        <Link
+          href={`/blog/seccion/${section}`}
+          className="transition-colors hover:text-white"
+        >
+          {SECTION_LABELS[section]}
         </Link>
       </nav>
 
@@ -150,16 +174,16 @@ export default function BlogPostPage() {
         </div>
       </header>
 
-      {/* Imagen destacada */}
+      {/* Imagen destacada (cuadrada: horizontal y cuadrado se recortan al centro con object-cover) */}
       {post.image && post.image !== '/post-1.jpg' && (
         <figure className="mb-10 -mx-4 md:mx-0">
-          <div className="rounded-none md:rounded-xl overflow-hidden">
+          <div className="mx-auto max-w-2xl overflow-hidden rounded-none md:rounded-xl">
             <AnimatedImage
               src={post.image}
               alt={post.title}
-              width={800}
-              height={450}
-              className="w-full object-cover"
+              width={1200}
+              height={1200}
+              className="aspect-square w-full object-cover"
             />
           </div>
         </figure>

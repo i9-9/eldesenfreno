@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import PostItem from '@/app/components/PostItem';
+import BlogSectionNav from '@/app/components/BlogSectionNav';
+import { SECTION_LABELS } from '@/app/lib/blogSections';
 import { getPostsByTag, getAllTags } from '@/app/lib/contentful';
 
 export const revalidate = 60;
@@ -46,6 +48,8 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
           {posts.length} {posts.length === 1 ? 'entrada' : 'entradas'} con este tag
         </p>
       </header>
+
+      <BlogSectionNav active="all" />
 
       {/* Otros tags */}
       {allTags.length > 1 && (
@@ -101,6 +105,7 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
                 date={formatDate(post.createdAt)}
                 author={post.author}
                 authorImage={post.authorImage}
+                sectionLabel={SECTION_LABELS[post.section]}
               />
             </Link>
           ))}

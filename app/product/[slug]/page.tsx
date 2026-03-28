@@ -1,13 +1,13 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import editions from '../../editions';
 import AddToCartButton from '../../components/AddToCartButton';
 import AnimatedImage from '../../components/AnimatedImage';
 import AuthorBio from '../../components/AuthorBio';
+import Tracklist, { type TracklistEntry } from '../../components/Tracklist';
 import { formatPrice } from '../../utils/formatPrice';
 
 const ProductPage = () => {
@@ -87,31 +87,20 @@ const ProductPage = () => {
         />
       )}
 
-      {/* Tracklist */}
-      {(product as any).tracklist && (
-        <div className="mt-12 bg-[#0B0B0B] rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-4">Tracklist</h3>
-          <div className="space-y-2">
-            {((product as any).tracklist as Array<{ number: number; artist: string; title: string; duration: string }>).map((track) => (
-              <div key={track.number} className="flex items-start gap-4 text-sm text-gray-300 border-b border-white/10 pb-2 last:border-0">
-                <span className="text-gray-500 font-mono text-xs w-6 flex-shrink-0">{track.number}.</span>
-                <div className="flex-1">
-                  <div className="font-medium">{track.artist} - {track.title}</div>
-                </div>
-                <span className="text-gray-500 text-xs font-mono flex-shrink-0">{track.duration}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+      {(product as { tracklist?: TracklistEntry[] }).tracklist && (
+        <Tracklist
+          className="mt-12"
+          tracks={(product as { tracklist: TracklistEntry[] }).tracklist}
+        />
       )}
 
-      {/* Bandcamp Embed para DESPARRAMO V/A */}
       {product.id === "7" && (
-        <div className="mt-8 flex justify-center">
-          <iframe 
-            style={{ border: 0, width: '350px', height: '470px' }} 
-            src="https://bandcamp.com/EmbeddedPlayer/album=2883471037/size=large/bgcol=333333/linkcol=ffffff/tracklist=false/transparent=true/" 
+        <div className="mt-8 w-full max-w-2xl mx-auto">
+          <iframe
+            style={{ border: 0, width: '100%', height: '307px' }}
+            src="https://bandcamp.com/EmbeddedPlayer/album=2883471037/size=large/bgcol=333333/linkcol=ffffff/tracklist=false/transparent=true/"
             seamless
+            className="w-full"
             title="DESPARRAMO V/A by El desenfreno"
           />
         </div>

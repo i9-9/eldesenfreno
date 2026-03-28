@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import EdItem from "./components/EdItem";
 import AnimatedImage from "./components/AnimatedImage";
+import Tracklist from "./components/Tracklist";
 import editions from "./editions";
 
 export default function Home() {
@@ -21,7 +22,7 @@ export default function Home() {
   return (
     <div className="flex flex-col pt-6">
       {/* Título de la sección */}
-      <h2 className="text-3xl font-neue-display font-bold -tracking-wide mx-2 mb-4">Novedades</h2>
+      <h2 className="text-3xl font-neue-display font-bold -tracking-wide mx-2 mb-4">Novedad</h2>
 
       {/* Novedad - Último libro */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start rounded-md bg-[#0B0B0B]">
@@ -40,17 +41,19 @@ export default function Home() {
             </Link>
           )}
           
-          {/* Bandcamp Embed para DESPARRAMO V/A */}
-          {latestBook.id === "7" && (
-            <div className="mt-4 w-full overflow-visible">
-              <iframe 
-                style={{ border: 0, width: '100%', height: '600px', minHeight: '600px' }} 
-                src="https://bandcamp.com/EmbeddedPlayer/album=2883471037/size=large/bgcol=333333/linkcol=ffffff/tracklist=false/transparent=true/" 
-                seamless
-                className="w-full"
-                title="DESPARRAMO V/A by El desenfreno"
-              />
-            </div>
+          {latestBook.id === "7" && latestBook.tracklist && (
+            <>
+              <Tracklist tracks={latestBook.tracklist} className="mt-4" />
+              <div className="mt-4 w-full">
+                <iframe
+                  style={{ border: 0, width: "100%", height: "307px", maxWidth: "700px" }}
+                  src="https://bandcamp.com/EmbeddedPlayer/album=2883471037/size=large/bgcol=333333/linkcol=ffffff/tracklist=false/transparent=true/"
+                  seamless
+                  className="w-full"
+                  title="DESPARRAMO V/A by El desenfreno"
+                />
+              </div>
+            </>
           )}
         </div>
         

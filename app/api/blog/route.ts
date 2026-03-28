@@ -28,6 +28,7 @@ export async function POST(request: NextRequest) {
       imageAssetId,
       authorImageAssetId,
       galleryAssetIds,
+      section,
     } = body;
 
     if (!title || !content) {
@@ -49,6 +50,7 @@ export async function POST(request: NextRequest) {
       imageAssetId,
       authorImageAssetId,
       galleryAssetIds,
+      section,
     });
 
     if (!newPost) {

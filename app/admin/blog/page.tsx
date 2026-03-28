@@ -2,6 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import editions from '@/app/editions';
+import {
+  BLOG_SECTIONS,
+  SECTION_LABELS,
+  type BlogSection,
+} from '@/app/lib/blogSections';
 
 interface Post {
   id: string;
@@ -22,6 +27,7 @@ interface Post {
   createdAt: string;
   updatedAt: string;
   published: boolean;
+  section?: BlogSection;
 }
 
 export default function AdminBlogPage() {
@@ -44,6 +50,7 @@ export default function AdminBlogPage() {
     imageAssetId: '',
     authorImageAssetId: '',
     galleryAssetIds: '',
+    section: 'prensa' as BlogSection,
   });
 
   useEffect(() => {
@@ -133,6 +140,7 @@ export default function AdminBlogPage() {
       imageAssetId: formData.imageAssetId.trim() || null,
       authorImageAssetId: formData.authorImageAssetId.trim() || null,
       galleryAssetIds,
+      section: formData.section,
     };
 
     try {
@@ -168,6 +176,7 @@ export default function AdminBlogPage() {
       imageAssetId: post.imageAssetId ?? '',
       authorImageAssetId: post.authorImageAssetId ?? '',
       galleryAssetIds: post.galleryAssetIds?.join(', ') ?? '',
+      section: post.section ?? 'prensa',
     });
     setShowForm(true);
   };
@@ -198,6 +207,7 @@ export default function AdminBlogPage() {
       imageAssetId: '',
       authorImageAssetId: '',
       galleryAssetIds: '',
+      section: 'prensa',
     });
     setEditingPost(null);
     setShowForm(false);
@@ -311,6 +321,29 @@ export default function AdminBlogPage() {
                 onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
                 className="w-full p-3 bg-[#0b0b0b] border border-[#333333] rounded-md text-white focus:outline-none focus:border-white transition-colors"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-400">
+                Sección *
+              </label>
+              <select
+                value={formData.section}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    section: e.target.value as BlogSection,
+                  })
+                }
+                className="w-full p-3 bg-[#0b0b0b] border border-[#333333] rounded-md text-white focus:outline-none focus:border-white transition-colors"
+                required
+              >
+                {BLOG_SECTIONS.map((id) => (
+                  <option key={id} value={id}>
+                    {SECTION_LABELS[id]}
+                  </option>
+                ))}
+              </select>
             </div>
             
             <div>
@@ -462,6 +495,7 @@ export default function AdminBlogPage() {
           <thead className="bg-[#0b0b0b] border-b border-[#333333]">
             <tr>
               <th className="text-left p-4 text-sm font-medium text-gray-400">Título</th>
+              <th className="text-left p-4 text-sm font-medium text-gray-400">Sección</th>
               <th className="text-left p-4 text-sm font-medium text-gray-400">Autor</th>
               <th className="text-left p-4 text-sm font-medium text-gray-400">Fecha</th>
               <th className="text-right p-4 text-sm font-medium text-gray-400">Acciones</th>
@@ -470,7 +504,7 @@ export default function AdminBlogPage() {
           <tbody>
             {posts.length === 0 ? (
               <tr>
-                <td colSpan={4} className="p-8 text-center text-gray-500">
+                <td colSpan={5} className="p-8 text-center text-gray-500">
                   No hay entradas en el blog. ¡Creá la primera!
                 </td>
               </tr>
@@ -484,6 +518,9 @@ export default function AdminBlogPage() {
                         <p className="text-sm text-gray-500">{post.subtitle}</p>
                       )}
                     </div>
+                  </td>
+                  <td className="p-4 text-gray-400 text-sm">
+                    {SECTION_LABELS[post.section ?? 'prensa']}
                   </td>
                   <td className="p-4 text-gray-400">{post.author}</td>
                   <td className="p-4 text-gray-400">{formatDate(post.createdAt)}</td>

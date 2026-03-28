@@ -1,5 +1,7 @@
 import { createClient, Entry, EntrySkeletonType, Asset, ContentfulClientApi } from 'contentful';
 import { createClient as createManagementClient } from 'contentful-management';
+import type { BlogSection } from './blogSections';
+import { normalizeBlogSection } from './blogSections';
 
 // Cliente lazy - se inicializa solo cuando se usa
 let _contentfulClient: ContentfulClientApi<undefined> | null = null;
@@ -42,6 +44,8 @@ export interface BlogPostFields {
   featured?: boolean;
   relatedBookId?: string;
   published?: boolean;
+  /** Short text: prensa | eventos | multimedia */
+  section?: string;
 }
 
 export interface BlogPostSkeleton extends EntrySkeletonType {
@@ -69,6 +73,7 @@ export interface BlogPost {
   createdAt: string;
   updatedAt: string;
   published: boolean;
+  section: BlogSection;
 }
 
 const LOCALE = 'en-US';
@@ -119,6 +124,7 @@ export function transformEntry(entry: Entry<BlogPostSkeleton>): BlogPost {
     createdAt: entry.sys.createdAt,
     updatedAt: entry.sys.updatedAt,
     published: Boolean(fields.published ?? true),
+    section: normalizeBlogSection(fields.section),
   };
 }
 
@@ -148,6 +154,12 @@ export async function getPostsSorted(): Promise<BlogPost[]> {
     if (!a.featured && b.featured) return 1;
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
+}
+
+/** Posts de una sección (tras ordenar; entradas sin campo en Contentful cuentan como Prensa) */
+export async function getPostsSortedBySection(section: BlogSection): Promise<BlogPost[]> {
+  const sorted = await getPostsSorted();
+  return sorted.filter((p) => p.section === section);
 }
 
 // Obtener posts por tag
@@ -233,6 +245,7 @@ export type CreateBlogPostInput = {
   imageAssetId?: string | null;
   authorImageAssetId?: string | null;
   galleryAssetIds?: string[];
+  section?: BlogSection;
 };
 
 // Crear un nuevo post (requiere Management API)
@@ -252,6 +265,7 @@ export async function createPost(data: CreateBlogPostInput): Promise<BlogPost | 
       featured: { [LOCALE]: data.featured ?? false },
       relatedBookId: { [LOCALE]: data.relatedBookId || '' },
       published: { [LOCALE]: data.published ?? true },
+      section: { [LOCALE]: normalizeBlogSection(data.section ?? 'prensa') },
     };
 
     if (data.imageAssetId?.trim()) {
@@ -290,6 +304,7 @@ export type UpdateBlogPostInput = Partial<{
   imageAssetId: string | null;
   authorImageAssetId: string | null;
   galleryAssetIds: string[] | null;
+  section: BlogSection;
 }>;
 
 // Actualizar un post existente
@@ -325,6 +340,9 @@ export async function updatePost(id: string, data: UpdateBlogPostInput): Promise
     }
     if (data.published !== undefined) {
       entry.fields.published = { [LOCALE]: data.published };
+    }
+    if (data.section !== undefined) {
+      entry.fields.section = { [LOCALE]: normalizeBlogSection(data.section) };
     }
     if (data.imageAssetId !== undefined) {
       entry.fields.image = data.imageAssetId?.trim()

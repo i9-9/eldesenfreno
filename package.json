@@ -11,7 +11,8 @@
     "test:mp:approved": "node scripts/test-mp.js approved preference",
     "test:mp:rejected": "node scripts/test-mp.js rejected preference",
     "test:mp:pending": "node scripts/test-mp.js pending preference",
-    "test:mp:webhook": "node scripts/test-mp.js approved webhook_simulation"
+    "test:mp:webhook": "node scripts/test-mp.js approved webhook_simulation",
+    "contentful:add-section-field": "node scripts/contentful-add-blogpost-section-field.js"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
