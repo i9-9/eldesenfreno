@@ -15,7 +15,7 @@ export default function DesparramoBandcampEmbeds({ className = "" }: Props) {
       {DESPARRAMO_BANDCAMP_TRACK_IDS.map((trackId, i) => (
         <iframe
           key={trackId}
-          style={{ border: 0, width: "100%", height: 120 }}
+          style={{ border: 0, width: "100%", height: 42, display: "block" }}
           src={desparramoTrackEmbedSrc(trackId)}
           seamless
           title={`Tema ${i + 1} — Desparramo V/A (Bandcamp)`}
