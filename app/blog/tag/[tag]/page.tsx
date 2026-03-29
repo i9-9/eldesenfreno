@@ -42,7 +42,7 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
       {/* Header */}
       <header className="mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <span className="text-3xl font-bold tracking-tight">#{decodedTag}</span>
+          <span className="text-4xl font-bold tracking-tight">#{decodedTag}</span>
         </div>
         <p className='text-gray-400 text-sm'>
           {posts.length} {posts.length === 1 ? 'entrada' : 'entradas'} con este tag

@@ -43,7 +43,7 @@ const CartPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold">Carrito</h1>
+          <h1 className="text-3xl font-bold">Carrito</h1>
           <p className="text-sm text-gray-400">{totalItems} {totalItems === 1 ? 'libro' : 'libros'}</p>
         </div>
         <Link href="/shop" className="text-sm text-gray-400 hover:text-white transition-colors">

@@ -8,8 +8,11 @@ import type { Metadata } from "next";
 import { Inter } from 'next/font/google'
 import { CartProvider } from './context/CartContext'
 import { ToastProvider } from './context/ToastContext'
+import { SidebarProvider } from './context/SidebarContext'
 import ToastProviderWrapper from './components/ToastProviderWrapper'
 import { Analytics } from '@vercel/analytics/next'
+import MainContent from './components/MainContent'
+import TopTicker from './components/TopTicker'
 
 const aggie = localFont({
   src: [
@@ -44,14 +47,17 @@ export default function RootLayout({ children }) {
         style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >
         <CartProvider>
-          <ToastProviderWrapper>
-            <MenuHeader />
-            <MobileHeader />
-            <div className="flex flex-1 flex-col">
-              <Sidebar />
-              <main className="md:ml-[500px] md:mt-10 md:flex-1">{children}</main>
-            </div>
-          </ToastProviderWrapper>
+          <SidebarProvider>
+            <ToastProviderWrapper>
+              <TopTicker />
+              <MenuHeader />
+              <MobileHeader />
+              <div className="flex flex-1 flex-col">
+                <Sidebar />
+                <MainContent>{children}</MainContent>
+              </div>
+            </ToastProviderWrapper>
+          </SidebarProvider>
         </CartProvider>
         <Analytics />
       </body>

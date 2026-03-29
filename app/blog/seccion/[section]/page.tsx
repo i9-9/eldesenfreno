@@ -53,7 +53,7 @@ export default async function BlogSectionPage({
       </nav>
 
       <header className="mb-8">
-        <h1 className="mb-2 text-3xl font-bold tracking-tight">{SECTION_LABELS[section]}</h1>
+        <h1 className="mb-2 text-4xl font-bold tracking-tight">{SECTION_LABELS[section]}</h1>
         <p className="max-w-lg text-sm text-gray-400">
           Entradas de la sección {SECTION_LABELS[section].toLowerCase()}.
         </p>

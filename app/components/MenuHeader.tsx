@@ -4,9 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from '../context/CartContext';
+import { useSidebar } from '../context/SidebarContext';
 
 const MenuHeader = () => {
   const { totalItems } = useCart();
+  const { isOpen, toggleSidebar } = useSidebar();
   const pathname = usePathname();
 
   const isActive = (href: string) => {
@@ -22,8 +24,29 @@ const MenuHeader = () => {
   };
 
   return (
-    <header className="hidden md:fixed top-0 left-0 right-0 z-10 md:flex items-center h-12 shrink-0 bg-transparent font-neue-display px-4">
+    <header className="hidden md:fixed top-6 left-0 right-0 z-50 md:flex items-center h-12 shrink-0 bg-transparent font-neue-display px-4">
       <div className="flex w-full justify-between items-center text-sm h-full gap-2">
+        {/* Toggle Sidebar Button */}
+        <button
+          onClick={toggleSidebar}
+          className="flex-shrink-0 p-2 transition-all duration-300 drop-shadow opacity-80 text-xs border border-white border-opacity-20 rounded-lg backdrop-blur-lg shadow-lg aspect-square flex items-center justify-center bg-[#2C2C2C] bg-opacity-10 hover:bg-gray-400 hover:bg-opacity-100 group"
+          aria-label={isOpen ? 'Cerrar sidebar' : 'Abrir sidebar'}
+        >
+          <svg
+            className={`w-4 h-4 transition-transform duration-300 ${isOpen ? '' : 'rotate-180'}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+
         <Link href="/" className="w-full">
           <button className={getButtonClass('/')}>
             Home

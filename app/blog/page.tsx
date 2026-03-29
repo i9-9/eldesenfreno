@@ -36,7 +36,7 @@ export default async function Blog() {
     <div className='flex flex-col font-neue-display px-4 md:px-0 pt-4 pb-16'>
       {/* Header */}
       <header className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight mb-2">Blog</h1>
+        <h1 className="text-4xl font-bold tracking-tight mb-2">Blog</h1>
         <p className='text-gray-400 text-sm max-w-lg'>
           Novedades de El Desenfreno: lanzamientos, columnas y escritos ocasionales
         </p>

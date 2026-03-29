@@ -220,6 +220,18 @@ body {
   background-color: #0f0f0f;
 }
 
+/* ===== Vertical Marquee ===== */
+@keyframes marquee-horiz {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+/* ===== Horizontal Ticker ===== */
+@keyframes marquee-ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 /* ===== Menu Animation ===== */
 @keyframes menuItemSlide {
   from {
