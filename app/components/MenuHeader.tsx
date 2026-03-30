@@ -24,7 +24,7 @@ const MenuHeader = () => {
   };
 
   return (
-    <header className="hidden md:fixed top-6 left-0 right-0 z-50 md:flex items-center h-12 shrink-0 bg-transparent font-neue-display px-4">
+    <header className="hidden md:fixed top-[26px] left-0 right-0 z-50 md:flex items-center h-12 shrink-0 bg-transparent font-neue-display px-4">
       <div className="flex w-full justify-between items-center text-sm h-full gap-2">
         {/* Toggle Sidebar Button */}
         <button
