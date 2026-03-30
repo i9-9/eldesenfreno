@@ -6,7 +6,7 @@ const Shop = () => {
   const reversedEditions = useMemo(() => editions.slice().reverse(), []);
 
   return (
-    <div className="flex flex-col font-neue-display mr-4 ml-2">
+    <div className="flex flex-col font-neue-display">
       <div className="flex flex-col pt-4">
         {reversedEditions.map((edition, index) => (
           <div key={index} id={`${index}`}>

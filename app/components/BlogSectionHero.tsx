@@ -55,10 +55,6 @@ export default function BlogSectionHero({ counts }: Props) {
           </Link>
         ))}
       </div>
-      <p className="mt-4 text-center text-xs text-gray-600">
-        Más abajo están <strong className="font-medium text-gray-500">todas</strong> las entradas,
-        ordenadas por fecha.
-      </p>
     </section>
   );
 }
