@@ -2,11 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import PostItem from '../components/PostItem';
 import BlogSectionHero from '../components/BlogSectionHero';
-import {
-  BLOG_SECTIONS,
-  SECTION_LABELS,
-  type BlogSection,
-} from '../lib/blogSections';
+import { SECTION_LABELS } from '../lib/blogSections';
 import { getPostsSorted, getAllTags } from '../lib/contentful';
 
 const formatDate = (dateString: string) => {
@@ -24,17 +20,9 @@ export default async function Blog() {
   const posts = allPosts.filter(p => p.published);
   const tags = await getAllTags();
 
-  const sectionCounts = BLOG_SECTIONS.reduce(
-    (acc, id) => {
-      acc[id] = posts.filter((p) => p.section === id).length;
-      return acc;
-    },
-    {} as Record<BlogSection, number>
-  );
-
   return (
     <div className='flex flex-col font-neue-display px-4 md:pl-2 md:pr-0 pt-4 pb-16'>
-      <BlogSectionHero counts={sectionCounts} />
+      <BlogSectionHero />
 
       {/* Tags */}
       {tags.length > 0 && (
