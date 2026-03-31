@@ -8,6 +8,7 @@ import AddToCartButton from '../../components/AddToCartButton';
 import AnimatedImage from '../../components/AnimatedImage';
 import AuthorBio from '../../components/AuthorBio';
 import DesparramoBandcampEmbeds from '../../components/DesparramoBandcampEmbeds';
+import RelatedProducts from '../../components/RelatedProducts';
 import { formatPrice } from '../../utils/formatPrice';
 
 const ProductPage = () => {
@@ -21,7 +22,7 @@ const ProductPage = () => {
 
   if (!product) {
     return (
-      <div className="container mx-auto px-4 py-8 font-neue-display">
+      <div className="px-4 md:pl-2 md:pr-0 pt-4 pb-16 font-neue-display">
         <p className="text-gray-400">Producto no encontrado</p>
         <Link href="/shop" className="text-sm text-gray-400 hover:text-white mt-4 inline-block">
           ← Volver a la tienda
@@ -31,13 +32,15 @@ const ProductPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 font-neue-display">
+    <div className="px-4 md:pl-2 md:pr-0 pt-4 pb-16 font-neue-display">
       {/* Breadcrumb */}
-      <div className="mb-6">
-        <Link href="/shop" className="text-sm text-gray-400 hover:text-white transition-colors">
-          ← Volver a la tienda
-        </Link>
-      </div>
+      <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-xs text-gray-500">
+        <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
+        <span aria-hidden="true">/</span>
+        <Link href="/shop" className="hover:text-white transition-colors">Tienda</Link>
+        <span aria-hidden="true">/</span>
+        <span className="text-gray-300 truncate max-w-[220px]" aria-current="page">{product.title}</span>
+      </nav>
 
       <div className="flex flex-col md:flex-row bg-[#0B0B0B] rounded-lg p-6 gap-8">
         {/* Imagen del libro */}
@@ -90,6 +93,9 @@ const ProductPage = () => {
       {product.id === "7" && (
         <DesparramoBandcampEmbeds className="mt-12" />
       )}
+
+      {/* Productos relacionados */}
+      <RelatedProducts currentSlug={product.slug} allEditions={editions} />
 
       {/* Navegación entre libros */}
       <div className="mt-12 flex justify-between items-center">

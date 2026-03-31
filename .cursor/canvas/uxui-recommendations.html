@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UX/UI — El Desenfreno Ediciones</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --paper: #f5f0e8;
+    --cream: #ede8dc;
+    --red: #c0392b;
+    --amber: #d68910;
+    --teal: #1a6b5a;
+    --rule: rgba(10,10,10,0.15);
+    --tag-crit: #c0392b;
+    --tag-high: #d68910;
+    --tag-med: #2471a3;
+    --tag-low: #1a6b5a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 48px 60px 36px;
+    border-bottom: 3px solid var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 23px,
+      rgba(255,255,255,0.03) 23px,
+      rgba(255,255,255,0.03) 24px
+    );
+  }
+  .masthead-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 12px;
+  }
+  .masthead-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.4rem, 4vw, 3.8rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    position: relative;
+  }
+  .masthead-sub {
+    margin-top: 14px;
+    font-size: 13px;
+    opacity: 0.55;
+    max-width: 480px;
+    font-weight: 300;
+  }
+  .masthead-meta {
+    margin-top: 28px;
+    display: flex;
+    gap: 32px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.4;
+  }
+
+  /* ── LEGEND BAR ── */
+  .legend-bar {
+    background: var(--cream);
+    border-bottom: 1px solid var(--rule);
+    padding: 12px 60px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .legend-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.4;
+    margin-right: 4px;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .pill-crit { background: var(--tag-crit); }
+  .pill-high { background: var(--tag-high); }
+  .pill-med  { background: var(--tag-med); }
+  .pill-low  { background: var(--tag-low); }
+
+  /* ── MAIN GRID ── */
+  .main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 60px 80px;
+  }
+
+  /* ── SECTION HEADING ── */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin: 52px 0 24px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .section-head:first-of-type { margin-top: 0; }
+  .section-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    opacity: 0.3;
+    text-transform: uppercase;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.55rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── CARD ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 20px 22px 22px;
+    position: relative;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    cursor: default;
+  }
+  .card:hover {
+    box-shadow: 4px 4px 0 var(--ink);
+    transform: translate(-2px, -2px);
+  }
+  .card-stripe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: 4px 0 0 4px;
+  }
+  .stripe-crit { background: var(--tag-crit); }
+  .stripe-high { background: var(--tag-high); }
+  .stripe-med  { background: var(--tag-med); }
+  .stripe-low  { background: var(--tag-low); }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    gap: 10px;
+  }
+  .card-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 13.5px;
+    line-height: 1.3;
+    flex: 1;
+  }
+  .card-body {
+    font-size: 12.5px;
+    color: #3a3a3a;
+    line-height: 1.65;
+    margin-bottom: 12px;
+  }
+  .card-body b { color: var(--ink); font-weight: 500; }
+
+  /* ── CODE SNIP ── */
+  .code-snip {
+    background: #f0ece2;
+    border-left: 3px solid var(--rule);
+    padding: 10px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px;
+    line-height: 1.55;
+    border-radius: 0 3px 3px 0;
+    margin-top: 10px;
+    color: #3a3a3a;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .code-snip .del { color: var(--tag-crit); text-decoration: line-through; }
+  .code-snip .add { color: var(--tag-teal, var(--teal)); }
+
+  /* ── RECOMMENDATION ── */
+  .rec {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #f8f5ee;
+    border-radius: 3px;
+    font-size: 11.5px;
+    color: #2a2a2a;
+    line-height: 1.55;
+  }
+  .rec strong { font-weight: 500; }
+
+  /* ── IMPACT METER ── */
+  .impact-row {
+    display: flex;
+    gap: 14px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .impact-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .impact-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.45;
+  }
+  .impact-dots {
+    display: flex;
+    gap: 3px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--rule);
+    border: 1px solid rgba(10,10,10,0.2);
+  }
+  .dot.on { background: var(--ink); border-color: var(--ink); }
+
+  /* ── SUMMARY TABLE ── */
+  .summary-box {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 4px;
+    padding: 28px 32px;
+    margin-top: 52px;
+  }
+  .summary-box h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+  }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.1);
+  }
+  .summary-cell {
+    background: var(--ink);
+    padding: 16px 14px;
+    text-align: center;
+  }
+  .summary-count {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.4rem;
+    line-height: 1;
+  }
+  .summary-type {
+    font-family: 'DM Mono', monospace;
+    font-size: 8.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-top: 6px;
+  }
+
+  /* ── DIVIDER ── */
+  .rule { border: none; border-top: 1px solid var(--rule); margin: 12px 0; }
+
+  /* ── ANNOTATIONS ── */
+  .annotation {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.4;
+    margin-top: 8px;
+  }
+  .annotation::before {
+    content: '↗';
+    font-size: 11px;
+    opacity: 0.6;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 720px) {
+    .masthead, .legend-bar, .main { padding-left: 20px; padding-right: 20px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-eyebrow">Análisis UX/UI — Revisión del código fuente</div>
+  <h1 class="masthead-title">El Desenfreno<br/><em>Ediciones</em></h1>
+  <p class="masthead-sub">Diagnóstico de experiencia de usuario e interfaz basado en el análisis del código Next.js. 14 hallazgos en 4 áreas clave.</p>
+  <div class="masthead-meta">
+    <span>Stack: Next.js 16 · Tailwind CSS · Contentful</span>
+    <span>Revisado: Mar 2026</span>
+    <span>14 recomendaciones</span>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend-bar">
+  <span class="legend-label">Prioridad</span>
+  <span class="pill pill-crit">● Crítica</span>
+  <span class="pill pill-high">● Alta</span>
+  <span class="pill pill-med">● Media</span>
+  <span class="pill pill-low">● Baja</span>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ── SECCIÓN 1: ACCESIBILIDAD Y SEMÁNTICA ── -->
+  <div class="section-head">
+    <span class="section-number">01</span>
+    <h2 class="section-title">Accesibilidad &amp; Semántica</h2>
+  </div>
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-stripe stripe-crit"></div>
+      <div class="card-header">
+        <div class="card-title">Idioma incorrecto en &lt;html lang&gt;</div>
+        <span class="pill pill-crit">Crítica</span>
+      </div>
+      <p class="card-body">El layout declara <b>lang="en"</b> pero todo el contenido está en español. Esto afecta lectores de pantalla, síntesis de voz y herramientas de traducción automática.</p>
+      <div class="code-snip"><span class="del">// layout.tsx
+&lt;html lang="en"&gt;</span>
+<span class="add">// → Corrección
+&lt;html lang="es"&gt;</span></div>
+      <div class="impact-row">
+        <div class="impact-item">
+          <span class="impact-label">Accesibilidad</span>
+          <div class="impact-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div>
+          </div>
+        </div>
+        <div class="impact-item">
+          <span class="impact-label">SEO</span>
+          <div class="impact-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe stripe-crit"></div>
+      <div class="card-header">
+        <div class="card-title">&lt;Link&gt;&lt;button&gt; — anidado inválido</div>
+        <span class="pill pill-crit">Crítica</span>
+      </div>
+      <p class="card-body">En <b>MenuHeader.tsx</b>, cada ítem de navegación envuelve un <b>&lt;button&gt;</b> dentro de un <b>&lt;Link&gt;</b> (que renderiza como <b>&lt;a&gt;</b>). Es HTML inválido: un elemento interactivo no puede contener otro.</p>
+      <div class="code-snip"><span class="del">// Patrón actual (inválido)
+&lt;Link href="/shop"&gt;
+  &lt;button className={getButtonClass('/shop')}&gt;
+    Tienda
+  &lt;/button&gt;
+&lt;/Link&gt;</span>
+<span class="add">// → Corrección: estilizar el Link directamente
+&lt;Link href="/shop" className={getButtonClass('/shop')}&gt;
+  Tienda
+&lt;/Link&gt;</span></div>
+      <div class="impact-row">
+        <div class="impact-item">
+          <span class="impact-label">Accesibilidad</span>
+          <div class="impact-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div>
+          </div>
+        </div>
+        <div class="impact-item">
+          <span class="impact-label">HTML válido</span>
+          <div class="impact-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe stripe-high"></div>
+      <div class="card-header">
+        <div class="card-title">hide-scrollbar en &lt;body&gt;</div>
+        <span class="pill pill-high">Alta</span>
+      </div>
+      <p class="card-body">Ocultar el scrollbar del <b>body</b> elimina una señal visual esencial: el usuario no puede saber cuánto contenido hay debajo del fold. Empeora la experiencia en páginas largas (blog, tienda).</p>
+      <div class="rec"><strong>Recomendación:</strong> Mantener el scrollbar nativo visible. Si el objetivo es estética, usar un scrollbar personalizado con CSS <code>scrollbar-width</code> y <code>scrollbar-color</code> en lugar de ocultarlo.</div>
+      <div class="impact-row">
+        <div class="impact-item">
+          <span class="impact-label">Usabilidad</span>
+          <div class="impact-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ── SECCIÓN 2: NAVEGACIÓN ── -->
+  <div class="section-head">
+    <span class="section-number">02</span>
+    <h2 class="section-title">Navegación</h2>
+  </div>
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-stripe stripe-high"></div>
+      <div class="card-header">
+        <div class="card-title">Marquee como link en mobile — sin affordance</div>
+        <span class="pill pill-high">Alta</span>
+      </div>
+      <p class="card-body">En <b>MobileHeader.tsx</b>, el título en marquee es el único link a Home en mobile. Los usuarios no saben que es clickeable. Un texto en movimiento que funciona como link viola principios de UX de descubribilidad.</p>
+      <div class="rec"><strong>Recomendación:</strong> Agregar un logo/logotipo estático o icono de Home separado con un tap target mínimo de 44×44px. El marquee puede seguir siendo decorativo.</div>
+      <div class="impact-row">
+        <div class="impact-item">
+          <span class="impact-label">Descubribilidad</span>
+          <div class="impact-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div>
+          </div>
+        </div>
+        <div class="impact-item">
+          <span class="impact-label">Mobile UX</span>
+          <div class="impact-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe stripe-high"></div>
+      <div class="card-header">
+        <div class="card-title">Carrito sin acceso directo en mobile</div>
+        <span class="pill pill-high">Alta</span>
+      </div>
+      <p class="card-body">En mobile, el carrito está enterrado dentro del <b>Dropdown</b>. El badge de items requiere abrir el menú para verlo. Esto aumenta el abandono en el flujo de compra.</p>
+      <div class="rec"><strong>Recomendación:</strong> Agregar un ícono de carrito con badge siempre visible en el header mobile (fuera del dropdown), siguiendo el patrón estándar de e-commerce.</div>
+      <div class="impact-row">
+        <div class="impact-item">
+          <span class="impact-label">Conversión</span>
+          <div class="impact-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe stripe-med"></div>
+      <div class="card-header">
+        <div class="card-title">Sin breadcrumbs en detalle de producto / post</div>
+        <span class="pill pill-med">Media</span>
+      </div>
+      <p class="card-body">Las páginas <b>/product/[slug]</b> y <b>/blog/[slug]</b> no tienen breadcrumbs. El usuario no sabe dónde está dentro de la jerarquía y el botón "atrás" del browser es la única forma de volver.</p>
+      <div class="rec"><strong>Recomendación:</strong> Añadir breadcrumb simple: <em>Inicio → Tienda → Nombre del libro</em>. Mejora navegación y SEO (structured data).</div>
+      <div class="impact-row">
+        <div class="impact-item">
+          <span class="impact-label">Orientación</span>
+          <div class="impact-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+          </div>
+        </div>
+        <div class="impact-item">
+          <span class="impact-label">SEO</span>
+          <div class="impact-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe stripe-low"></div>
+      <div class="card-header">
+        <div class="card-title">TopTicker ausente en mobile</div>
+        <span class="pill pill-low">Baja</span>
+      </div>
+      <p class="card-body">El <b>TopTicker</b> está oculto en mobile (<code>hidden md:flex</code>). En desktop es el único elemento que muestra el nombre de la editorial prominentemente, pero en mobile no existe ese componente de branding.</p>
+      <div class="rec"><strong>Recomendación:</strong> Mantener algún elemento de identidad de marca siempre visible en mobile. El marquee actualmente sirve ese propósito, pero si se rediseña la navegación, evaluar incluir el nombre de la editorial en el header.</div>
+    </div>
+
+  </div>
+
+
+  <!-- ── SECCIÓN 3: TIENDA Y BLOG ── -->
+  <div class="section-head">
+    <span class="section-number">03</span>
+    <h2 class="section-title">Tienda &amp; Blog</h2>
+  </div>
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-stripe stripe-high"></div>
+      <div class="card-header">
+        <div class="card-title">Sidebar de Bio — bajo aprovechamiento del espacio</div>
+        <span class="pill pill-high">Alta</span>
+      </div>
+      <p class="card-body">El sidebar ocupa <b>25vw</b> (hasta 400px) y solo contiene una foto, el tagline <em>"No es desierto. Es atropello."</em> y un link a Instagram. Es una gran área de pantalla con muy poca información útil.</p>
+      <div class="rec"><strong>Recomendación:</strong> Enriquecer el sidebar con: descripción breve de la editorial, últimas publicaciones destacadas, novedades del blog, o un CTA hacia la tienda. Alternativamente, considerar moverlo a la Home page y hacer el sidebar colapsado por defecto.</div>
+      <div class="impact-row">
+        <div class="impact-item">
+          <span class="impact-label">Contexto</span>
+          <div class="impact-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe stripe-high"></div>
+      <div class="card-header">
+        <div class="card-title">Tienda sin filtros ni ordenamiento</div>
+        <span class="pill pill-high">Alta</span>
+      </div>
+      <p class="card-body">La página <b>/shop</b> muestra todos los productos en lista, ordenados solo inversamente por índice (<code>editions.slice().reverse()</code>). No hay filtros por precio, género, autor, ni ordenamiento.</p>
+      <div class="rec"><strong>Recomendación:</strong> Agregar al menos: (1) ordenamiento por precio ascendente/descendente y (2) filtro por disponibilidad. Con un catálogo creciente, la usabilidad cae drásticamente sin estas herramientas.</div>
+      <div class="impact-row">
+        <div class="impact-item">
+          <span class="impact-label">Conversión</span>
+          <div class="impact-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe stripe-med"></div>
+      <div class="card-header">
+        <div class="card-title">Blog sin paginación</div>
+        <span class="pill pill-med">Media</span>
+      </div>
+      <p class="card-body">Todos los posts se cargan de una sola vez en <b>/blog/page.tsx</b> (<code>getPostsSorted()</code>). A medida que crezca el catálogo, esto impactará fuertemente en el tiempo de carga y el consumo de datos.</p>
+      <div class="rec"><strong>Recomendación:</strong> Implementar paginación server-side o infinite scroll con <code>cursor</code>-based pagination en Contentful. Un límite inicial de 12–15 posts es razonable.</div>
+      <div class="impact-row">
+        <div class="impact-item">
+          <span class="impact-label">Performance</span>
+          <div class="impact-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div>
+          </div>
+        </div>
+        <div class="impact-item">
+          <span class="impact-label">Escalabilidad</span>
+          <div class="impact-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe stripe-med"></div>
+      <div class="card-header">
+        <div class="card-title">Tags sin conteo de artículos</div>
+        <span class="pill pill-med">Media</span>
+      </div>
+      <p class="card-body">Los filtros por etiqueta no muestran cuántos artículos hay en cada categoría. El usuario no puede anticipar si una etiqueta tiene 1 o 20 artículos antes de hacer clic.</p>
+      <div class="rec"><strong>Recomendación:</strong> Mostrar el conteo junto a cada tag: <em>Poesía (8)</em>. Si es costoso calcularlo en el servidor, cachear el resultado con <code>revalidate</code>.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe stripe-med"></div>
+      <div class="card-header">
+        <div class="card-title">Imágenes en escala de grises en el blog</div>
+        <span class="pill pill-med">Media</span>
+      </div>
+      <p class="card-body">Todas las imágenes de <b>PostItem</b> tienen <code>className="grayscale"</code> aplicado. Si es una decisión de branding, es válida, pero reduce el engagement en grids visuales y puede hacer las tarjetas difíciles de diferenciar.</p>
+      <div class="rec"><strong>Recomendación:</strong> Considerar mostrar el color en hover (ya existe la transición de escala). Cambiar a <code>grayscale group-hover:grayscale-0 transition-all duration-500</code> para dar un toque de descubrimiento visual.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe stripe-low"></div>
+      <div class="card-header">
+        <div class="card-title">dangerouslySetInnerHTML en reseña de producto</div>
+        <span class="pill pill-low">Baja</span>
+      </div>
+      <p class="card-body">En <b>ShopItem.tsx</b>, la reseña se renderiza con <code>dangerouslySetInnerHTML</code>. Si el contenido viene de Contentful (rich text), evaluar usar el renderer oficial <code>@contentful/rich-text-react-renderer</code> para mayor seguridad y flexibilidad tipográfica.</p>
+      <div class="code-snip"><span class="del">// ShopItem.tsx — riesgo si el HTML no está sanitizado
+dangerouslySetInnerHTML={{ __html: review }}</span>
+<span class="add">// → Alternativa más segura
+import { documentToReactComponents } from
+  '@contentful/rich-text-react-renderer'
+documentToReactComponents(reviewRichText)</span></div>
+    </div>
+
+  </div>
+
+
+  <!-- ── SECCIÓN 4: PERFORMANCE Y PULIDO ── -->
+  <div class="section-head">
+    <span class="section-number">04</span>
+    <h2 class="section-title">Performance &amp; Pulido visual</h2>
+  </div>
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-stripe stripe-med"></div>
+      <div class="card-header">
+        <div class="card-title">Múltiples backdrop-blur simultáneos</div>
+        <span class="pill pill-med">Media</span>
+      </div>
+      <p class="card-body">El header, los botones de nav, el sidebar y el dropdown usan todos <code>backdrop-blur-lg</code> al mismo tiempo. En dispositivos de gama media-baja, múltiples capas de blur activas generan jank visible.</p>
+      <div class="rec"><strong>Recomendación:</strong> Reducir el nivel de blur (<code>backdrop-blur-sm</code>) o limitarlo a 1–2 elementos por vista. El sidebar y el header raramente coexisten visualmente, por lo que el impacto puede ser manejable.</div>
+      <div class="impact-row">
+        <div class="impact-item">
+          <span class="impact-label">GPU pressure</span>
+          <div class="impact-dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe stripe-low"></div>
+      <div class="card-header">
+        <div class="card-title">Sin footer</div>
+        <span class="pill pill-low">Baja</span>
+      </div>
+      <p class="card-body">La web no tiene footer. El contenido termina abruptamente. Para una editorial, el footer es un lugar canónico para: contacto, redes, derechos de autor, política de envío, y links secundarios.</p>
+      <div class="rec"><strong>Recomendación:</strong> Agregar un footer minimalista con: © año, links de navegación secundaria, Instagram, y email de contacto. Mantenerlo austero para no romper la identidad visual.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe stripe-low"></div>
+      <div class="card-header">
+        <div class="card-title">Opacity 80% en estado activo de nav</div>
+        <span class="pill pill-low">Baja</span>
+      </div>
+      <p class="card-body">Los botones de navegación tienen <code>opacity-80</code> como clase base incluso en estado activo. Esto reduce la legibilidad del texto cuando el elemento está seleccionado — el estado activo debería ser el de mayor contraste.</p>
+      <div class="code-snip"><span class="del">// baseClass actual
+"... opacity-80 ..."</span>
+<span class="add">// → Separar opacity por estado
+isActive ? "... opacity-100 ..." : "... opacity-70 hover:opacity-100 ..."</span></div>
+    </div>
+
+  </div>
+
+
+  <!-- SUMMARY -->
+  <div class="summary-box">
+    <h3>Resumen del diagnóstico</h3>
+    <div class="summary-grid">
+      <div class="summary-cell">
+        <div class="summary-count" style="color:#e74c3c">2</div>
+        <div class="summary-type">Críticas</div>
+      </div>
+      <div class="summary-cell">
+        <div class="summary-count" style="color:#f39c12">5</div>
+        <div class="summary-type">Alta prioridad</div>
+      </div>
+      <div class="summary-cell">
+        <div class="summary-count" style="color:#3498db">5</div>
+        <div class="summary-type">Prioridad media</div>
+      </div>
+      <div class="summary-cell">
+        <div class="summary-count" style="color:#27ae60">3</div>
+        <div class="summary-type">Prioridad baja</div>
+      </div>
+    </div>
+    <div style="margin-top:20px; font-size:11.5px; opacity:0.5; line-height:1.7;">
+      Las correcciones críticas se resuelven en minutos y tienen impacto inmediato en accesibilidad y SEO. Las de alta prioridad relacionadas con la navegación mobile y la tienda tienen el mayor impacto en conversión. Las de prioridad media son mejoras de calidad a largo plazo.
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

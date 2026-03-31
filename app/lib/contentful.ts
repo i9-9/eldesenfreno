@@ -1,5 +1,6 @@
 import { createClient, Entry, EntrySkeletonType, Asset, ContentfulClientApi } from 'contentful';
 import { createClient as createManagementClient } from 'contentful-management';
+import { unstable_cache } from 'next/cache';
 import type { BlogSection } from './blogSections';
 import { normalizeBlogSection } from './blogSections';
 
@@ -128,8 +129,7 @@ export function transformEntry(entry: Entry<BlogPostSkeleton>): BlogPost {
   };
 }
 
-// Obtener todos los posts
-export async function getPosts(): Promise<BlogPost[]> {
+async function _getPosts(): Promise<BlogPost[]> {
   try {
     const client = getContentfulClient();
     const entries = await client.getEntries<BlogPostSkeleton>({
@@ -144,6 +144,12 @@ export async function getPosts(): Promise<BlogPost[]> {
     return [];
   }
 }
+
+// Obtener todos los posts (con caché de 5 minutos; revalidable por tag)
+export const getPosts = unstable_cache(_getPosts, ['contentful-posts'], {
+  revalidate: 300,
+  tags: ['contentful-posts'],
+});
 
 // Obtener posts destacados primero
 export async function getPostsSorted(): Promise<BlogPost[]> {

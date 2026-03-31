@@ -41,9 +41,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="overflow-x-hidden hide-scrollbar">
+    <html lang="es" className="overflow-x-hidden">
       <body
-        className={`${aggie.className} hide-scrollbar`}
+        className={`${aggie.className}`}
         style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >
         <CartProvider>

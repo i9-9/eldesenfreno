@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { getPosts, createPost } from '@/app/lib/contentful';
 
 // GET - Obtener todos los posts
@@ -60,6 +61,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    revalidateTag('contentful-posts');
     return NextResponse.json(newPost, { status: 201 });
   } catch (error) {
     console.error('Error creating post:', error);

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { getPostBySlug, getPostById, updatePost, deletePost, type UpdateBlogPostInput } from '@/app/lib/contentful';
 
 // GET - Obtener un post por ID o slug
@@ -47,6 +48,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Post no encontrado o error al actualizar' }, { status: 404 });
     }
 
+    revalidateTag('contentful-posts');
     return NextResponse.json(updatedPost);
   } catch (error) {
     console.error('Error updating post:', error);
@@ -68,6 +70,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Post no encontrado o error al eliminar' }, { status: 404 });
     }
 
+    revalidateTag('contentful-posts');
     return NextResponse.json({ message: 'Post eliminado correctamente' });
   } catch (error) {
     console.error('Error deleting post:', error);
