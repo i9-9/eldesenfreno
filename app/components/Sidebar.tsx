@@ -13,7 +13,7 @@ const Sidebar = () => {
         isOpen ? 'md:w-[clamp(300px,calc(25vw+22px),400px)] translate-x-0' : 'md:w-[clamp(300px,calc(25vw+22px),400px)] -translate-x-full'
       }`}
     >
-      {/* border-l-[1px] */}
+      {/* border-l-[1px]. */}
       <div className="flex flex-col h-full min-h-0">
         <MarqueeTitle />
         <div className={`flex flex-col flex-1 min-h-0 pt-12 pb-8 pr-0 pl-20 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
