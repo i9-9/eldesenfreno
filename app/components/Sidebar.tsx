@@ -15,9 +15,9 @@ const Sidebar = () => {
     >
       {/* border-l-[1px] */}
       <div className="flex flex-col h-full min-h-0">
-        {/* <MarqueeTitle /> */}
-        <div className={`flex flex-col flex-1 min-h-0 pt-[76px] pb-8 pr-0 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
-          <div className="flex flex-col flex-1 min-h-0 border border-white border-opacity-20 rounded-r-lg backdrop-blur-lg shadow-lg bg-[#2C2C2C] bg-opacity-10 overflow-hidden border-l-0">
+        <MarqueeTitle />
+        <div className={`flex flex-col flex-1 min-h-0 pt-12 pb-8 pr-0 pl-20 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="flex flex-col flex-1 min-h-0 border border-white border-opacity-20 rounded-lg backdrop-blur-lg shadow-lg bg-[#2C2C2C] bg-opacity-10 overflow-hidden">
             <div className="flex-1 overflow-y-auto hide-scrollbar">
               <Bio />
             </div>

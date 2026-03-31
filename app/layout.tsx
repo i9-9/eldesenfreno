@@ -9,7 +9,6 @@ import { SidebarProvider } from './context/SidebarContext'
 import ToastProviderWrapper from './components/ToastProviderWrapper'
 import { Analytics } from '@vercel/analytics/next'
 import MainContent from './components/MainContent'
-import TopTicker from './components/TopTicker'
 
 const aggie = localFont({
   src: [
@@ -78,7 +77,6 @@ export default function RootLayout({ children }) {
         <CartProvider>
           <SidebarProvider>
             <ToastProviderWrapper>
-              <TopTicker />
               <MenuHeader />
               <MobileHeader />
               <div className="flex flex-1 flex-col">
