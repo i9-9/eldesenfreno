@@ -34,7 +34,7 @@ const Shop = () => {
   return (
     <div className="flex flex-col font-neue-display px-4 md:pl-2 md:pr-0 pt-4 pb-16">
       {/* Filtros */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row gap-3 mb-3">
         <div className="relative flex-1">
           <svg
             className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none"

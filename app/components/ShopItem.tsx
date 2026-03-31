@@ -28,7 +28,7 @@ const ShopItem = ({
   link,
 }: ShopItemProps) => {
   return (
-    <div className="mb-8 py-4 pr-4 pl-2 bg-[#0B0B0B] rounded-lg">
+    <div className="mb-8 py-4 pr-4 bg-[#0B0B0B] rounded-lg">
       <div className="flex flex-col md:flex-row">
         <div className="md:w-1/3 mb-4 md:mb-0">
           <Link href={`/product/${slug}`}>

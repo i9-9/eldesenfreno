@@ -34,7 +34,7 @@ const ProductPage = () => {
   return (
     <div className="px-4 md:pl-2 md:pr-0 pt-4 pb-16 font-neue-display">
       {/* Breadcrumb */}
-      <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-xs text-gray-500">
+      <nav aria-label="Breadcrumb" className="mb-3 flex items-center gap-2 text-xs text-gray-500">
         <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
         <span aria-hidden="true">/</span>
         <Link href="/shop" className="hover:text-white transition-colors">Tienda</Link>
@@ -42,22 +42,23 @@ const ProductPage = () => {
         <span className="text-gray-300 truncate max-w-[220px]" aria-current="page">{product.title}</span>
       </nav>
 
-      <div className="flex flex-col md:flex-row bg-[#0B0B0B] rounded-lg p-6 gap-8">
+      <div className="flex flex-col md:flex-row bg-[#0B0B0B] rounded-lg py-4 pr-4">
         {/* Imagen del libro */}
-        <div className="w-full md:w-1/2">
+        <div className="w-full md:w-1/3 mb-4 md:mb-0">
           {product.image && (
             <AnimatedImage 
               src={product.image} 
               alt={product.title} 
-              width={500} 
-              height={600}
+              width={300} 
+              height={400}
+              sizes="(max-width: 768px) 100vw, 33vw"
               className="rounded-md drop-shadow-md border border-[#666666] border-opacity-20 object-contain w-full"
             />
           )}
         </div>
         
         {/* Información del libro */}
-        <div className="w-full md:w-1/2">
+        <div className="w-full md:w-2/3 md:pl-6">
           <h1 className="text-2xl font-bold mb-2">{product.title}</h1>
           <h2 className="text-lg text-gray-400 mb-4">{product.author}</h2>
           <p className="text-2xl font-bold mb-6">{formatPrice(product.price)}</p>
