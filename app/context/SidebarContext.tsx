@@ -12,20 +12,8 @@ const SidebarContext = createContext<SidebarContextType | undefined>(undefined)
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(true)
 
-  // Persistir el estado en localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem('sidebarOpen')
-    if (saved !== null) {
-      setIsOpen(saved === 'true')
-    }
-  }, [])
-
   const toggleSidebar = () => {
-    setIsOpen(prev => {
-      const newValue = !prev
-      localStorage.setItem('sidebarOpen', String(newValue))
-      return newValue
-    })
+    setIsOpen(prev => !prev)
   }
 
   return (

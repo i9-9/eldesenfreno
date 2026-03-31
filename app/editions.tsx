@@ -80,7 +80,7 @@
   {
     id: "7",
     slug: "desparramo-va",
-    image: "/7.jpeg",
+    image: "/7.jpg",
     title: "Desparramo V/A",
     author: "Varios Artistas",
     authorImage: null,
