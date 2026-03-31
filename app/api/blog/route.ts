@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    revalidateTag('contentful-posts');
+    revalidateTag('contentful-posts', 'max');
     return NextResponse.json(newPost, { status: 201 });
   } catch (error) {
     console.error('Error creating post:', error);
