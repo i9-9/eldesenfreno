@@ -80,7 +80,7 @@ const Dropdown = () => {
             <Link
               key={item.href}
               href={item.href}
-              className={`block w-full text-left px-4 py-3 text-xs text-white transition-all duration-200 ${
+              className={`block w-full text-left px-4 py-5 text-xs text-white transition-all duration-200 ${
                 index !== menuItems.length - 1 ? 'border-b border-white/10' : ''
               } ${isOpen ? 'animate-menu-item' : 'opacity-0 translate-x-[-10px]'} ${
                 isActive(item.href) ? 'bg-white/10' : 'hover:bg-white/10'
@@ -98,7 +98,7 @@ const Dropdown = () => {
           {/* Carrito con badge */}
           <Link
             href="/cart"
-            className={`flex items-center justify-between w-full px-4 py-3 text-xs text-white transition-all duration-200 border-t border-white/10 ${
+            className={`flex items-center justify-between w-full px-4 py-5 text-xs text-white transition-all duration-200 border-t border-white/10 ${
               isOpen ? 'animate-menu-item' : 'opacity-0 translate-x-[-10px]'
             } ${isActive('/cart') ? 'bg-white/10' : 'hover:bg-white/10'}`}
             style={{ 
