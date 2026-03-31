@@ -3,11 +3,8 @@ import localFont from "next/font/local";
 import MenuHeader from "./components/MenuHeader";
 import MobileHeader from "./components/MobileHeader";
 import Sidebar from "./components/Sidebar";
-import Head from "next/head";
 import type { Metadata } from "next";
-import { Inter } from 'next/font/google'
 import { CartProvider } from './context/CartContext'
-import { ToastProvider } from './context/ToastContext'
 import { SidebarProvider } from './context/SidebarContext'
 import ToastProviderWrapper from './components/ToastProviderWrapper'
 import { Analytics } from '@vercel/analytics/next'
@@ -26,11 +23,43 @@ const aggie = localFont({
   preload: true,
 });
 
-const inter = Inter({ subsets: ['latin'] })
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://eldesenfreno.com";
+const defaultOgImage = "/post-rounded.svg";
 
 export const metadata: Metadata = {
-  title: "El Desenfreno Ediciones",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "El Desenfreno Ediciones",
+    template: "%s | El Desenfreno Ediciones",
+  },
   description: "Editorial argentina de poesía.",
+  authors: [{ name: "Iván Nevares", url: "https://inevares.com" }],
+  creator: "Iván Nevares",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "es_AR",
+    url: "/",
+    siteName: "El Desenfreno Ediciones",
+    title: "El Desenfreno Ediciones",
+    description: "Editorial argentina de poesía.",
+    images: [
+      {
+        url: defaultOgImage,
+        width: 1200,
+        height: 630,
+        alt: "El Desenfreno Ediciones",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "El Desenfreno Ediciones",
+    description: "Editorial argentina de poesía.",
+    images: [defaultOgImage],
+  },
   icons: {
     icon: "/favicon.ico",
   },

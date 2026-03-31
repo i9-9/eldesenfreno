@@ -47,7 +47,7 @@ const ShopItem = ({
           <h3 className="text-md mb-2">{author}</h3>
           <p className="text-lg font-bold mb-4">{formatPrice(price)}</p>
           <div
-            className="text-sm mb-4 line-clamp-3"
+            className="text-sm mb-4 line-clamp-7 max-w-[62ch]"
             dangerouslySetInnerHTML={{ __html: review }}
           />
           <div className="flex space-x-3">
