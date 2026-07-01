@@ -174,7 +174,7 @@ export default function BlogPostPage() {
         </div>
       </header>
 
-      {/* Imagen destacada (cuadrada: horizontal y cuadrado se recortan al centro con object-cover) */}
+      {/* Imagen destacada (mantiene proporción original) */}
       {post.image && post.image !== '/post-1.jpg' && (
         <figure className="mb-10 -mx-4 md:mx-0">
           <div className="mx-auto max-w-2xl overflow-hidden rounded-none md:rounded-xl">
@@ -182,8 +182,8 @@ export default function BlogPostPage() {
               src={post.image}
               alt={post.title}
               width={1200}
-              height={1200}
-              className="aspect-square w-full object-cover"
+              height={800}
+              className="w-full h-auto"
             />
           </div>
         </figure>
