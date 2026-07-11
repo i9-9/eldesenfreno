@@ -35,6 +35,20 @@ export async function POST(request: Request) {
       );
     }
 
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(payer.email).trim());
+    const nameOk = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'-]{2,80}$/.test(String(payer.name).trim());
+    const phoneDigits = String(payer.phone?.number || '').replace(/\D/g, '').replace(/^54/, '');
+    const phoneOk = /^\d{10}$/.test(phoneDigits);
+    const streetNumberOk = /^\d{1,6}[a-zA-Z]?$/.test(String(payer.address.street_number || '').trim());
+    const zipOk = /^(\d{4}|[A-Za-z]\d{4}[A-Za-z]{3})$/i.test(String(payer.address.zip_code || '').trim());
+
+    if (!emailOk || !nameOk || !phoneOk || !streetNumberOk || !zipOk) {
+      return NextResponse.json(
+        { error: 'Los datos del comprador no tienen un formato válido' },
+        { status: 400 }
+      );
+    }
+
     // Agregar log para depuración
     console.log('Valor de NEXT_PUBLIC_SITE_URL:', process.env.NEXT_PUBLIC_SITE_URL);
 

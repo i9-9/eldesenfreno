@@ -1,17 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ChangeEvent } from 'react';
 import { useCart } from '../context/CartContext';
 import Link from 'next/link';
 import { formatPrice } from '../utils/formatPrice';
+import {
+  ARGENTINE_PROVINCES,
+  type CheckoutFieldErrors,
+  type CheckoutFormData,
+  sanitizePhoneInput,
+  sanitizePostalCodeInput,
+  sanitizeStreetNumberInput,
+  validateCheckoutForm,
+} from '../utils/checkoutValidation';
+
+const inputClassName =
+  'w-full p-2 border rounded bg-[#121212] text-white placeholder:text-white/40';
+const errorInputClassName = 'border-red-500';
 
 export default function CheckoutPage() {
-  const { cart, totalPrice, clearCart } = useCart();
+  const { cart, totalPrice } = useCart();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<CheckoutFieldErrors>({});
 
-  // Datos del cliente
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CheckoutFormData>({
     name: '',
     email: '',
     phone: '',
@@ -20,30 +33,63 @@ export default function CheckoutPage() {
     city: '',
     state: '',
     postalCode: '',
-    zone: 'CABA', // Valor por defecto
-    apartment: '', // Nuevo campo para departamento
+    zone: 'CABA',
+    apartment: '',
   });
 
-  const [shippingCost, setShippingCost] = useState(5000); // Costo de envío por defecto
+  const [shippingCost, setShippingCost] = useState(5000);
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Actualizar costo de envío cuando cambie la zona
-    if (name === 'zone') {
-      setShippingCost(value === 'CABA' ? 5000 : 10000);
+    let nextValue = value;
+
+    if (name === 'phone') {
+      nextValue = sanitizePhoneInput(value);
+    } else if (name === 'street_number') {
+      nextValue = sanitizeStreetNumberInput(value);
+    } else if (name === 'postalCode') {
+      nextValue = sanitizePostalCodeInput(value);
     }
+
+    setFormData((prev) => {
+      const updated = { ...prev, [name]: nextValue };
+
+      if (name === 'zone') {
+        setShippingCost(nextValue === 'CABA' ? 5000 : 10000);
+        if (nextValue === 'CABA' && !prev.state) {
+          updated.state = 'Ciudad Autónoma de Buenos Aires';
+        }
+      }
+
+      return updated;
+    });
+
+    if (fieldErrors[name as keyof CheckoutFormData]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[name as keyof CheckoutFormData];
+        return next;
+      });
+    }
+
+    if (error) setError('');
   };
 
   const createPreference = async () => {
-    if (!validateForm()) return;
+    const errors = validateCheckoutForm(formData);
+    setFieldErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      setError('Revisá los campos marcados e intentá de nuevo');
+      return;
+    }
 
     setLoading(true);
     setError('');
 
     try {
-      console.log('Enviando datos para crear preferencia...');
       const response = await fetch('/api/mercadopago/create-preference', {
         method: 'POST',
         headers: {
@@ -51,79 +97,67 @@ export default function CheckoutPage() {
         },
         body: JSON.stringify({
           items: [
-            ...cart.map(item => ({
+            ...cart.map((item) => ({
               id: item.id,
               title: item.title,
               quantity: item.quantity,
               unit_price: parseFloat(item.price),
               currency_id: 'ARS',
             })),
-            // Agregar envío
             {
               id: 'shipping',
               title: `Envío - ${formData.zone}`,
               quantity: 1,
               unit_price: shippingCost,
               currency_id: 'ARS',
-            }
+            },
           ],
           payer: {
-            name: formData.name,
-            email: formData.email,
+            name: formData.name.trim(),
+            email: formData.email.trim().toLowerCase(),
             phone: {
-              number: formData.phone
+              number: formData.phone.trim(),
             },
             address: {
-              street_name: formData.address,
-              street_number: formData.street_number,
-              zip_code: formData.postalCode,
+              street_name: formData.address.trim(),
+              street_number: formData.street_number.trim(),
+              zip_code: formData.postalCode.trim().toUpperCase(),
               city: {
-                name: formData.city
+                name: formData.city.trim(),
               },
               state: {
-                name: formData.state
+                name: formData.state,
               },
               country: {
-                name: 'Argentina'
+                name: 'Argentina',
               },
-              apartment: formData.apartment // Agregamos el departamento
-            }
-          }
+              apartment: formData.apartment.trim(),
+            },
+          },
         }),
       });
 
       const data = await response.json();
-      console.log('Respuesta recibida:', data);
 
       if (!response.ok) {
         throw new Error(data.error || 'Error al crear la preferencia de pago');
       }
 
       if (data.initPoint) {
-        console.log('Redirigiendo a:', data.initPoint);
-        // Usar window.location.href para una redirección completa
         window.location.href = data.initPoint;
       } else {
         throw new Error('No se recibió el punto de inicio para el pago');
       }
-      
     } catch (err) {
       console.error('Error:', err);
-      setError(err.message || 'Ocurrió un error al procesar el pago');
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Ocurrió un error al procesar el pago'
+      );
     } finally {
       setLoading(false);
     }
-  };
-
-  const validateForm = () => {
-    // Validar todos los campos requeridos para envío
-    if (!formData.name || !formData.email || !formData.phone || 
-        !formData.address || !formData.street_number || !formData.city || 
-        !formData.state || !formData.postalCode || !formData.zone) {
-      setError('Por favor completa todos los campos');
-      return false;
-    }
-    return true;
   };
 
   if (cart.length === 0) {
@@ -138,175 +172,263 @@ export default function CheckoutPage() {
     );
   }
 
+  const fieldClass = (field: keyof CheckoutFormData) =>
+    `${inputClassName} ${fieldErrors[field] ? errorInputClassName : ''}`;
+
   return (
     <div className="container mx-auto p-4 font-neue-display">
       <h1 className="text-3xl font-bold mb-6">Finalizar compra</h1>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Formulario de datos del cliente */}
         <div>
           <h2 className="text-xl font-semibold mb-4">Datos de envío</h2>
-          
+
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">Zona de envío</label>
+              <label className="block text-sm font-medium mb-1 text-white">
+                Zona de envío
+              </label>
               <select
                 name="zone"
                 value={formData.zone}
                 onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
+                className={fieldClass('zone')}
                 required
               >
                 <option value="CABA">CABA - {formatPrice(5000)}</option>
-                <option value="Resto del País">Resto del País - {formatPrice(10000)}</option>
+                <option value="Resto del País">
+                  Resto del País - {formatPrice(10000)}
+                </option>
               </select>
+              {fieldErrors.zone && (
+                <p className="mt-1 text-sm text-red-400">{fieldErrors.zone}</p>
+              )}
             </div>
+
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">Nombre completo</label>
+              <label className="block text-sm font-medium mb-1 text-white">
+                Nombre completo
+              </label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
+                className={fieldClass('name')}
                 placeholder="Nombre y apellido"
+                autoComplete="name"
                 required
               />
+              {fieldErrors.name && (
+                <p className="mt-1 text-sm text-red-400">{fieldErrors.name}</p>
+              )}
             </div>
+
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">Email</label>
+              <label className="block text-sm font-medium mb-1 text-white">
+                Email
+              </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
+                className={fieldClass('email')}
                 placeholder="ejemplo@email.com"
+                autoComplete="email"
+                inputMode="email"
                 required
               />
+              {fieldErrors.email && (
+                <p className="mt-1 text-sm text-red-400">{fieldErrors.email}</p>
+              )}
             </div>
+
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">Teléfono</label>
+              <label className="block text-sm font-medium mb-1 text-white">
+                Teléfono
+              </label>
               <input
                 type="tel"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
+                className={fieldClass('phone')}
                 placeholder="11 1234-5678"
+                autoComplete="tel"
+                inputMode="tel"
                 required
               />
+              {fieldErrors.phone && (
+                <p className="mt-1 text-sm text-red-400">{fieldErrors.phone}</p>
+              )}
             </div>
+
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">Dirección</label>
+              <label className="block text-sm font-medium mb-1 text-white">
+                Dirección
+              </label>
               <input
                 type="text"
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
+                className={fieldClass('address')}
                 placeholder="Nombre de la calle"
+                autoComplete="street-address"
                 required
               />
+              {fieldErrors.address && (
+                <p className="mt-1 text-sm text-red-400">{fieldErrors.address}</p>
+              )}
             </div>
+
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">Número de calle</label>
+              <label className="block text-sm font-medium mb-1 text-white">
+                Número de calle
+              </label>
               <input
                 type="text"
                 name="street_number"
                 value={formData.street_number}
                 onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
+                className={fieldClass('street_number')}
                 placeholder="1234"
+                inputMode="numeric"
                 required
               />
+              {fieldErrors.street_number && (
+                <p className="mt-1 text-sm text-red-400">
+                  {fieldErrors.street_number}
+                </p>
+              )}
             </div>
+
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">Departamento</label>
+              <label className="block text-sm font-medium mb-1 text-white">
+                Departamento
+              </label>
               <input
                 type="text"
                 name="apartment"
                 value={formData.apartment}
                 onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
-                placeholder="Número de departamento, piso, etc."
+                className={fieldClass('apartment')}
+                placeholder="Piso / depto (opcional)"
               />
+              {fieldErrors.apartment && (
+                <p className="mt-1 text-sm text-red-400">
+                  {fieldErrors.apartment}
+                </p>
+              )}
             </div>
+
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">Ciudad</label>
+              <label className="block text-sm font-medium mb-1 text-white">
+                Ciudad
+              </label>
               <input
                 type="text"
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
+                className={fieldClass('city')}
                 placeholder="Ciudad"
+                autoComplete="address-level2"
                 required
               />
+              {fieldErrors.city && (
+                <p className="mt-1 text-sm text-red-400">{fieldErrors.city}</p>
+              )}
             </div>
+
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">Provincia</label>
-              <input
-                type="text"
+              <label className="block text-sm font-medium mb-1 text-white">
+                Provincia
+              </label>
+              <select
                 name="state"
                 value={formData.state}
                 onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
-                placeholder="Provincia"
+                className={fieldClass('state')}
+                autoComplete="address-level1"
                 required
-              />
+              >
+                <option value="">Seleccioná una provincia</option>
+                {ARGENTINE_PROVINCES.map((province) => (
+                  <option key={province} value={province}>
+                    {province}
+                  </option>
+                ))}
+              </select>
+              {fieldErrors.state && (
+                <p className="mt-1 text-sm text-red-400">{fieldErrors.state}</p>
+              )}
             </div>
+
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">Código postal</label>
+              <label className="block text-sm font-medium mb-1 text-white">
+                Código postal
+              </label>
               <input
                 type="text"
                 name="postalCode"
                 value={formData.postalCode}
                 onChange={handleChange}
-                className="w-full p-2 border rounded bg-[#121212] text-white"
-                placeholder="1234"
+                className={fieldClass('postalCode')}
+                placeholder="1425"
+                autoComplete="postal-code"
+                inputMode="text"
                 required
               />
+              {fieldErrors.postalCode && (
+                <p className="mt-1 text-sm text-red-400">
+                  {fieldErrors.postalCode}
+                </p>
+              )}
             </div>
           </div>
         </div>
-        
-        {/* Resumen del pedido */}
+
         <div>
           <h2 className="text-xl font-semibold mb-4">Resumen del pedido</h2>
-          
+
           <div className="border rounded p-4 mb-4">
-            {cart.map((item) => ( 
+            {cart.map((item) => (
               <div key={item.id} className="flex justify-between py-2 border-b">
                 <div>
                   <p className="font-medium">{item.title}</p>
-                  <p className="text-sm text-gray-600">Cantidad: {item.quantity}</p>
+                  <p className="text-sm text-gray-600">
+                    Cantidad: {item.quantity}
+                  </p>
                 </div>
-                <p className="font-medium">{formatPrice(parseFloat(item.price) * item.quantity)}</p>
+                <p className="font-medium">
+                  {formatPrice(parseFloat(item.price) * item.quantity)}
+                </p>
               </div>
             ))}
-            
+
             <div className="flex justify-between py-2 border-b">
               <p>Envío ({formData.zone})</p>
               <p>{formatPrice(shippingCost)}</p>
             </div>
-            
+
             <div className="flex justify-between py-2 font-bold">
               <p>Total</p>
               <p>{formatPrice(totalPrice + shippingCost)}</p>
             </div>
           </div>
-          
+
           {error && (
             <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
               {error}
             </div>
           )}
-          
+
           <button
             onClick={createPreference}
             disabled={loading}
-            className="w-full bg-black text-white py-3 rounded font-medium hover:bg-gray-800 transition"
+            className="w-full bg-black text-white py-3 rounded font-medium hover:bg-gray-800 transition disabled:opacity-60"
           >
             {loading ? 'Procesando...' : 'Proceder al pago'}
           </button>
