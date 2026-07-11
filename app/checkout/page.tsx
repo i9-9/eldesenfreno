@@ -15,8 +15,9 @@ import {
 } from '../utils/checkoutValidation';
 
 const inputClassName =
-  'w-full p-2 border rounded bg-[#121212] text-white placeholder:text-white/40';
-const errorInputClassName = 'border-red-500';
+  'w-full p-2 border border-white/20 rounded bg-[#121212] text-white placeholder:text-white/40 outline-none transition-colors focus:border-white/60 focus:ring-1 focus:ring-white/30';
+const errorInputClassName =
+  'border-red-500 focus:border-red-400 focus:ring-red-400/40';
 
 export default function CheckoutPage() {
   const { cart, totalPrice } = useCart();
